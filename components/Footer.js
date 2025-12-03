@@ -165,8 +165,8 @@ export default function Footer() {
 
           {/* Middle: credits */}
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[15px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] font-semibold">
-            <span>Design by Dylan</span>
-            <span>Code by Dennis</span>
+            <span>Design by Nasick</span>
+            <span>Code by Ahmad</span>
           </div>
 
           {/* Right: social icons */}

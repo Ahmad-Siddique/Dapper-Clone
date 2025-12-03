@@ -4,59 +4,54 @@ import Link from 'next/link';
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[#EFEFEF] pt-32 md:pt-40 pb-24">
+    <section className="relative overflow-hidden bg-[#EFEFEF] pt-32 md:pt-40 pb-28">
       {/* BACKGROUND LEAF IMAGE ON RIGHT */}
-      <div className="pointer-events-none absolute inset-y-0 right-[-8%] w-[100%] md:right-[-4%] md:w-[55%] lg:right-0 lg:w-[50%]">
+      <div className="pointer-events-none absolute inset-y-0 right-[-14%] w-[120%] sm:right-[-6%] sm:w-[70%] lg:right-[-2%] lg:w-[55%] xl:right-0 xl:w-[50%]">
         <Image
           src="/hero-plant.png"
           alt="Decorative plant"
           fill
           priority
           className="object-contain object-right"
-          sizes="(min-width: 1024px) 650px, (min-width: 768px) 500px, 320px"
+          sizes="(min-width: 1280px) 720px, (min-width: 1024px) 600px, (min-width: 768px) 480px, 320px"
         />
       </div>
 
-      {/* FOREGROUND CONTENT (relative so card can be absolute inside) */}
-      <div className="relative z-10 mx-auto max-w-[1800px] px-4 md:px-6">
+      {/* FOREGROUND CONTENT */}
+      <div className="relative z-10 mx-auto flex max-w-[1800px] flex-col px-4 md:px-6 lg:px-10">
         {/* Text block on the left */}
-        <div className="max-w-[900px]">
-          {/* Badge ABOVE title */}
-          <div className="mb-12 flex items-center gap-3">
+        <div className="max-w-[980px]">
+          {/* Badge */}
+          <div className="mb-10 flex items-center gap-3">
             <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm md:text-base font-semibold tracking-tight text-[#212121]">
-              B2B Marketing Agency
+            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#212121]">
+              B2B marketing agency
             </span>
           </div>
 
-          {/* FULL-WIDTH TITLE */}
-          <h1 className="mb-14 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[0.95] tracking-tight text-[#111111]">
-            <span className="block text-[46px] sm:text-[60px] md:text-[76px] lg:text-[90px] xl:text-[98px] font-bold">
+          {/* Title */}
+          <h1 className="mb-12 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[0.92] tracking-[-0.03em] text-[#111111]">
+            <span className="block text-[46px] sm:text-[60px] md:text-[78px] lg:text-[92px] xl:text-[104px] font-bold">
               We build{' '}
-              <span className="font-normal italic">
-                high-performing
-              </span>
+              <span className="font-normal italic">high‑performing</span>
             </span>
-            <span className="mt-3 block text-[46px] sm:text-[60px] md:text-[76px] lg:text-[90px] xl:text-[98px] font-bold">
+            <span className="mt-2 block text-[46px] sm:text-[60px] md:text-[78px] lg:text-[92px] xl:text-[104px] font-bold">
               marketing engines for
             </span>
-            <span className="mt-3 block text-[46px] sm:text-[60px] md:text-[76px] lg:text-[90px] xl:text-[98px] font-bold">
-              B2B Brands
+            <span className="mt-2 block text-[46px] sm:text-[60px] md:text-[78px] lg:text-[92px] xl:text-[104px] font-bold">
+              B2B brands
             </span>
           </h1>
 
-          {/* SUBCOPY */}
-          <p className="mb-10 max-w-[560px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[17px] md:text-[19px] font-semibold leading-relaxed text-[#212121]">
-            We build, optimize, and scale marketing engines that generate
+          {/* Subcopy */}
+          <p className="mb-9 max-w-[600px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[17px] md:text-[19px] font-semibold leading-relaxed text-[#212121]">
+            We build, optimize and scale marketing engines that generate
             pipeline and improve marketing ROI.
           </p>
 
-          {/* CTA BUTTON */}
-          <Link
-            href="#discover"
-            className="inline-flex items-center gap-3 group"
-          >
-            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[16px] md:text-[17px] font-bold tracking-tight text-[#212121]">
+          {/* CTA */}
+          <Link href="#discover" className="inline-flex items-center gap-3 group">
+            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[16px] md:text-[17px] font-bold tracking-tight text-[#111111]">
               Discover more
             </span>
             <span className="flex h-9 w-9 items-center justify-center rounded-[4px] bg-[#74F5A1] transition-colors group-hover:bg-[#5fe58a]">
@@ -67,7 +62,7 @@ export default function HeroSection() {
                 aria-hidden="true"
               >
                 <path
-                  d="M7 2V12M7 12L3 8M7 12L11 8"
+                  d="M1 13L13 1M13 1H5M13 1V9"
                   fill="none"
                   stroke="#212121"
                   strokeWidth="1.8"
@@ -79,30 +74,25 @@ export default function HeroSection() {
           </Link>
         </div>
 
-        {/* STORYTEQ CARD */}
-        <div
-          className="
-            mt-14 flex justify-end
-            lg:mt-0 lg:absolute lg:right-16 lg:top-1/2 lg:-translate-y-1/2 lg:z-20
-          "
-        >
+        {/* Storyteq card */}
+        <div className="mt-14 flex justify-start lg:justify-end lg:absolute lg:right-16 lg:top-1/2 lg:-translate-y-1/2 lg:z-20">
           <div className="w-[420px] max-w-full">
-            <div className="flex overflow-hidden rounded-lg bg-white shadow-[0_18px_45px_rgba(0,0,0,0.22)]">
+            <div className="flex overflow-hidden rounded-xl bg-white shadow-[0_18px_45px_rgba(0,0,0,0.22)]">
               {/* Text area */}
-              <div className="flex flex-1 flex-col justify-between px-5 py-5">
+              <div className="flex flex-1 flex-col justify-between px-5 py-5 md:px-6 md:py-6">
                 <div>
-                  <p className="mb-1 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[11px] font-semibold uppercase tracking-[0.15em] text-[#7A7A7A]">
+                  <p className="mb-1 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7A7A7A]">
                     Results
                   </p>
-                  <h3 className="mb-3 pr-2 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-bold leading-snug text-[#212121]">
-                    54% increase in pipeline with Demand Generation strategy
+                  <h3 className="mb-3 pr-3 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-bold leading-snug text-[#212121]">
+                    54% increase in pipeline with demand generation strategy
                   </h3>
                 </div>
 
                 <div className="mt-3 flex items-center justify-between gap-3">
                   <div className="relative h-4 w-28">
                     <Image
-                      src="/storyteq-logo.png"
+                      src="https://cdn.prod.website-files.com/67bd789ea8377ea95b1724ad/683979c61bb4c3a3f5a9f665_Storyteq_Logo_Light_Final.svg"
                       alt="Storyteq"
                       fill
                       className="object-contain object-left"
@@ -136,7 +126,7 @@ export default function HeroSection() {
               {/* Right visual */}
               <div className="relative hidden sm:block w-[150px] lg:w-[170px]">
                 <Image
-                  src="/storyteq-case.png"
+                  src="https://cdn.prod.website-files.com/67bd789ea8377ea95b1724ad/6863e1a7d3e379059672b955_3.avif"
                   alt="Campaign creative"
                   fill
                   className="object-cover"
