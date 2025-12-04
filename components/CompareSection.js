@@ -1,6 +1,8 @@
 // components/CompareSection.jsx
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
+
 const TRADITIONAL_ITEMS = [
   'Marketing and sales work in silos',
   'Prioritizes MQLs',
@@ -20,9 +22,49 @@ const MODERN_ITEMS = [
 ];
 
 export default function CompareSection() {
+  const sectionRef = useRef(null);
+  const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const sectionEl = sectionRef.current;
+    if (!sectionEl) return;
+
+    // Disable scroll-trigger animation on mobile/tablet
+    const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+    if (!isDesktop) {
+      setHasEntered(true); // show everything immediately
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasEntered(true);
+          observer.unobserve(sectionEl);
+        }
+      },
+      {
+        threshold: 0.45,
+      }
+    );
+
+    observer.observe(sectionEl);
+    return () => observer.disconnect();
+  }, []);
+
+  // Stagger timing (ms)
+  const STAGGER = 140;
+  const traditionalTotal = TRADITIONAL_ITEMS.length * STAGGER;
+  const modernBaseDelay = traditionalTotal + 200;
+
   return (
-    <section className="relative bg-white py-32 overflow-hidden">
-      {/* Decorative shapes - left and right */}
+    <section
+      ref={sectionRef}
+      className="relative bg-white py-32 overflow-hidden"
+    >
+      {/* Decorative shapes - right */}
       <div className="pointer-events-none absolute right-0 top-20 hidden lg:block">
         <svg width="140" height="200" viewBox="0 0 140 200" fill="none">
           <rect x="0" y="0" width="70" height="70" rx="8" fill="#74F5A1" />
@@ -33,6 +75,7 @@ export default function CompareSection() {
         </svg>
       </div>
 
+      {/* Decorative shapes - left */}
       <div className="pointer-events-none absolute left-0 bottom-32 hidden lg:block">
         <svg width="100" height="160" viewBox="0 0 100 160" fill="none">
           <rect x="0" y="0" width="50" height="50" rx="6" fill="#74F5A1" />
@@ -74,7 +117,16 @@ export default function CompareSection() {
               {TRADITIONAL_ITEMS.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-6 rounded-2xl border border-black/[0.08] bg-[#F9F9F9] px-6 py-6 sm:px-8 sm:py-7 transition-all hover:border-black/[0.12] hover:bg-[#F5F5F5]"
+                  className={[
+                    'flex items-center gap-6 rounded-2xl border border-black/[0.08] bg-[#F9F9F9] px-6 py-6 sm:px-8 sm:py-7',
+                    'transition-all duration-600 ease-out',
+                    hasEntered
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-4',
+                  ].join(' ')}
+                  style={{
+                    transitionDelay: hasEntered ? `${index * STAGGER}ms` : '0ms',
+                  }}
                 >
                   <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-[#111111]">
                     <svg
@@ -111,7 +163,18 @@ export default function CompareSection() {
               {MODERN_ITEMS.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-6 rounded-2xl border border-[#74F5A1]/30 bg-[#74F5A1]/[0.08] px-6 py-6 sm:px-8 sm:py-7 transition-all hover:border-[#74F5A1]/50 hover:bg-[#74F5A1]/[0.12]"
+                  className={[
+                    'flex items-center gap-6 rounded-2xl border border-[#74F5A1]/30 bg-[#74F5A1]/[0.08] px-6 py-6 sm:px-8 sm:py-7',
+                    'transition-all duration-600 ease-out',
+                    hasEntered
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-4',
+                  ].join(' ')}
+                  style={{
+                    transitionDelay: hasEntered
+                      ? `${modernBaseDelay + index * STAGGER}ms`
+                      : '0ms',
+                  }}
                 >
                   <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-[#74F5A1]">
                     <svg

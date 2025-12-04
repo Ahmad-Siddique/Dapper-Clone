@@ -1,9 +1,11 @@
 // components/StatsSection.jsx
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const COMPANY_CARDS = [
   {
@@ -48,8 +50,33 @@ const COMPANY_CARDS = [
   },
 ];
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function StatsSection() {
   const trackRef = useRef(null);
+  const sectionRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from('.stats-card', {
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 20%', // fire when section comes into viewport
+          once: true,
+        },
+        y: 150,
+        opacity: 0,
+        duration: 1.5,
+        ease: 'power3.out',
+        stagger: 0.25,
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
 
   const scrollByCard = (direction) => {
     const track = trackRef.current;
@@ -68,13 +95,15 @@ export default function StatsSection() {
   };
 
   return (
-    <section className="bg-[#EFEFEF] py-16 sm:py-20">
+    <section
+      ref={sectionRef}
+      className="bg-[#EFEFEF] py-16 sm:py-20"
+    >
       <div className="mx-auto max-w-[1800px] px-4 md:px-8">
         {/* TOP ROW: LEFT / RIGHT COLUMNS */}
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)]">
           {/* Left: Results badge + main heading */}
           <div>
-            {/* Green badge like hero */}
             <div className="mb-4 flex items-center gap-3">
               <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
               <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#212121]">
@@ -97,31 +126,57 @@ export default function StatsSection() {
               marketing engine and marketing ROI.
             </p>
 
-            <Link
+           <Link
               href="#cases"
-              className="mt-6 inline-flex items-center gap-2 rounded-[10px] border border-black/10 bg-white px-4 py-2 shadow-sm transition-colors hover:bg-[#F7F7F7]"
+              className="group mt-6 inline-flex items-center gap-2 rounded-[10px] border border-black/10 bg-white px-4 py-2 shadow-sm transition-colors duration-500 ease-out hover:bg-[#F7F7F7]"
             >
               <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[16px] md:text-[18px] font-semibold tracking-tight text-[#212121]">
                 Explore all results
               </span>
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-[4px] bg-[#74F5A1]">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 14 14"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M1 13L13 1M13 1H5M13 1V9"
-                    fill="none"
-                    stroke="#212121"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+
+              {/* Arrow container */}
+              <span className="relative inline-flex h-7 w-7 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
+                {/* Default arrow: slow fly-out to top-right + fade */}
+                <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:opacity-0">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 14 14"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M1 13L13 1M13 1H5M13 1V9"
+                      fill="none"
+                      stroke="#212121"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+
+                {/* New arrow: slow fly-in from bottom-left + fade in */}
+                <span className="absolute inset-0 flex items-center justify-center translate-x-[-10px] translate-y-[10px] opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 14 14"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M1 13L13 1M13 1H5M13 1V9"
+                      fill="none"
+                      stroke="#74F5A1"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
               </span>
             </Link>
+
+
           </div>
         </div>
 
@@ -186,7 +241,7 @@ export default function StatsSection() {
                 <article
                   key={card.id}
                   data-card
-                  className="snap-start shrink-0 w-[90vw] sm:w-[380px] md:w-[420px] lg:w-[520px] flex flex-col rounded-lg border border-black/[0.06] bg-white shadow-[0_10px_35px_rgba(0,0,0,0.08)]"
+                  className="stats-card snap-start shrink-0 w-[90vw] sm:w-[380px] md:w-[420px] lg:w-[520px] flex flex-col rounded-lg border border-black/[0.06] bg-white shadow-[0_10px_35px_rgba(0,0,0,0.08)]"
                 >
                   {/* Logo / name area */}
                   <div className="relative h-[140px] sm:h-[170px] md:h-[190px] lg:h-[220px] px-6 pt-6">
@@ -256,7 +311,7 @@ export default function StatsSection() {
               <button
                 type="button"
                 onClick={() => scrollByCard('next')}
-                className="flex h-9 w-9 items-center justify-center rounded-[6px] bg-[#111111] text-white transition hover:bg-black"
+                className="flex h-9 w-9 items-center justify-center rounded-[6px] bg-[#111111] text-white transition hover:bg:black"
                 aria-label="Next results"
               >
                 <svg

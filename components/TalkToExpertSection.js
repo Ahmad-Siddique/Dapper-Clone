@@ -1,12 +1,69 @@
 // components/TalkToExpertSection.jsx
 'use client';
 
+import { useLayoutEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function TalkToExpertSection() {
+  const sectionRef = useRef(null);
+  const leftTextRef = useRef(null);
+  const rightTextRef = useRef(null);
+
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const section = sectionRef.current;
+    const leftText = leftTextRef.current;
+    const rightText = rightTextRef.current;
+    if (!section || !leftText || !rightText) return;
+
+    const ctx = gsap.context(() => {
+      // Left text: move left as user scrolls down through the section
+      gsap.fromTo(
+        leftText,
+        { x: 0 },
+        {
+          x: -200, // tweak distance as you like
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',   // when section enters viewport
+            end: 'bottom top',     // until section leaves viewport
+            scrub: true,           // ties motion to scroll
+          },
+        }
+      );
+
+      // Right text: move right as user scrolls down through the section
+      gsap.fromTo(
+        rightText,
+        { x: 0 },
+        {
+          x: 200,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+          },
+        }
+      );
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative bg-[#2A2A2A] py-32 overflow-hidden">
+    <section
+      ref={sectionRef}
+      className="relative bg-[#2A2A2A] py-32 overflow-hidden"
+    >
       {/* Subtle background pattern */}
       <div className="pointer-events-none absolute inset-0 opacity-30">
         <svg
@@ -68,7 +125,10 @@ export default function TalkToExpertSection() {
         {/* Main content centered */}
         <div className="flex flex-col items-center justify-center gap-12 lg:flex-row lg:gap-16 xl:gap-24">
           {/* Left text: "Talk to" */}
-          <div className="text-center lg:text-right">
+          <div
+            ref={leftTextRef}
+            className="text-center lg:text-right will-change-transform"
+          >
             <h2 className="font-[Helvetica Now Text,Arial,sans-serif] text-[56px] sm:text-[68px] md:text-[80px] lg:text-[96px] xl:text-[110px] font-bold leading-[1.05] tracking-[-0.02em] text-white">
               Talk to
             </h2>
@@ -142,7 +202,10 @@ export default function TalkToExpertSection() {
           </div>
 
           {/* Right text: "an expert" */}
-          <div className="text-center lg:text-left">
+          <div
+            ref={rightTextRef}
+            className="text-center lg:text-left will-change-transform"
+          >
             <h2 className="font-[Helvetica Now Text,Arial,sans-serif] text-[56px] sm:text-[68px] md:text-[80px] lg:text-[96px] xl:text-[110px] font-normal italic leading-[1.05] tracking-[-0.02em] text-white">
               an expert
             </h2>
