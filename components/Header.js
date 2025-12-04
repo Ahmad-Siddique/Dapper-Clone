@@ -1,4 +1,4 @@
-// components/Header.tsx
+// components/Header.jsx
 import Link from 'next/link';
 
 const navItems = [
@@ -12,32 +12,31 @@ const navItems = [
 
 export default function Header() {
   return (
-    <header className="fixed top-6 md:top-8 left-0 right-0 z-50">
+    <header className="fixed top-6 md:top-8 left-0 right-0 z-50 antialiased">
       {/* Center the header bar */}
-      <div className="flex justify-center">
+      <div className="flex justify-center px-2 md:px-4">
         {/* White bar */}
-        <div className="flex items-center gap-8 lg:gap-10 bg-white rounded-lg shadow-sm px-6 md:px-8 lg:px-10 py-3 md:py-4">
+        <div className="flex w-full max-w-[1180px] items-center gap-8 lg:gap-10 rounded-[14px] bg-white px-7 md:px-9 lg:px-12 py-[14px] md:py-[16px] shadow-[0_10px_30px_rgba(0,0,0,0.08)]">
           {/* Logo left */}
-          <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-            {/* Placeholder mark – replace with real logo if you have it */}
-            <div className="w-8 h-8 flex items-center justify-center">
-              <svg viewBox="0 0 32 32" className="w-7 h-7" aria-hidden="true">
-                <path d="M7 18C7 11 13 7 19 7V18H7Z" fill="#212121" />
-                <path d="M19 18C25 18 29 24 29 28H19V18Z" fill="#212121" />
+          <Link href="/" className="flex flex-shrink-0 items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center">
+              <svg viewBox="0 0 32 32" className="h-8 w-8" aria-hidden="true">
+                <path d="M7 18C7 11 13 7 19 7V18H7Z" fill="#111111" />
+                <path d="M19 18C25 18 29 24 29 28H19V18Z" fill="#111111" />
               </svg>
             </div>
-            <span className="font-bold text-[22px] md:text-[24px] text-[#212121] tracking-tight leading-none font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
+            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[24px] md:text-[26px] font-bold leading-none tracking-tight text-text-black">
               Dapper
             </span>
           </Link>
 
           {/* Menu middle */}
-          <nav className="flex items-center gap-6 lg:gap-8">
+          <nav className="flex flex-1 items-center justify-center gap-7 lg:gap-9">
             {navItems.map((item) => (
               <button
                 key={item.label}
                 type="button"
-                className="flex items-center gap-1 font-bold text-[15px] lg:text-[16px] text-[#212121] tracking-tight hover:text-[#74F5A1] transition-colors font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]"
+                className="flex items-center gap-1 font-[Helvetica_Now_Text,Arial,sans-serif] text-[18px] lg:text-[19px]  tracking-tight text-black transition-colors hover:text-[#74F5A1]"
               >
                 <span>{item.label}</span>
                 {item.hasDropdown && (
@@ -64,12 +63,12 @@ export default function Header() {
           {/* Right: Talk to us */}
           <Link
             href="#talk"
-            className="flex items-center gap-3 flex-shrink-0"
+            className="flex flex-shrink-0 items-center gap-3"
           >
-            <span className="font-bold text-[15px] lg:text-[16px] text-[#212121] tracking-tight font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
+            <span className="font-[Helvetica_Now_Text,Arial,sans-serif] text-[17px] lg:text-[18px]  tracking-tight text-black">
               Talk to us
             </span>
-            <span className="w-9 h-9 bg-[#74F5A1] rounded-[4px] flex items-center justify-center">
+            <span className="flex h-9 w-9 items-center justify-center rounded-[4px] bg-[#74F5A1]">
               <svg
                 width="14"
                 height="14"
@@ -79,7 +78,7 @@ export default function Header() {
                 <path
                   d="M1 13L13 1M13 1H5M13 1V9"
                   fill="none"
-                  stroke="#212121"
+                  stroke="#111111"
                   strokeWidth="1.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"

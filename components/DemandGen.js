@@ -52,7 +52,6 @@ export default function DemandSection() {
         <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.7fr)]">
           {/* LEFT: phone image that scrolls then sticks and stops at section bottom */}
           <div className="relative">
-            {/* This sticky wrapper scrolls until the bottom of this grid row (i.e. after second card) */}
             <div className="lg:sticky lg:top-28">
               <div className="relative w-full max-w-[360px] lg:max-w-[380px] xl:max-w-[420px]">
                 <div className="relative overflow-hidden rounded-[32px] border border-black/[0.06] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.20)]">
@@ -83,32 +82,32 @@ export default function DemandSection() {
               >
                 {/* Heading */}
                 <header className="mb-12">
-                  <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[38px] sm:text-[44px] md:text-[50px] font-bold tracking-tight text-[#111111]">
+                  <h2 className="font-[Helvetica Now Text,Arial,sans-serif] text-[38px] sm:text-[44px] md:text-[85px] font-bold tracking-tight text-[#111111]">
                     {block.label}
                   </h2>
-                  <p className="mt-4 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[24px] sm:text-[26px] md:text-[28px] italic text-[#111111]">
+                  <p className="mt-4 font-ivy-presto italic text-[0.94em] tracking-[0.03em] font-regular text-[24px] sm:text-[26px] md:text-[37px] italic text-[#111111]">
                     {block.tagline}
                   </p>
                 </header>
 
                 {/* Body copy */}
-                <div className="max-w-[620px] space-y-5 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[18px] sm:text-[19px] md:text-[20px] leading-relaxed text-[#212121]">
+                <div className="max-w-[800px] space-y-5 font-[Helvetica Now Text,Arial,sans-serif] text-[18px] sm:text-[19px] md:text-[23px] leading-relaxed text-[#212121]">
                   <p className="font-semibold">{block.intro}</p>
                   {block.body.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
+                    <p className="text-gray" key={paragraph}>{paragraph}</p>
                   ))}
                 </div>
 
-                {/* Results + CTA pinned to bottom-right */}
+                {/* Results + CTA */}
                 <div className="mt-14">
-                  <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] font-semibold uppercase tracking-[0.18em] text-[#777777]">
+                  <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[13px] font-semibold uppercase tracking-[0.18em] text-[#777777]">
                     The result?
                   </p>
                   <ul className="mt-6 space-y-4">
                     {block.results.map((item) => (
                       <li
                         key={item}
-                        className="flex items-start gap-3 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[17px] sm:text-[18px] text-[#212121]"
+                        className="flex items-start gap-3 font-[Helvetica Now Text,Arial,sans-serif] text-[17px] sm:text-[18px] text-[#212121]"
                       >
                         <span className="mt-[3px] inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md bg-[#74F5A1]" />
                         <span>{item}</span>
@@ -119,7 +118,7 @@ export default function DemandSection() {
                   <div className="mt-10 flex justify-end">
                     <Link
                       href={block.href}
-                      className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-6 py-3 text-[15px] sm:text-[16px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] font-bold tracking-tight text-[#111111] shadow-sm transition-colors hover:bg-[#F7F7F7]"
+                      className="inline-flex items-center gap-2 rounded-[10px] border border-black/10 bg-white px-6 py-3 text-[15px] sm:text-[16px] font-[Helvetica Now Text,Arial,sans-serif] font-semibold tracking-tight text-[#111111] shadow-sm transition-colors hover:bg-[#F7F7F7]"
                     >
                       <span>Discover more</span>
                       <span className="inline-flex h-7 w-7 items-center justify-center rounded-[4px] bg-[#74F5A1]">

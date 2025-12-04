@@ -69,14 +69,14 @@ export default function TalkToExpertSection() {
         <div className="flex flex-col items-center justify-center gap-12 lg:flex-row lg:gap-16 xl:gap-24">
           {/* Left text: "Talk to" */}
           <div className="text-center lg:text-right">
-            <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[56px] sm:text-[68px] md:text-[80px] lg:text-[96px] xl:text-[110px] font-bold leading-[1.05] tracking-[-0.02em] text-white">
+            <h2 className="font-[Helvetica Now Text,Arial,sans-serif] text-[56px] sm:text-[68px] md:text-[80px] lg:text-[96px] xl:text-[110px] font-bold leading-[1.05] tracking-[-0.02em] text-white">
               Talk to
             </h2>
           </div>
 
           {/* Center: Stacked phone cards with expert images */}
           <div className="relative flex-shrink-0">
-            {/* Back phone frame - slightly offset and lower opacity */}
+            {/* Back phone frame */}
             <div className="absolute -right-8 -top-6 z-0 h-[500px] w-[290px] sm:h-[540px] sm:w-[320px] rounded-[44px] border-[4px] border-white/20 bg-[#1A1A1A] p-3 opacity-60 shadow-[0_25px_70px_rgba(0,0,0,0.5)]">
               <div className="relative h-full w-full overflow-hidden rounded-[36px] bg-gradient-to-b from-[#3A3A3A] to-[#2A2A2A]">
                 <div className="relative h-full w-full">
@@ -92,9 +92,8 @@ export default function TalkToExpertSection() {
               <div className="absolute left-1/2 top-5 z-20 h-6 w-24 -translate-x-1/2 rounded-full bg-[#1A1A1A]" />
             </div>
 
-            {/* Front phone frame - main focus */}
+            {/* Front phone frame */}
             <div className="relative z-10 h-[500px] w-[290px] sm:h-[540px] sm:w-[320px] rounded-[44px] border-[4px] border-white/30 bg-[#1A1A1A] p-3 shadow-[0_35px_90px_rgba(0,0,0,0.6)]">
-              {/* Inner content area */}
               <div className="relative h-full w-full overflow-hidden rounded-[36px] bg-gradient-to-b from-[#3A3A3A] to-[#2A2A2A]">
                 {/* Expert image */}
                 <div className="relative h-full w-full">
@@ -144,7 +143,7 @@ export default function TalkToExpertSection() {
 
           {/* Right text: "an expert" */}
           <div className="text-center lg:text-left">
-            <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[56px] sm:text-[68px] md:text-[80px] lg:text-[96px] xl:text-[110px] font-normal italic leading-[1.05] tracking-[-0.02em] text-white">
+            <h2 className="font-[Helvetica Now Text,Arial,sans-serif] text-[56px] sm:text-[68px] md:text-[80px] lg:text-[96px] xl:text-[110px] font-normal italic leading-[1.05] tracking-[-0.02em] text-white">
               an expert
             </h2>
           </div>

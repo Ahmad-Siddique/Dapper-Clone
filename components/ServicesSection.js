@@ -28,26 +28,29 @@ export default function ServicesSection() {
       <div className="mx-auto max-w-[1800px] px-4 md:px-8">
         {/* TOP ROW: left label, right heading+paragraph */}
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)]">
-          {/* LEFT: Our services */}
+          {/* LEFT: Our services badge */}
           <div className="flex items-center gap-3">
             <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[24px] font-semibold text-[#111111]">
+            <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#212121]">
               Our services
             </span>
           </div>
 
           {/* RIGHT: heading + copy */}
           <div className="max-w-[1100px]">
-            <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[1.02] tracking-tight text-[#111111]">
+            <h2 className="font-[Helvetica Now Text,Arial,sans-serif] leading-[1.02] tracking-tight text-[#111111]">
               <span className="block text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] font-bold">
                 Level up your marketing,
               </span>
               <span className="block text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] font-bold">
-                improve <span className="italic font-normal">marketing ROI</span>
+                improve{' '}
+                <span className="font-ivy-presto italic font-normal">
+                  marketing ROI
+                </span>
               </span>
             </h2>
 
-            <p className="mt-6 max-w-[640px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[17px] md:text-[18px] lg:text-[19px] font-semibold leading-relaxed text-[#212121]">
+            <p className="mt-6 max-w-[640px] font-[Helvetica Now Text,Arial,sans-serif] text-[17px] md:text-[18px] lg:text-[19px] font-semibold leading-relaxed text-[#212121]">
               Better marketing leads to better marketing ROI. At Dapper, we help
               you level up your complete marketing engine. From strategy to
               content, advertising, and measurement.
@@ -92,13 +95,13 @@ export default function ServicesSection() {
                     .join(' ')}
                 >
                   {/* Title at top */}
-                  <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] sm:text-[22px] md:text-[24px] font-bold tracking-tight text-[#111111]">
+                  <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] sm:text-[22px] md:text-[32px] font-semibold tracking-tight text-[#111111]">
                     {service.title}
                   </h3>
 
                   {/* Bottom row: hover description + icon */}
                   <div className="mt-4 flex items-end justify-between gap-4">
-                    <p className="max-w-[360px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[14px] sm:text-[15px] font-semibold leading-snug text-[#444444] opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0">
+                    <p className="max-w-[360px] font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[15px] font-semibold leading-snug text-[#444444] opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0">
                       {service.description}
                     </p>
 

@@ -21,7 +21,7 @@ const MainPage = () => {
         <StatsSection />
         <ServicesSection />
         <DemandSection />
-        <DemandTeamSection />
+        {/* <DemandTeamSection /> */}
         <ResultsSection />
         <CompareSection />
         <TalkToExpertSection />

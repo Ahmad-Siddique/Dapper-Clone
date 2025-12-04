@@ -1,7 +1,7 @@
 // components/ResultsSection.jsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -60,9 +60,24 @@ const TESTIMONIALS = [
 
 export default function ResultsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // Calculate max index based on showing 2 cards at a time
-  const maxIndex = Math.max(0, TESTIMONIALS.length - 2);
+  const [cardsPerView, setCardsPerView] = useState(1);
+
+  // Responsive: 1 card on small screens, 2 on lg+
+  useEffect(() => {
+    const updateCardsPerView = () => {
+      if (window.innerWidth >= 1024) {
+        setCardsPerView(2);
+      } else {
+        setCardsPerView(1);
+      }
+    };
+
+    updateCardsPerView();
+    window.addEventListener('resize', updateCardsPerView);
+    return () => window.removeEventListener('resize', updateCardsPerView);
+  }, []);
+
+  const maxIndex = Math.max(0, TESTIMONIALS.length - cardsPerView);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
@@ -78,156 +93,157 @@ export default function ResultsSection() {
         {/* Label above everything */}
         <div className="mb-6 flex items-center gap-3">
           <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-          <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold text-[#111111]">
+          <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#111111]">
             Results
           </span>
         </div>
 
-        {/* Heading left, copy/CTA/nav right */}
-        <div className="mb-16 grid gap-10 lg:grid-cols-[1.2fr_1fr]">
+        {/* Heading left, copy/CTA right */}
+        <div className="mb-10 grid gap-10 lg:grid-cols-[1.2fr_1fr]">
           {/* Left: heading only */}
           <div>
-            <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[1.02] tracking-tight text-[#111111]">
-              <span className="block text-[44px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[96px] font-bold">
+            <h2 className="font-[Helvetica Now Text,Arial,sans-serif] leading-[1.02] tracking-tight text-[#111111]">
+              <span className="block text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] font-bold">
                 Driven by a
               </span>
-              <span className="block text-[44px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[96px] font-bold">
-                <span className="italic font-normal">performance</span> mindset
+              <span className="block text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] font-bold">
+                <span className="font-ivy-presto font-normal">performance</span> mindset
               </span>
             </h2>
           </div>
 
-          {/* Right: copy + CTA + nav */}
-          <div className="flex flex-col gap-6 lg:max-w-[520px]">
-            <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[17px] sm:text-[18px] md:text-[19px] font-semibold leading-relaxed text-[#212121]">
-              You don't just hire experts—you hire people with a drive to
+          {/* Right: copy + CTA */}
+          <div className="flex flex-col gap-6 lg:max-w-[600px]">
+            <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[17px] sm:text-[18px] md:text-[23px] font-semibold leading-relaxed text-[#212121]">
+              You don&apos;t just hire experts - you hire people with a drive to
               deliver results. The Dapper team thrives on impact. When you work
-              with us, you'll work with a team as ambitious about growth as you
-              are.
+              with us, you&apos;ll work with a team as ambitious about growth as
+              you are.
             </p>
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <Link
-                href="/cases"
-                className="inline-flex items-center gap-2 self-start rounded-full border border-black/10 bg-white px-5 py-3 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[14px] sm:text-[15px] font-bold tracking-tight text-[#111111] shadow-sm transition-colors hover:bg-[#F7F7F7]"
-              >
-                <span>Explore our cases</span>
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-[4px] bg-[#74F5A1]">
-                  <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
-                    <path
-                      d="M1 13L13 1M13 1H5M13 1V9"
-                      fill="none"
-                      stroke="#212121"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </Link>
-
-              {/* Carousel navigation - now on the right side, more prominent */}
-              <div className="flex gap-3 self-start sm:self-auto">
-                <button
-                  onClick={handlePrev}
-                  aria-label="Previous testimonial"
-                  className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#111111] text-white transition-all hover:bg-[#222222] hover:scale-105 active:scale-95"
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 14 14"
+            <Link
+              href="/cases"
+              className="inline-flex items-center gap-2 self-start rounded-[10px] border border-black/10 bg-white px-5 py-3 font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[18px] font-semibold tracking-tight text-[#111111] shadow-sm transition-colors hover:bg-[#F7F7F7]"
+            >
+              <span>Explore our cases</span>
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-[4px] bg-[#74F5A1]">
+                <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
+                  <path
+                    d="M1 13L13 1M13 1H5M13 1V9"
                     fill="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M11 1L4 7L11 13"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                <button
-                  onClick={handleNext}
-                  aria-label="Next testimonial"
-                  className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#111111] text-white transition-all hover:bg-[#222222] hover:scale-105 active:scale-95"
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 14 14"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M3 1L10 7L3 13"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
+                    stroke="#212121"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </Link>
           </div>
         </div>
 
-        {/* Testimonial cards with proper sliding */}
-        <div className="relative overflow-hidden">
-          <div
-            className="flex gap-6 transition-transform duration-700 ease-in-out"
-            style={{
-              transform: `translateX(calc(-${currentIndex * 50}% - ${currentIndex * 12}px))`,
-            }}
-          >
-            {TESTIMONIALS.map((testimonial) => (
-              <div
-                key={testimonial.id}
-                className="w-[calc(50%-12px)] flex-shrink-0"
+        {/* Slider + nav (nav near slider on the right) */}
+        <div className="relative mt-6">
+          {/* Nav on the right, above slider on sm+ */}
+          <div className="mb-4 flex justify-end gap-2">
+            <button
+              onClick={handlePrev}
+              aria-label="Previous testimonial"
+              className="flex h-9 w-9 items-center justify-center rounded-[6px] bg-[#D3D3D3] text-white transition hover:bg-[#BBBBBB]"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
               >
-                <article className="relative flex h-full flex-col justify-between rounded-2xl border border-black/[0.06] bg-white px-10 py-14 shadow-[0_14px_40px_rgba(0,0,0,0.10)] min-h-[420px] md:min-h-[480px]">
-                  {/* Quote with left border accent */}
-                  <blockquote className="border-l-4 border-[#111111] pl-8 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] font-medium leading-snug text-[#111111]">
-                    " {testimonial.quote} "
-                  </blockquote>
+                <path
+                  d="M10 4L6 8L10 12"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            <button
+              onClick={handleNext}
+              aria-label="Next testimonial"
+              className="flex h-9 w-9 items-center justify-center rounded-[6px] bg-[#111111] text-white transition hover:bg-black"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M6 4L10 8L6 12"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
 
-                  {/* Author + company */}
-                  <div className="mt-12 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 min-w-0">
-                      <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-gray-200">
+          {/* Testimonial cards */}
+          <div className="overflow-hidden">
+            <div
+              className="flex -mx-3 transition-transform duration-700 ease-in-out"
+              style={{
+                transform: `translateX(-${(100 / cardsPerView) * currentIndex}%)`,
+              }}
+            >
+              {TESTIMONIALS.map((testimonial) => (
+                <div
+                  key={testimonial.id}
+                  className="basis-full px-3 flex-shrink-0 lg:basis-1/2"
+                >
+                  <article className="relative flex h-full min-h-[380px] flex-col justify-between rounded-2xl border border-black/[0.06] bg-white px-6 py-10 shadow-[0_14px_40px_rgba(0,0,0,0.10)] sm:px-8 sm:py-12 md:min-h-[440px] lg:px-10 lg:py-14">
+                    {/* Quote */}
+                    <blockquote className="border-l-4 border-[#111111] pl-5 sm:pl-7 font-[Helvetica Now Text,Arial,sans-serif] text-[20px] sm:text-[24px] md:text-[28px] lg:text-[35px] font-regular leading-snug text-[#111111]">
+                      “{testimonial.quote}”
+                    </blockquote>
+
+                    {/* Author + company */}
+                    <div className="mt-10 flex items-center justify-between gap-4">
+                      <div className="flex min-w-0 items-center gap-4">
+                        <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full bg-gray-200 sm:h-16 sm:w-16">
+                          <Image
+                            src={testimonial.avatar}
+                            alt={testimonial.author}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[15px] sm:text-[16px] font-bold text-[#111111] truncate">
+                            {testimonial.author}
+                          </p>
+                          <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[13px] sm:text-[14px] font-medium text-[#444444] truncate">
+                            {testimonial.role} – {testimonial.company}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Company logo */}
+                      <div className="relative h-8 w-24 flex-shrink-0 sm:h-10 sm:w-32">
                         <Image
-                          src={testimonial.avatar}
-                          alt={testimonial.author}
+                          src={testimonial.logo}
+                          alt={`${testimonial.company} logo`}
                           fill
-                          className="object-cover"
+                          className="object-contain object-right"
                         />
                       </div>
-                      <div className="min-w-0">
-                        <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[16px] font-bold text-[#111111] truncate">
-                          {testimonial.author}
-                        </p>
-                        <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[14px] font-medium text-[#444444] truncate">
-                          {testimonial.role} - {testimonial.company}
-                        </p>
-                      </div>
                     </div>
-
-                    {/* Company logo */}
-                    <div className="relative h-10 w-32 flex-shrink-0">
-                      <Image
-                        src={testimonial.logo}
-                        alt={`${testimonial.company} logo`}
-                        fill
-                        className="object-contain object-right"
-                      />
-                    </div>
-                  </div>
-                </article>
-              </div>
-            ))}
+                  </article>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

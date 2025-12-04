@@ -12,7 +12,7 @@
 
   /* Force Helvetica font stack */
   .font-helvetica {
-    font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Helvetica Now Text', Arial, sans-serif;
   }
 }
 
@@ -23,4 +23,73 @@
 }
 .animate-slideDown {
   animation: slideDown 0.2s ease-out forwards;
+}
+
+/* === SMOOTH TEXT LIKE DAPPER.CO === */
+@font-face {
+  font-family: 'Helvetica Now Text';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/HelveticaNowText-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Now Text';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/HelveticaNowText-Medium.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Now Text';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/HelveticaNowText-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Helvetica Now Display';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/HelveticaNowDisplay-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+
+
+@font-face {
+  font-family: 'Ivy Presto Headline';
+  font-style: normal;
+  font-weight: 300; /* or 700 if this is a bold cut */
+  src: url('/fonts/fonnts.com-Ivy-Presto-Headline-Semi-Light.otf') format('opentype');
+  font-display: swap;
+}
+
+.font-ivy-presto {
+  font-family: 'Ivy Presto Headline', serif !important;
+  font-weight: 300        /* try 300 or even 200 */
+ 
+}
+
+
+/* Force maximum text crispness */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* Extra smooth on macOS Chrome/Edge */
+html {
+  -webkit-text-stroke: 0.45px; /* this is the magic sauce Dapper uses */
+}
+
+/* Optional: even smoother on high-DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  * {
+    -webkit-font-smoothing: antialiased;
+  }
 }
