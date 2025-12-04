@@ -68,7 +68,7 @@ export default function StatsSection() {
   };
 
   return (
-    <section className="bg-[#EFEFEF] py-20">
+    <section className="bg-[#EFEFEF] py-16 sm:py-20">
       <div className="mx-auto max-w-[1800px] px-4 md:px-8">
         {/* TOP ROW: LEFT / RIGHT COLUMNS */}
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)]">
@@ -82,7 +82,7 @@ export default function StatsSection() {
               </p>
             </div>
 
-            <h2 className="font-[Helvetica Now Text,Arial,sans-serif] text-[32px] sm:text-[38px] md:text-[46px] lg:text-[80px] font-bold leading-[1.05] tracking-tight text-[#111111]">
+            <h2 className="font-[Helvetica Now Text,Arial,sans-serif] text-[28px] sm:text-[34px] md:text-[42px] lg:text-[80px] font-bold leading-[1.05] tracking-tight text-[#111111]">
               100+ B2B companies trusted us to improve their{' '}
               <span className="font-ivy-presto italic font-normal">
                 marketing
@@ -91,8 +91,8 @@ export default function StatsSection() {
           </div>
 
           {/* Right: description + Explore button */}
-          <div className="mt-20 max-w-[520px] lg:ml-auto">
-            <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[17px] md:text-[18px] lg:text-[19px] font-semibold leading-relaxed text-[#212121]">
+          <div className="max-w-[520px] lg:ml-auto lg:mt-10">
+            <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[16px] sm:text-[17px] md:text-[18px] lg:text-[19px] font-semibold leading-relaxed text-[#212121]">
               More than 100 B2B companies worldwide trusted us to improve their
               marketing engine and marketing ROI.
             </p>
@@ -101,7 +101,7 @@ export default function StatsSection() {
               href="#cases"
               className="mt-6 inline-flex items-center gap-2 rounded-[10px] border border-black/10 bg-white px-4 py-2 shadow-sm transition-colors hover:bg-[#F7F7F7]"
             >
-              <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[18px] md:text-[18px] font-semibold tracking-tight text-[#212121]">
+              <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[16px] md:text-[18px] font-semibold tracking-tight text-[#212121]">
                 Explore all results
               </span>
               <span className="inline-flex h-7 w-7 items-center justify-center rounded-[4px] bg-[#74F5A1]">
@@ -126,11 +126,10 @@ export default function StatsSection() {
         </div>
 
         {/* SLIDER ROW */}
-        <div className="mt-12 border-t border-black/10 pt-10">
+        <div className="mt-10 border-t border-black/10 pt-10">
           <div className="relative">
-            {/* Slider buttons (desktop) */}
+            {/* Slider buttons (desktop, floated on top-right) */}
             <div className="pointer-events-none absolute -top-12 right-0 hidden gap-2 lg:flex">
-              {/* Prev: grey square with white arrow */}
               <button
                 type="button"
                 onClick={() => scrollByCard('prev')}
@@ -154,7 +153,6 @@ export default function StatsSection() {
                 </svg>
               </button>
 
-              {/* Next: black square with white arrow */}
               <button
                 type="button"
                 onClick={() => scrollByCard('next')}
@@ -188,10 +186,10 @@ export default function StatsSection() {
                 <article
                   key={card.id}
                   data-card
-                  className="snap-start shrink-0 w-[85vw] sm:w-[420px] lg:w-[520px] flex flex-col rounded-lg border border-black/[0.06] bg-white shadow-[0_10px_35px_rgba(0,0,0,0.08)]"
+                  className="snap-start shrink-0 w-[90vw] sm:w-[380px] md:w-[420px] lg:w-[520px] flex flex-col rounded-lg border border-black/[0.06] bg-white shadow-[0_10px_35px_rgba(0,0,0,0.08)]"
                 >
                   {/* Logo / name area */}
-                  <div className="relative h-[150px] sm:h-[180px] md:h-[200px] lg:h-[220px] px-6 pt-6">
+                  <div className="relative h-[140px] sm:h-[170px] md:h-[190px] lg:h-[220px] px-6 pt-6">
                     <div className="relative flex h-8 sm:h-9 md:h-10 w-auto items-center">
                       {card.logoSrc ? (
                         <Image
@@ -217,10 +215,10 @@ export default function StatsSection() {
                           key={metric.value + metric.label}
                           className="flex-1 rounded-md bg-[#F4F4F4] px-5 py-4"
                         >
-                          <p className="font-[Helvetica Now Display,Arial,sans-serif] text-[28px] sm:text-[35px] font-semibold tracking-tight text-[#111111]">
+                          <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[22px] sm:text-[26px] md:text-[28px] font-bold tracking-tight text-[#111111]">
                             {metric.value}
                           </p>
-                          <p className="mt-1 max-w-[220px] font-[Helvetica Now Display,Arial,sans-serif] text-[13px] sm:text-[16px] font-semibold leading-snug text-[#444444]">
+                          <p className="mt-1 max-w-[220px] font-[Helvetica Now Text,Arial,sans-serif] text-[13px] sm:text-[14px] md:text-[15px] font-semibold leading-snug text-[#444444]">
                             {metric.label}
                           </p>
                         </div>
@@ -229,6 +227,54 @@ export default function StatsSection() {
                   </div>
                 </article>
               ))}
+            </div>
+
+            {/* Mobile / tablet slider buttons under track */}
+            <div className="mt-4 flex justify-center gap-3 lg:hidden">
+              <button
+                type="button"
+                onClick={() => scrollByCard('prev')}
+                className="flex h-9 w-9 items-center justify-center rounded-[6px] bg-[#D3D3D3] text-white transition hover:bg-[#BBBBBB]"
+                aria-label="Previous results"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M9.5 4L5.5 8L9.5 12"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollByCard('next')}
+                className="flex h-9 w-9 items-center justify-center rounded-[6px] bg-[#111111] text-white transition hover:bg-black"
+                aria-label="Next results"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 16 16"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M6.5 4L10.5 8L6.5 12"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
