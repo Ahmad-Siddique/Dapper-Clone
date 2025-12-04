@@ -12,19 +12,19 @@ export default function Footer() {
         <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-7 border-b border-white/10 pb-14">
           {/* Contact Tycho */}
           <div className="space-y-3">
-            <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] md:text-[22px] font-bold tracking-tight">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
               Contact Tycho
             </h3>
             <div className="space-y-1.5">
               <a
                 href="mailto:hello@dapper.agency"
-                className="block font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold text-[#D6D6D6] hover:text-[#74F5A1] transition-colors"
+                className="block font-[Helvetica Now Text,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold text-[#D6D6D6] hover:text-[#74F5A1] transition-colors"
               >
                 hello@dapper.agency
               </a>
               <a
                 href="tel:+31103076707"
-                className="block font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold text-[#D6D6D6] hover:text-[#74F5A1] transition-colors"
+                className="block font-[Helvetica Now Text,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold text-[#D6D6D6] hover:text-[#74F5A1] transition-colors"
               >
                 +31 10 307 6707
               </a>
@@ -33,10 +33,10 @@ export default function Footer() {
 
           {/* Dapper Rotterdam */}
           <div className="space-y-3">
-            <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] md:text-[22px] font-bold tracking-tight">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
               Dapper Rotterdam
             </h3>
-            <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold leading-relaxed text-[#D6D6D6]">
+            <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold leading-relaxed text-[#D6D6D6]">
               Weena 70, 13th floor
               <br />
               3012 CM Rotterdam
@@ -45,10 +45,10 @@ export default function Footer() {
 
           {/* Dapper Lisbon */}
           <div className="space-y-3">
-            <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] md:text-[22px] font-bold tracking-tight">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
               Dapper Lisbon
             </h3>
-            <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold leading-relaxed text-[#D6D6D6]">
+            <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold leading-relaxed text-[#D6D6D6]">
               Av. Duque de Loulé 12,
               <br />
               1050-093 Lisbon
@@ -57,7 +57,7 @@ export default function Footer() {
 
           {/* Services */}
           <div className="space-y-3">
-            <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] md:text-[22px] font-bold tracking-tight">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
               Services
             </h3>
             <nav className="space-y-1.5">
@@ -84,19 +84,23 @@ export default function Footer() {
 
           {/* Expertise */}
           <div className="space-y-3">
-            <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] md:text-[22px] font-bold tracking-tight">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
               Expertise
             </h3>
             <nav className="space-y-1.5">
               <FooterLink href="/expertise/b2b-saas">B2B SaaS</FooterLink>
-              <FooterLink href="/expertise/b2b-service">B2B Service</FooterLink>
-              <FooterLink href="/expertise/b2b-hardware">B2B Hardware</FooterLink>
+              <FooterLink href="/expertise/b2b-service">
+                B2B Service
+              </FooterLink>
+              <FooterLink href="/expertise/b2b-hardware">
+                B2B Hardware
+              </FooterLink>
             </nav>
           </div>
 
           {/* Resources */}
           <div className="space-y-3">
-            <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] md:text-[22px] font-bold tracking-tight">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
               Resources
             </h3>
             <nav className="space-y-1.5">
@@ -108,7 +112,7 @@ export default function Footer() {
 
           {/* Company */}
           <div className="space-y-3">
-            <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] md:text-[22px] font-bold tracking-tight">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
               Company
             </h3>
             <nav className="space-y-1.5">
@@ -136,7 +140,7 @@ export default function Footer() {
               </svg>
             </div>
             {/* Wordmark */}
-            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[46px] sm:text-[52px] md:text-[60px] font-extrabold tracking-tight">
+            <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[46px] sm:text-[52px] md:text-[60px] font-extrabold tracking-tight">
               Dapper
             </span>
           </div>
@@ -146,25 +150,25 @@ export default function Footer() {
         <div className="flex flex-col gap-6 py-6 text-[#D6D6D6] md:flex-row md:items-center md:justify-between">
           {/* Left: copyright + legal */}
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] font-semibold">
+            <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[15px] font-semibold">
               © 2025 Dapper
             </span>
             <Link
               href="/privacy-policy"
-              className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] font-semibold hover:text-[#74F5A1] transition-colors"
+              className="font-[Helvetica Now Text,Arial,sans-serif] text-[15px] font-semibold hover:text-[#74F5A1] transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms-and-conditions"
-              className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] font-semibold hover:text-[#74F5A1] transition-colors"
+              className="font-[Helvetica Now Text,Arial,sans-serif] text-[15px] font-semibold hover:text-[#74F5A1] transition-colors"
             >
               Terms and Conditions
             </Link>
           </div>
 
           {/* Middle: credits */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[15px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] font-semibold">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[15px] font-[Helvetica Now Text,Arial,sans-serif] font-semibold">
             <span>Design by Nasick</span>
             <span>Code by Ahmad</span>
           </div>
@@ -192,7 +196,7 @@ function FooterLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="block font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold text-[#D6D6D6] hover:text-[#74F5A1] transition-colors"
+      className="block font-[Helvetica Now Text,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold text-[#D6D6D6] hover:text-[#74F5A1] transition-colors"
     >
       {children}
     </Link>
