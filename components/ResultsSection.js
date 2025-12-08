@@ -413,12 +413,14 @@ export default function ResultsSection() {
 
             <Link
               href="/cases"
-              className="group inline-flex items-center gap-2 self-start rounded-[10px] border border-black/10 bg-white px-4 py-2.5 font-[Helvetica Now Text,Arial,sans-serif] text-[13px] sm:text-[16px] font-semibold tracking-tight text-[#111111] shadow-sm transition-colors duration-500 ease-out hover:bg-[#F7F7F7]"
+              className="group inline-flex items-center gap-2 self-start rounded-[10px] border border-black/10 bg-white px-4 py-2.5 shadow-sm transition-transform duration-300 ease-out hover:scale-[1.10] hover:-translate-y-[1px]"
             >
-              <span>Explore our cases</span>
+              <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[13px] sm:text-[16px] font-semibold tracking-tight text-[#111111]">
+                Explore our cases
+              </span>
 
-              <span className="relative inline-flex h-7 w-7 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
-                <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:opacity-0">
+              <span className="relative inline-flex h-7 w-7 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-colors duration-500 group-hover:bg-black">
+                <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-3 group-hover:-translate-y-3 group-hover:opacity-0">
                   <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
                     <path
                       d="M1 13L13 1M13 1H5M13 1V9"
@@ -445,6 +447,7 @@ export default function ResultsSection() {
                 </span>
               </span>
             </Link>
+
           </div>
         </div>
 
