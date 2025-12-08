@@ -94,13 +94,13 @@ export default function CompareSection() {
         </div>
 
         {/* Heading */}
-        <h2 className="mx-auto mb-10 max-w-5xl text-center font-[Helvetica Now Text,Arial,sans-serif] text-[40px] sm:text-[58px] md:text-[68px] lg:text-[78px] xl:text-[88px] font-bold leading-[1.08] tracking-[-0.02em] text-[#111111]">
+        <h2 className="mx-auto mb-10 max-w-5xl text-center font-[Helvetica Now Text,Arial,sans-serif] text-[40px] sm:text-[58px] md:text-[68px] lg:text-[78px] xl:text-[88px] font-semibold leading-[1.08] tracking-[-0.02em] text-[#111111]">
           <span className="italic font-normal">Traditional B2B marketing</span>{' '}
-          <span className="font-bold">vs modern B2B marketing</span>
+          <span className="font-semibold">vs modern B2B marketing</span>
         </h2>
 
         {/* Subheading */}
-        <p className="mx-auto mb-24 max-w-3xl text-center font-[Helvetica Now Text,Arial,sans-serif] text-[18px] sm:text-[20px] md:text-[22px] font-semibold leading-relaxed tracking-tight text-[#444444]">
+        <p className="mx-auto mb-24 max-w-3xl text-center font-[Helvetica Now Text,Arial,sans-serif] text-[18px] sm:text-[20px] md:text-[22px] font-regular leading-relaxed tracking-tight text-[#444444]">
           B2B marketing is changing, fast. Attention spans are getting shorter,
           AI is getting smarter, and competition is increasing. That&apos;s why you
           need a partner who is a frontrunner in the industry.

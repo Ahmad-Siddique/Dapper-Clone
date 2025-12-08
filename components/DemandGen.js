@@ -152,15 +152,15 @@ export default function DemandSection() {
                 className="rounded-2xl border border-black/[0.06] bg-white px-12 py-16 sm:px-20 sm:py-20 md:px-24 md:py-24 shadow-[0_18px_45px_rgba(0,0,0,0.10)]"
               >
                 <header className="mb-12">
-                  <h2 className="font-[Helvetica Now Text,Arial,sans-serif] text-[38px] sm:text-[44px] md:text-[85px] font-bold tracking-tight text-[#111111]">
+                  <h2 className="font-[Helvetica Now Text,Arial,sans-serif] text-[38px] sm:text-[44px] md:text-[75px] font-semibold tracking-tight text-[#111111]">
                     {block.label}
                   </h2>
-                  <p className="mt-4 font-ivy-presto italic text-[24px] sm:text-[26px] md:text-[37px] text-[#111111]">
+                  <p className="mt-4 font-ivy-presto italic text-[24px] sm:text-[26px] md:text-[32px] text-[#111111]">
                     {block.tagline}
                   </p>
                 </header>
 
-                <div className="max-w-[800px] space-y-5 font-[Helvetica Now Text,Arial,sans-serif] text-[18px] sm:text-[19px] md:text-[23px] leading-relaxed text-[#212121]">
+                <div className="max-w-[800px] space-y-5 font-[Helvetica Now Text,Arial,sans-serif] text-[18px] sm:text-[19px] md:text-[20px] leading-relaxed text-[#212121]">
                   <p className="font-semibold">{block.intro}</p>
                   {block.body.map((p, i) => (
                     <p key={i} className="text-[#555]">{p}</p>

@@ -107,7 +107,7 @@ export default function HeroSection() {
               pipeline and improve marketing ROI.
             </p>
 
-            {/* Main CTA with animated arrow */}
+            {/* Main CTA with straight downward animated arrow */}
             <Link
               href="#discover"
               className="inline-flex items-center gap-3 group"
@@ -117,8 +117,8 @@ export default function HeroSection() {
               </span>
 
               <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
-                {/* Default arrow */}
-                <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:opacity-0">
+                {/* Default downward arrow */}
+                <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-y-3 group-hover:opacity-0">
                   <svg
                     width="14"
                     height="14"
@@ -126,7 +126,7 @@ export default function HeroSection() {
                     aria-hidden="true"
                   >
                     <path
-                      d="M1 13L13 1M13 1H5M13 1V9"
+                      d="M7 1V13M7 13L3 9M7 13L11 9"
                       fill="none"
                       stroke="#212121"
                       strokeWidth="1.8"
@@ -136,8 +136,8 @@ export default function HeroSection() {
                   </svg>
                 </span>
 
-                {/* New arrow */}
-                <span className="absolute inset-0 flex items-center justify-center translate-x-[-10px] translate-y-[10px] opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100">
+                {/* New downward arrow (flies in from top) */}
+                <span className="absolute inset-0 flex items-center justify-center translate-y-[-12px] opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
                   <svg
                     width="14"
                     height="14"
@@ -145,7 +145,7 @@ export default function HeroSection() {
                     aria-hidden="true"
                   >
                     <path
-                      d="M1 13L13 1M13 1H5M13 1V9"
+                      d="M7 1V13M7 13L3 9M7 13L11 9"
                       fill="none"
                       stroke="#74F5A1"
                       strokeWidth="1.8"
@@ -184,15 +184,15 @@ export default function HeroSection() {
                       />
                     </div>
 
-                    {/* Storyteq CTA with same arrow animation */}
+                    {/* Storyteq CTA with straight downward arrow animation */}
                     <Link
                       href="#case-storyteq"
                       aria-label="Open Storyteq case study"
                       className="group flex h-9 w-9 items-center justify-center"
                     >
                       <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
-                        {/* Default arrow */}
-                        <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:opacity-0">
+                        {/* Default downward arrow */}
+                        <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-y-3 group-hover:opacity-0">
                           <svg
                             width="14"
                             height="14"
@@ -200,7 +200,7 @@ export default function HeroSection() {
                             aria-hidden="true"
                           >
                             <path
-                              d="M1 13L13 1M13 1H5M13 1V9"
+                              d="M7 1V13M7 13L3 9M7 13L11 9"
                               fill="none"
                               stroke="#212121"
                               strokeWidth="1.8"
@@ -210,8 +210,8 @@ export default function HeroSection() {
                           </svg>
                         </span>
 
-                        {/* New arrow */}
-                        <span className="absolute inset-0 flex items-center justify-center translate-x-[-10px] translate-y-[10px] opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100">
+                        {/* New downward arrow (flies in from top) */}
+                        <span className="absolute inset-0 flex items-center justify-center translate-y-[-12px] opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
                           <svg
                             width="14"
                             height="14"
@@ -219,7 +219,7 @@ export default function HeroSection() {
                             aria-hidden="true"
                           >
                             <path
-                              d="M1 13L13 1M13 1H5M13 1V9"
+                              d="M7 1V13M7 13L3 9M7 13L11 9"
                               fill="none"
                               stroke="#74F5A1"
                               strokeWidth="1.8"

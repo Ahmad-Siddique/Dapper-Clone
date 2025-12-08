@@ -9,7 +9,7 @@ const SERVICES = [
   {
     id: 'content',
     title: 'Content & Creative',
-    description: "We’ll make your prospects stop scrolling.",
+    description: "We'll make your prospects stop scrolling.",
   },
   {
     id: 'paid',
@@ -40,10 +40,10 @@ export default function ServicesSection() {
 
           <div className="max-w-[1100px]">
             <h2 className="font-[Helvetica Now Text,Arial,sans-serif] leading-[1.02] tracking-tight text-[#111111]">
-              <span className="block text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] font-bold">
+              <span className="block text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] font-semibold">
                 Level up your marketing,
               </span>
-              <span className="block text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] font-bold">
+              <span className="block text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] font-semibold">
                 improve{' '}
                 <span className="font-ivy-presto italic font-normal">
                   marketing ROI
@@ -51,7 +51,7 @@ export default function ServicesSection() {
               </span>
             </h2>
 
-            <p className="mt-6 max-w-[640px] font-[Helvetica Now Text,Arial,sans-serif] text-[17px] md:text-[18px] lg:text-[19px] font-semibold leading-relaxed text-[#212121]">
+            <p className="mt-6 max-w-[640px] font-[Helvetica Now Text,Arial,sans-serif] text-[17px] md:text-[18px] lg:text-[22px] font-regular leading-relaxed text-[#212121]">
               Better marketing leads to better marketing ROI. At Dapper, we help
               you level up your complete marketing engine. From strategy to
               content, advertising, and measurement.
@@ -79,41 +79,23 @@ export default function ServicesSection() {
             <span className="pointer-events-none absolute left-16 top-24 h-8 w-5 bg-[#74F5A1]" />
           </div>
 
-          {/* RIGHT cards */}
+          {/* RIGHT cards with dynamic grid */}
           <div className="w-full flex-1">
-            <div className="grid h-full gap-6 md:grid-cols-2 md:grid-rows-2">
+            <div
+              className="grid h-full gap-3 transition-all duration-500 ease-out"
+              style={{
+                gridTemplateColumns:
+                  activeId === 'content'
+                    ? '1.15fr 0.85fr'
+                    : activeId === 'paid'
+                    ? '0.85fr 1.15fr'
+                    : '1fr 1fr',
+                gridTemplateRows:
+                  activeId === 'data' ? '0.85fr 1.15fr' : '1fr 1fr',
+              }}
+            >
               {SERVICES.map((service, index) => {
                 const isActive = activeId === service.id;
-                const anyActive = activeId !== null;
-
-                const scaleClass = anyActive
-                  ? isActive
-                    ? 'md:scale-[1.06]'
-                    : 'md:scale-[0.94]'
-                  : 'md:scale-100';
-
-                const paddingClass = isActive ? 'md:py-9' : 'md:py-8';
-
-                // Active vs inactive transform-origin per card
-                const activeOrigin =
-                  index === 0
-                    ? 'md:origin-top-left' // grows right+down
-                    : index === 1
-                    ? 'md:origin-top-right' // grows left+down
-                    : 'md:origin-bottom'; // grows up
-
-                const inactiveOrigin =
-                  index === 0
-                    ? 'md:origin-bottom-right' // shrinks opposite of card 1
-                    : index === 1
-                    ? 'md:origin-bottom-left' // shrinks opposite of card 2
-                    : 'md:origin-top'; // shrinks opposite of card 3
-
-                const originClass = anyActive
-                  ? isActive
-                    ? activeOrigin
-                    : inactiveOrigin
-                  : 'md:origin-center';
 
                 return (
                   <article
@@ -123,13 +105,10 @@ export default function ServicesSection() {
                     className={[
                       'group relative flex flex-col justify-between rounded-xl border border-black/[0.06] bg-white shadow-[0_10px_35px_rgba(0,0,0,0.08)]',
                       'px-8 py-7',
-                      paddingClass,
                       'transition-all duration-500 ease-out',
-                      originClass,
-                      index === 0 ? 'md:row-start-1 md:col-start-1' : '',
-                      index === 1 ? 'md:row-start-1 md:col-start-2' : '',
-                      index === 2 ? 'md:row-start-2 md:col-span-2' : '',
-                      scaleClass,
+                      index === 0 ? 'row-start-1 col-start-1' : '',
+                      index === 1 ? 'row-start-1 col-start-2' : '',
+                      index === 2 ? 'row-start-2 col-span-2' : '',
                     ]
                       .filter(Boolean)
                       .join(' ')}
@@ -148,7 +127,6 @@ export default function ServicesSection() {
                         aria-label={`Learn more about ${service.title}`}
                         className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center"
                       >
-                        {/* Fixed animated arrow button */}
                         <span className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] text-[#212121] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
                           {/* Default arrow */}
                           <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:opacity-0">

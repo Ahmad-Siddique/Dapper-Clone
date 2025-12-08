@@ -1,7 +1,7 @@
 // components/ResultsSection.jsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -61,6 +61,19 @@ const TESTIMONIALS = [
 export default function ResultsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardsPerView, setCardsPerView] = useState(1);
+  const sliderRef = useRef(null);
+  const animationRef = useRef(null);
+  const dragState = useRef({
+    isDown: false,
+    startX: 0,
+    currentTranslate: 0,
+    targetTranslate: 0,
+    velocity: 0,
+    lastX: 0,
+    lastTime: 0,
+    isButtonScrolling: false,
+    useCSS: false,
+  });
 
   // Responsive: 1 card on small screens, 2 on lg+
   useEffect(() => {
@@ -83,13 +96,287 @@ export default function ResultsSection() {
 
   const handlePrev = () => {
     if (!canPrev) return;
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
+    const state = dragState.current;
+    state.isButtonScrolling = true;
+    state.useCSS = true;
+    
+    setCurrentIndex((prev) => {
+      const newIndex = Math.max(0, prev - 1);
+      const newTranslate = -(100 / cardsPerView) * newIndex;
+      state.targetTranslate = newTranslate;
+      state.currentTranslate = newTranslate;
+      state.velocity = 0;
+      return newIndex;
+    });
+
+    setTimeout(() => {
+      state.isButtonScrolling = false;
+      state.useCSS = false;
+    }, 700);
   };
 
   const handleNext = () => {
     if (!canNext) return;
-    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
+    const state = dragState.current;
+    state.isButtonScrolling = true;
+    state.useCSS = true;
+    
+    setCurrentIndex((prev) => {
+      const newIndex = Math.min(maxIndex, prev + 1);
+      const newTranslate = -(100 / cardsPerView) * newIndex;
+      state.targetTranslate = newTranslate;
+      state.currentTranslate = newTranslate;
+      state.velocity = 0;
+      return newIndex;
+    });
+
+    setTimeout(() => {
+      state.isButtonScrolling = false;
+      state.useCSS = false;
+    }, 700);
   };
+
+  // Smooth animation loop (only for drag)
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    const state = dragState.current;
+
+    const smoothAnimation = () => {
+      // Only use RAF when dragging or has momentum, not for button clicks
+      if (!state.useCSS && !state.isButtonScrolling) {
+        if (!state.isDown) {
+          // Apply momentum
+          if (Math.abs(state.velocity) > 0.05) {
+            state.targetTranslate += state.velocity;
+            state.velocity *= 0.92;
+          }
+        }
+
+        // Smooth interpolation for drag
+        if (state.isDown || Math.abs(state.velocity) > 0.05) {
+          const ease = 0.12;
+          state.currentTranslate += (state.targetTranslate - state.currentTranslate) * ease;
+          
+          // Apply transform
+          slider.style.transition = 'none';
+          slider.style.transform = `translateX(${state.currentTranslate}%)`;
+        }
+
+        // Clamp to valid range
+        const minTranslate = -(100 / cardsPerView) * maxIndex;
+        const maxTranslate = 0;
+
+        if (state.currentTranslate < minTranslate) {
+          state.currentTranslate = minTranslate;
+          state.targetTranslate = minTranslate;
+          state.velocity = 0;
+        } else if (state.currentTranslate > maxTranslate) {
+          state.currentTranslate = maxTranslate;
+          state.targetTranslate = maxTranslate;
+          state.velocity = 0;
+        }
+      }
+
+      animationRef.current = requestAnimationFrame(smoothAnimation);
+    };
+
+    // Initialize positions
+    const initialTranslate = -(100 / cardsPerView) * currentIndex;
+    state.currentTranslate = initialTranslate;
+    state.targetTranslate = initialTranslate;
+
+    animationRef.current = requestAnimationFrame(smoothAnimation);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [cardsPerView, currentIndex, maxIndex]);
+
+  // Update CSS transform when using buttons
+  useEffect(() => {
+    const slider = sliderRef.current;
+    const state = dragState.current;
+    if (!slider) return;
+
+    if (state.useCSS) {
+      const translateValue = -(100 / cardsPerView) * currentIndex;
+      slider.style.transition = 'transform 700ms cubic-bezier(0.4, 0, 0.2, 1)';
+      slider.style.transform = `translateX(${translateValue}%)`;
+    }
+  }, [currentIndex, cardsPerView]);
+
+  // Drag handlers
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    const state = dragState.current;
+    const container = slider.parentElement;
+
+    const onMouseDown = (e) => {
+      if (e.target.closest('a') || e.target.closest('button')) {
+        return;
+      }
+
+      state.isDown = true;
+      state.isButtonScrolling = false;
+      state.useCSS = false;
+      state.startX = e.pageX;
+      state.lastX = e.pageX;
+      state.lastTime = Date.now();
+      state.velocity = 0;
+
+      container.style.cursor = 'grabbing';
+      slider.style.willChange = 'transform';
+    };
+
+    const onMouseMove = (e) => {
+      if (!state.isDown) return;
+      e.preventDefault();
+
+      const currentTime = Date.now();
+      const containerWidth = container.getBoundingClientRect().width;
+      const deltaX = e.pageX - state.startX;
+      const timeDelta = currentTime - state.lastTime;
+
+      const percentMove = (deltaX / containerWidth) * 100;
+      const baseTranslate = -(100 / cardsPerView) * currentIndex;
+      state.targetTranslate = baseTranslate + percentMove;
+
+      if (timeDelta > 0) {
+        const moveX = e.pageX - state.lastX;
+        const percentMoveX = (moveX / containerWidth) * 100;
+        state.velocity = (percentMoveX / timeDelta) * 16;
+      }
+
+      state.lastX = e.pageX;
+      state.lastTime = currentTime;
+    };
+
+    const onMouseUp = () => {
+      if (!state.isDown) return;
+      state.isDown = false;
+
+      container.style.cursor = 'grab';
+      slider.style.willChange = 'auto';
+
+      setTimeout(() => {
+        const cardPercentage = 100 / cardsPerView;
+        const currentOffset = Math.abs(state.currentTranslate);
+        const nearestIndex = Math.round(currentOffset / cardPercentage);
+        const clampedIndex = Math.max(0, Math.min(maxIndex, nearestIndex));
+        
+        if (clampedIndex !== currentIndex) {
+          state.useCSS = true;
+          setCurrentIndex(clampedIndex);
+          slider.style.transition = 'transform 400ms cubic-bezier(0.4, 0, 0.2, 1)';
+          
+          setTimeout(() => {
+            state.useCSS = false;
+          }, 400);
+        }
+        
+        state.targetTranslate = -(100 / cardsPerView) * clampedIndex;
+        state.currentTranslate = state.targetTranslate;
+        state.velocity = 0;
+      }, 100);
+    };
+
+    const onMouseLeave = () => {
+      if (state.isDown) {
+        onMouseUp();
+      }
+    };
+
+    // Touch events for mobile
+    const onTouchStart = (e) => {
+      if (e.target.closest('a') || e.target.closest('button')) {
+        return;
+      }
+
+      state.isDown = true;
+      state.isButtonScrolling = false;
+      state.useCSS = false;
+      state.startX = e.touches[0].pageX;
+      state.lastX = e.touches[0].pageX;
+      state.lastTime = Date.now();
+      state.velocity = 0;
+
+      slider.style.willChange = 'transform';
+    };
+
+    const onTouchMove = (e) => {
+      if (!state.isDown) return;
+
+      const currentTime = Date.now();
+      const containerWidth = container.getBoundingClientRect().width;
+      const deltaX = e.touches[0].pageX - state.startX;
+      const timeDelta = currentTime - state.lastTime;
+
+      const percentMove = (deltaX / containerWidth) * 100;
+      const baseTranslate = -(100 / cardsPerView) * currentIndex;
+      state.targetTranslate = baseTranslate + percentMove;
+
+      if (timeDelta > 0) {
+        const moveX = e.touches[0].pageX - state.lastX;
+        const percentMoveX = (moveX / containerWidth) * 100;
+        state.velocity = (percentMoveX / timeDelta) * 16;
+      }
+
+      state.lastX = e.touches[0].pageX;
+      state.lastTime = currentTime;
+    };
+
+    const onTouchEnd = () => {
+      if (!state.isDown) return;
+      state.isDown = false;
+
+      slider.style.willChange = 'auto';
+
+      setTimeout(() => {
+        const cardPercentage = 100 / cardsPerView;
+        const currentOffset = Math.abs(state.currentTranslate);
+        const nearestIndex = Math.round(currentOffset / cardPercentage);
+        const clampedIndex = Math.max(0, Math.min(maxIndex, nearestIndex));
+        
+        if (clampedIndex !== currentIndex) {
+          state.useCSS = true;
+          setCurrentIndex(clampedIndex);
+          slider.style.transition = 'transform 400ms cubic-bezier(0.4, 0, 0.2, 1)';
+          
+          setTimeout(() => {
+            state.useCSS = false;
+          }, 400);
+        }
+        
+        state.targetTranslate = -(100 / cardsPerView) * clampedIndex;
+        state.currentTranslate = state.targetTranslate;
+        state.velocity = 0;
+      }, 100);
+    };
+
+    container.addEventListener('mousedown', onMouseDown);
+    container.addEventListener('mousemove', onMouseMove);
+    container.addEventListener('mouseup', onMouseUp);
+    container.addEventListener('mouseleave', onMouseLeave);
+    container.addEventListener('touchstart', onTouchStart, { passive: true });
+    container.addEventListener('touchmove', onTouchMove, { passive: true });
+    container.addEventListener('touchend', onTouchEnd);
+
+    return () => {
+      container.removeEventListener('mousedown', onMouseDown);
+      container.removeEventListener('mousemove', onMouseMove);
+      container.removeEventListener('mouseup', onMouseUp);
+      container.removeEventListener('mouseleave', onMouseLeave);
+      container.removeEventListener('touchstart', onTouchStart);
+      container.removeEventListener('touchmove', onTouchMove);
+      container.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [cardsPerView, currentIndex, maxIndex]);
 
   return (
     <section className="bg-[#EFEFEF] py-20 sm:py-24">
@@ -106,10 +393,10 @@ export default function ResultsSection() {
         <div className="mb-10 grid gap-8 sm:gap-10 lg:grid-cols-[1.2fr_1fr]">
           <div>
             <h2 className="font-[Helvetica Now Text,Arial,sans-serif] leading-[1.02] tracking-tight text-[#111111]">
-              <span className="block text-[32px] sm:text-[40px] md:text-[56px] lg:text-[70px] xl:text-[82px] font-bold">
+              <span className="block text-[32px] sm:text-[40px] md:text-[56px] lg:text-[70px] xl:text-[82px] font-semibold">
                 Driven by a
               </span>
-              <span className="block text-[32px] sm:text-[40px] md:text-[56px] lg:text-[70px] xl:text-[82px] font-bold">
+              <span className="block text-[32px] sm:text-[40px] md:text-[56px] lg:text-[70px] xl:text-[82px] font-semibold">
                 <span className="font-ivy-presto font-normal">performance</span>{' '}
                 mindset
               </span>
@@ -130,16 +417,9 @@ export default function ResultsSection() {
             >
               <span>Explore our cases</span>
 
-              {/* Animated arrow square */}
               <span className="relative inline-flex h-7 w-7 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
-                {/* Default arrow */}
                 <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:opacity-0">
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 14 14"
-                    aria-hidden="true"
-                  >
+                  <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
                     <path
                       d="M1 13L13 1M13 1H5M13 1V9"
                       fill="none"
@@ -151,14 +431,8 @@ export default function ResultsSection() {
                   </svg>
                 </span>
 
-                {/* New arrow */}
                 <span className="absolute inset-0 flex items-center justify-center translate-x-[-10px] translate-y-[10px] opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100">
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 14 14"
-                    aria-hidden="true"
-                  >
+                  <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
                     <path
                       d="M1 13L13 1M13 1H5M13 1V9"
                       fill="none"
@@ -182,19 +456,13 @@ export default function ResultsSection() {
               aria-label="Previous testimonial"
               disabled={!canPrev}
               className={[
-                'flex h-9 w-9 items-center justify-center rounded-[6px] text-white transition',
+                'flex h-9 w-9 items-center justify-center rounded-[6px] text-white transition z-10 relative',
                 canPrev
                   ? 'bg-[#111111] hover:bg-black cursor-pointer'
                   : 'bg-[#D3D3D3] cursor-not-allowed',
               ].join(' ')}
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path
                   d="M10 4L6 8L10 12"
                   stroke="currentColor"
@@ -209,19 +477,13 @@ export default function ResultsSection() {
               aria-label="Next testimonial"
               disabled={!canNext}
               className={[
-                'flex h-9 w-9 items-center justify-center rounded-[6px] text-white transition',
+                'flex h-9 w-9 items-center justify-center rounded-[6px] text-white transition z-10 relative',
                 canNext
-                  ? 'bg-[#111111] hover:bg:black cursor-pointer'
+                  ? 'bg-[#111111] hover:bg-black cursor-pointer'
                   : 'bg-[#D3D3D3] cursor-not-allowed',
               ].join(' ')}
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-              >
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path
                   d="M6 4L10 8L6 12"
                   stroke="currentColor"
@@ -233,21 +495,16 @@ export default function ResultsSection() {
             </button>
           </div>
 
-          <div className="overflow-hidden">
-            <div
-              className="flex -mx-2 sm:-mx-3 transition-transform duration-700 ease-in-out"
-              style={{
-                transform: `translateX(-${(100 / cardsPerView) * currentIndex}%)`,
-              }}
-            >
+          <div className="overflow-hidden cursor-grab active:cursor-grabbing select-none">
+            <div ref={sliderRef} className="flex -mx-2 sm:-mx-3">
               {TESTIMONIALS.map((testimonial) => (
                 <div
                   key={testimonial.id}
                   className="basis-full px-2 flex-shrink-0 sm:px-3 lg:basis-1/2"
                 >
-                  <article className="relative flex h-full min-h-[280px] flex-col justify-between rounded-2xl border border-black/[0.06] bg-white px-4 py-7 shadow-[0_10px_30px_rgba(0,0,0,0.10)] sm:min-h-[360px] sm:px-6 sm:py-9 md:min-h-[420px] lg:px-10 lg:py-14">
+                  <article className="relative flex h-full min-h-[280px] flex-col justify-between rounded-2xl border border-black/[0.06] bg-white px-4 py-7 shadow-[0_10px_30px_rgba(0,0,0,0.10)] sm:min-h-[360px] sm:px-6 sm:py-9 md:min-h-[420px] lg:px-10 lg:py-14 pointer-events-none">
                     <blockquote className="border-l-4 border-[#111111] pl-4 sm:pl-6 font-[Helvetica Now Text,Arial,sans-serif] text-[17px] sm:text-[20px] md:text-[24px] lg:text-[30px] leading-snug text-[#111111]">
-                      “{testimonial.quote}”
+                      "{testimonial.quote}"
                     </blockquote>
 
                     <div className="mt-7 flex items-center justify-between gap-4 sm:mt-9">

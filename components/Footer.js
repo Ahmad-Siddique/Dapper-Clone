@@ -5,17 +5,17 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2A2A2A] text-white pt-8 pb-6 px-2 md:px-4">
+    <footer className="bg-[#2A2A2A] text-white pt-6 pb-8 px-4 md:px-6 lg:px-8">
       {/* Floating footer card */}
-      <div className="mx-auto max-w-[1920px] rounded-2xl md:rounded-3xl bg-[#111111] shadow-[0_18px_70px_rgba(0,0,0,0.6)] border border-white/8 px-4 md:px-8 pt-16 pb-10">
+      <div className="mx-auto max-w-[1920px] rounded-2xl md:rounded-3xl bg-[#111111] shadow-[0_18px_70px_rgba(0,0,0,0.6)] border border-white/8 px-6 md:px-10 lg:px-12 pt-10 pb-8">
         {/* TOP: 7 COLUMNS IN ONE ROW ON DESKTOP */}
-        <div className="grid gap-12 md:grid-cols-3 lg:grid-cols-7 border-b border-white/10 pb-14">
+        <div className="grid gap-8 md:grid-cols-3 lg:grid-cols-7 border-b border-white/10 pb-8">
           {/* Contact Tycho */}
-          <div className="space-y-3">
-            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
+          <div className="space-y-2">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[18px] md:text-[20px] font-semibold tracking-tight">
               Contact Tycho
             </h3>
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <a
                 href="mailto:hello@dapper.agency"
                 className="block font-[Helvetica Now Text,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold text-[#D6D6D6] hover:text-[#74F5A1] transition-colors"
@@ -32,8 +32,8 @@ export default function Footer() {
           </div>
 
           {/* Dapper Rotterdam */}
-          <div className="space-y-3">
-            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
+          <div className="space-y-2">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[18px] md:text-[20px] font-semibold tracking-tight">
               Dapper Rotterdam
             </h3>
             <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold leading-relaxed text-[#D6D6D6]">
@@ -44,8 +44,8 @@ export default function Footer() {
           </div>
 
           {/* Dapper Lisbon */}
-          <div className="space-y-3">
-            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
+          <div className="space-y-2">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[18px] md:text-[20px] font-semibold tracking-tight">
               Dapper Lisbon
             </h3>
             <p className="font-[Helvetica Now Text,Arial,sans-serif] text-[15px] md:text-[16px] font-semibold leading-relaxed text-[#D6D6D6]">
@@ -56,11 +56,11 @@ export default function Footer() {
           </div>
 
           {/* Services */}
-          <div className="space-y-3">
-            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
+          <div className="space-y-2">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[18px] md:text-[20px] font-semibold tracking-tight">
               Services
             </h3>
-            <nav className="space-y-1.5">
+            <nav className="space-y-1">
               <FooterLink href="/services/content-creative">
                 Content &amp; Creative
               </FooterLink>
@@ -83,11 +83,11 @@ export default function Footer() {
           </div>
 
           {/* Expertise */}
-          <div className="space-y-3">
-            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
+          <div className="space-y-2">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[18px] md:text-[20px] font-semibold tracking-tight">
               Expertise
             </h3>
-            <nav className="space-y-1.5">
+            <nav className="space-y-1">
               <FooterLink href="/expertise/b2b-saas">B2B SaaS</FooterLink>
               <FooterLink href="/expertise/b2b-service">
                 B2B Service
@@ -99,11 +99,11 @@ export default function Footer() {
           </div>
 
           {/* Resources */}
-          <div className="space-y-3">
-            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
+          <div className="space-y-2">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[18px] md:text-[20px] font-semibold tracking-tight">
               Resources
             </h3>
-            <nav className="space-y-1.5">
+            <nav className="space-y-1">
               <FooterLink href="/cases">Cases</FooterLink>
               <FooterLink href="/blog">Blog</FooterLink>
               <FooterLink href="/newsletter">Newsletter</FooterLink>
@@ -111,11 +111,11 @@ export default function Footer() {
           </div>
 
           {/* Company */}
-          <div className="space-y-3">
-            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[20px] md:text-[22px] font-semibold tracking-tight">
+          <div className="space-y-2">
+            <h3 className="font-[Helvetica Now Text,Arial,sans-serif] text-[18px] md:text-[20px] font-semibold tracking-tight">
               Company
             </h3>
-            <nav className="space-y-1.5">
+            <nav className="space-y-1">
               <FooterLink href="/about">About</FooterLink>
               <FooterLink href="/careers">Careers</FooterLink>
               <FooterLink href="/contact">Contact</FooterLink>
@@ -124,10 +124,10 @@ export default function Footer() {
         </div>
 
         {/* LOGO BAND */}
-        <div className="flex items-end border-b border-white/10 py-10">
-          <div className="flex items-end gap-6">
-            {/* Leaf mark */}
-            <div className="h-[70px] w-[120px]">
+        <div className="flex items-end border-b border-white/10 py-6">
+          <div className="flex items-end gap-4">
+            {/* Leaf mark - smaller */}
+            <div className="h-[45px] w-[75px]">
               <svg
                 viewBox="0 0 120 80"
                 className="h-full w-full"
@@ -139,15 +139,15 @@ export default function Footer() {
                 />
               </svg>
             </div>
-            {/* Wordmark */}
-            <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[46px] sm:text-[52px] md:text-[60px] font-extrabold tracking-tight">
+            {/* Wordmark - smaller */}
+            <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[36px] sm:text-[40px] md:text-[46px] font-extrabold tracking-tight">
               Dapper
             </span>
           </div>
         </div>
 
         {/* BOTTOM BAR */}
-        <div className="flex flex-col gap-6 py-6 text-[#D6D6D6] md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 py-4 text-[#D6D6D6] md:flex-row md:items-center md:justify-between">
           {/* Left: copyright + legal */}
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="font-[Helvetica Now Text,Arial,sans-serif] text-[15px] font-semibold">
