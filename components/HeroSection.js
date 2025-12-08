@@ -1,13 +1,15 @@
 // components/HeroSection.jsx
 'use client';
 
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function HeroSection() {
   const sectionRef = useRef(null);
+  const [triangles, setTriangles] = useState([]);
+  const triangleIdRef = useRef(0);
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -51,11 +53,81 @@ export default function HeroSection() {
     return () => ctx.revert();
   }, []);
 
+  // Cursor Trail Effect
+  const createTriangle = useCallback((x, y) => {
+    const id = triangleIdRef.current++;
+    const size = Math.random() * 15 + 25; // Random size between 25-40px (bigger)
+    const rotation = Math.random() * 360; // Random rotation
+    const greenShades = ['#74F5A1', '#5FE08D', '#4DD97F', '#3BC972'];
+    const color = greenShades[Math.floor(Math.random() * greenShades.length)];
+
+    const newTriangle = {
+      id,
+      x,
+      y,
+      size,
+      rotation,
+      color,
+    };
+
+    setTriangles((prev) => [...prev, newTriangle]);
+
+    // Remove triangle after animation completes (faster - 1050ms instead of 1500ms)
+    setTimeout(() => {
+      setTriangles((prev) => prev.filter((t) => t.id !== id));
+    }, 1050);
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    let lastTime = 0;
+    const throttleDelay = 80; // Throttle to every 80ms
+
+    const handleMouseMove = (e) => {
+      const currentTime = Date.now();
+      if (currentTime - lastTime < throttleDelay) return;
+      lastTime = currentTime;
+
+      const rect = section.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      createTriangle(x, y);
+    };
+
+    section.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      section.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [createTriangle]);
+
   return (
     <section
       ref={sectionRef}
       className="relative overflow-hidden bg-[#EFEFEF] pt-32 md:pt-40 pb-28"
     >
+      {/* CURSOR TRAIL TRIANGLES */}
+      {triangles.map((triangle) => (
+        <div
+          key={triangle.id}
+          className="pointer-events-none absolute z-[5] animate-triangle-fade"
+          style={{
+            left: `${triangle.x}px`,
+            top: `${triangle.y}px`,
+            width: '0',
+            height: '0',
+            borderLeft: `${triangle.size / 2}px solid transparent`,
+            borderRight: `${triangle.size / 2}px solid transparent`,
+            borderBottom: `${triangle.size}px solid ${triangle.color}`,
+            transform: `translate(-50%, -50%) rotate(${triangle.rotation}deg)`,
+            opacity: 0.7,
+          }}
+        />
+      ))}
+
       {/* BACKGROUND LEAF IMAGE ON RIGHT */}
       <div className="pointer-events-none absolute inset-y-0 right-[-14%] w-[120%] sm:right-[-6%] sm:w-[70%] lg:right-[-2%] lg:w-[55%] xl:right-0 xl:w-[50%]">
         {/* <Image

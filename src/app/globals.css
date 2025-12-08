@@ -93,3 +93,31 @@ html {
     -webkit-font-smoothing: antialiased;
   }
 }
+
+
+/* globals.css */
+
+@keyframes triangle-fade {
+  0% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  20% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+}
+
+.animate-triangle-fade {
+  animation: triangle-fade 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Ensure body doesn't clip triangles */
+body {
+  position: relative;
+  overflow-x: hidden;
+}

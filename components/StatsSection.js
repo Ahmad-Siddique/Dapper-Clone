@@ -275,7 +275,7 @@ export default function StatsSection() {
   return (
     <section
       ref={sectionRef}
-      className="bg-[#EFEFEF] py-18 sm:py-22 md:py-24"
+      className="relative z-10 bg-[#EFEFEF] py-18 sm:py-22 md:py-24"
     >
       <div className="mx-auto max-w-[1800px] px-4 md:px-8">
         {/* TOP ROW */}
