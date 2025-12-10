@@ -68,6 +68,47 @@
   font-display: swap;
 }
 
+/* In your global.css file */
+@font-face {
+  font-family: 'Fellix';
+  src: url('/fonts/Fellix-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fellix';
+  src: url('/fonts/Fellix-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fellix';
+  src: url('/fonts/Fellix-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fellix';
+  src: url('/fonts/Fellix-SemiBoldItalic.woff2') format('woff2');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fellix';
+  src: url('/fonts/Fellix-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 .font-ivy-presto {
   font-family: 'Ivy Presto Headline', serif !important;
   font-weight: 300        /* try 300 or even 200 */
@@ -121,3 +162,26 @@ body {
   position: relative;
   overflow-x: hidden;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
