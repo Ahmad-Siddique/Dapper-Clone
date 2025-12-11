@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import gsap from 'gsap';
 
 const TRADITIONAL_ITEMS = [
   'Marketing and sales work in silos',
@@ -98,6 +99,117 @@ export default function CompareSection({ theme = 'light' }) {
       section.removeEventListener('mousemove', handleMouseMove);
     };
   }, [createTriangle]);
+
+  // Electric animation refs and state
+  const animationIntervalRef = useRef(null);
+
+  // Function to create smooth electrical hover effect
+  const triggerElectricalAnimation = useCallback(() => {
+    const titleLines = document.querySelectorAll(".hero-title-line");
+
+    // Define colors based on theme
+    const originalColor = theme === "dark" ? "#f3f3f3" : "#111111";
+    const electricColor = theme === "dark" ? "#74F5A1" : "#3BC972";
+    const brightElectricColor = theme === "dark" ? "#FFFFFF" : "#FFFFFF";
+
+    // Create a single timeline for all lines
+    const tl = gsap.timeline({
+      defaults: {
+        ease: "sine.inOut",
+      },
+    });
+
+    // Animate each line with an electrical sweep effect
+    titleLines.forEach((line, lineIndex) => {
+      // Get the text content
+      const text = line.textContent;
+
+      // Split text into spans for character-by-character animation
+      if (!line.querySelector(".char")) {
+        const chars = text
+          .split("")
+          .map(
+            (char, i) =>
+              `<span class="char" style="color: ${originalColor}; display: inline-block; position: relative;" data-index="${i}">${
+                char === " " ? "&nbsp;" : char
+              }</span>`
+          )
+          .join("");
+        line.innerHTML = chars;
+      }
+
+      // Animate each character with electrical effect
+      const chars = line.querySelectorAll(".char");
+      chars.forEach((char, charIndex) => {
+        // Randomize timing slightly for electrical feel
+        const baseDelay = lineIndex * 0.5 + charIndex * 0.06;
+        const randomDelay = Math.random() * 0.1;
+        const totalDelay = baseDelay + randomDelay;
+
+        // Electrical flicker effect
+        tl.to(
+          char,
+          {
+            duration: 0.12,
+            color: brightElectricColor,
+            scale: 1.05,
+            delay: totalDelay,
+            ease: "power2.out",
+          },
+          0
+        )
+          .to(
+            char,
+            {
+              duration: 0.18,
+              color: electricColor,
+              scale: 1.02,
+              delay: totalDelay + 0.12,
+              ease: "sine.inOut",
+            },
+            0
+          )
+          .to(
+            char,
+            {
+              duration: 0.3,
+              color: originalColor,
+              scale: 1,
+              delay: totalDelay + 0.3,
+              ease: "power2.in",
+            },
+            0
+          );
+      });
+    });
+  }, [theme]);
+
+  const startElectricalAnimation = useCallback(() => {
+    if (animationIntervalRef.current) {
+      clearInterval(animationIntervalRef.current);
+    }
+
+    setTimeout(() => {
+      triggerElectricalAnimation();
+    }, 800);
+
+    animationIntervalRef.current = setInterval(() => {
+      triggerElectricalAnimation();
+    }, 10000);
+  }, [triggerElectricalAnimation]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      startElectricalAnimation();
+    }, 1500);
+
+    return () => {
+      clearTimeout(timer);
+      if (animationIntervalRef.current) {
+        clearInterval(animationIntervalRef.current);
+      }
+    };
+  }, [startElectricalAnimation]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -221,11 +333,11 @@ export default function CompareSection({ theme = 'light' }) {
           </div>
 
           {/* Heading */}
-          <h2 className={`mx-auto mb-8 sm:mb-10 max-w-5xl text-center font-[Helvetica Now Text,Arial,sans-serif] leading-[1.08] tracking-[-0.02em] ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
-            <span className="block text-[32px] sm:text-[40px] md:text-[48px] lg:text-[58px] xl:text-[68px] font-normal italic">
+          <h2 className={`mx-auto mb-8 sm:mb-10 max-w-5xl text-center font-fellix leading-[1.08] tracking-[-0.02em] ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
+            <span className="hero-title-line block text-[32px] sm:text-[40px] md:text-[48px] lg:text-[58px] xl:text-[68px] font-normal italic">
               Traditional B2B marketing
             </span>
-            <span className="block text-[32px] sm:text-[40px] md:text-[48px] lg:text-[58px] xl:text-[68px] font-semibold">
+            <span className="hero-title-line block text-[32px] sm:text-[40px] md:text-[48px] lg:text-[58px] xl:text-[68px] font-semibold">
               vs modern B2B marketing
             </span>
           </h2>

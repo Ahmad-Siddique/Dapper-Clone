@@ -429,6 +429,11 @@ export default function StatsSection({ theme = "light" }) {
       .font-fellix {
         font-family: 'Fellix', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       }
+
+      /* Smooth theme transition for title */
+      .stats-title-line {
+        transition: color 0.4s ease;
+      }
     `;
     document.head.appendChild(style);
 

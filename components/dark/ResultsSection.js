@@ -971,97 +971,85 @@ export default function ResultsSection({ theme = "light" }) {
 
   // --- ELECTRIC ANIMATION LOGIC ---
 
-  const triggerElectricalAnimation = useCallback(() => {
-    // Target the specific titles in this section via the new class
-    const titleLines = document.querySelectorAll(".electric-text-target");
+ const triggerElectricalAnimation = useCallback(() => {
+    const titleLines = document.querySelectorAll(".hero-title-line");
 
-    // Always use current theme colors
-    const getCurrentColors = () => ({
-      text: theme === "dark" ? "#f3f3f3" : "#111111",
-      electric: "#74f5a1",
-      flash: "#ffffff",
+    // Define colors based on theme
+    const originalColor = theme === "dark" ? "#f3f3f3" : "#111111";
+    const electricColor = theme === "dark" ? "#74F5A1" : "#3BC972";
+    const brightElectricColor = theme === "dark" ? "#FFFFFF" : "#FFFFFF";
+
+    // Create a single timeline for all lines
+    const tl = gsap.timeline({
+      defaults: {
+        ease: "sine.inOut",
+      },
     });
 
-    const { text, electric, flash } = getCurrentColors();
+    // Animate each line with an electrical sweep effect
+    titleLines.forEach((line, lineIndex) => {
+      // Get the text content
+      const text = line.textContent;
 
-    // Split text into characters ONLY ONCE (first run)
-    // We check if it has already been split to avoid DOM thrashing
-    titleLines.forEach((line) => {
+      // Split text into spans for character-by-character animation
       if (!line.querySelector(".char")) {
-        const content = line.textContent;
-        let html = "";
-
-        // Split by words but preserve spaces
-        const parts = content.split(/(\s+)/);
-        parts.forEach((part) => {
-          if (part.trim() === "") {
-            html += part; // keep spaces
-          } else {
-            const chars = part
-              .split("")
-              .map((char) => {
-                const isSpace = char === " ";
-                return `<span class="char" style="display:inline-block;position:relative;color:${text}">${
-                  isSpace ? "&nbsp;" : char
-                }</span>`;
-              })
-              .join("");
-            html += `<span class="word" style="white-space:nowrap">${chars}</span>`;
-          }
-        });
-
-        line.innerHTML = html;
+        const chars = text
+          .split("")
+          .map(
+            (char, i) =>
+              `<span class="char" style="color: ${originalColor}; display: inline-block; position: relative;" data-index="${i}">${
+                char === " " ? "&nbsp;" : char
+              }</span>`
+          )
+          .join("");
+        line.innerHTML = chars;
       }
-    });
 
-    // Now animate — always uses latest theme colors
-    const chars = document.querySelectorAll(".electric-text-target .char");
-    if (chars.length === 0) return;
+      // Animate each character with electrical effect
+      const chars = line.querySelectorAll(".char");
+      chars.forEach((char, charIndex) => {
+        // Randomize timing slightly for electrical feel
+        const baseDelay = lineIndex * 0.5 + charIndex * 0.06;
+        const randomDelay = Math.random() * 0.1;
+        const totalDelay = baseDelay + randomDelay;
 
-    const tl = gsap.timeline();
-
-    chars.forEach((char, i) => {
-      // Randomize delay slightly for organic feel
-      const delay = i * 0.045 + Math.random() * 0.08;
-
-      tl.to(
-        char,
-        {
-          color: flash,
-          scale: 1.08,
-          duration: 0.14,
-          ease: "power2.out",
-        },
-        delay
-      )
-        .to(
+        // Electrical flicker effect
+        tl.to(
           char,
           {
-            color: electric,
-            scale: 1.03,
-            duration: 0.22,
-            ease: "sine.inOut",
+            duration: 0.12,
+            color: brightElectricColor,
+            scale: 1.05,
+            delay: totalDelay,
+            ease: "power2.out",
           },
-          delay + 0.12
+          0
         )
-        .to(
-          char,
-          {
-            color: text, // ← Always correct current theme color
-            scale: 1,
-            duration: 0.4,
-            ease: "power2.in",
-          },
-          delay + 0.3
-        );
+          .to(
+            char,
+            {
+              duration: 0.18,
+              color: electricColor,
+              scale: 1.02,
+              delay: totalDelay + 0.12,
+              ease: "sine.inOut",
+            },
+            0
+          )
+          .to(
+            char,
+            {
+              duration: 0.3,
+              color: originalColor,
+              scale: 1,
+              delay: totalDelay + 0.3,
+              ease: "power2.in",
+            },
+            0
+          );
+      });
     });
-
-    // Final cleanup — force correct color in case of race conditions
-    tl.add(() => {
-      const { text } = getCurrentColors();
-      gsap.set(".electric-text-target .char", { color: text });
-    });
-  }, [theme]); // ← Re-runs when theme changes to ensure colors are correct
+  }, [theme]);
 
   const startElectricalAnimation = useCallback(() => {
     if (animationIntervalRef.current) {
@@ -1574,20 +1562,20 @@ export default function ResultsSection({ theme = "light" }) {
           <div className="mb-10 grid gap-8 sm:gap-10 lg:grid-cols-[1.2fr_1fr]">
             <div>
               <h2
-                className={`font-[Helvetica Now Text,Arial,sans-serif] leading-[1.02] tracking-tight ${
+                className={`font-fellix leading-[1.02] tracking-tight ${
                   theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                 }`}
               >
                 {/* Note: electric-text-target class added for animation targeting */}
-                <span className="electric-text-target block text-[32px] sm:text-[40px] md:text-[56px] lg:text-[70px] xl:text-[82px] font-semibold">
+                <span className="hero-title-line block text-[32px] sm:text-[40px] md:text-[56px] lg:text-[70px] xl:text-[82px] ">
                   Driven by a
                 </span>
-                <span className="block text-[32px] sm:text-[40px] md:text-[56px] lg:text-[70px] xl:text-[82px] font-semibold">
-                  {/* Note: electric-text-target added to individual words to preserve font styles */}
-                  <span className="electric-text-target font-ivy-presto font-normal">
+                <span className="block text-[32px] sm:text-[40px] md:text-[56px] lg:text-[70px] xl:text-[82px] ">
+                  {/* Note: hero-title-line added to individual words to preserve font styles */}
+                  <span className="hero-title-line font-ivy-presto font-normal">
                     performance
                   </span>{" "}
-                  <span className="electric-text-target">
+                  <span className="hero-title-line">
                     mindset
                   </span>
                 </span>

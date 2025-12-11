@@ -588,95 +588,84 @@ export default function DemandSection({ theme = "light" }) {
   // --- ELECTRIC ANIMATION LOGIC ---
 
   const triggerElectricalAnimation = useCallback(() => {
-    // Target the specific titles in this section
-    const titleLines = document.querySelectorAll(".demand-block-title");
+    const titleLines = document.querySelectorAll(".hero-title-line");
 
-    // Always use current theme colors
-    const getCurrentColors = () => ({
-      text: theme === "dark" ? "#f3f3f3" : "#111111",
-      electric: "#74f5a1",
-      flash: "#ffffff",
+    // Define colors based on theme
+    const originalColor = theme === "dark" ? "#f3f3f3" : "#111111";
+    const electricColor = theme === "dark" ? "#74F5A1" : "#3BC972";
+    const brightElectricColor = theme === "dark" ? "#FFFFFF" : "#FFFFFF";
+
+    // Create a single timeline for all lines
+    const tl = gsap.timeline({
+      defaults: {
+        ease: "sine.inOut",
+      },
     });
 
-    const { text, electric, flash } = getCurrentColors();
+    // Animate each line with an electrical sweep effect
+    titleLines.forEach((line, lineIndex) => {
+      // Get the text content
+      const text = line.textContent;
 
-    // Split text into characters ONLY ONCE (first run)
-    if (titleLines.length > 0 && !titleLines[0].querySelector(".char")) {
-      titleLines.forEach((line) => {
-        const content = line.textContent;
-        let html = "";
+      // Split text into spans for character-by-character animation
+      if (!line.querySelector(".char")) {
+        const chars = text
+          .split("")
+          .map(
+            (char, i) =>
+              `<span class="char" style="color: ${originalColor}; display: inline-block; position: relative;" data-index="${i}">${
+                char === " " ? "&nbsp;" : char
+              }</span>`
+          )
+          .join("");
+        line.innerHTML = chars;
+      }
 
-        // Split by words but preserve spaces
-        const parts = content.split(/(\s+)/);
-        parts.forEach((part) => {
-          if (part.trim() === "") {
-            html += part; // keep spaces
-          } else {
-            const chars = part
-              .split("")
-              .map((char) => {
-                const isSpace = char === " ";
-                return `<span class="char" style="display:inline-block;position:relative;color:${text}">${
-                  isSpace ? "&nbsp;" : char
-                }</span>`;
-              })
-              .join("");
-            html += `<span class="word" style="white-space:nowrap">${chars}</span>`;
-          }
-        });
+      // Animate each character with electrical effect
+      const chars = line.querySelectorAll(".char");
+      chars.forEach((char, charIndex) => {
+        // Randomize timing slightly for electrical feel
+        const baseDelay = lineIndex * 0.5 + charIndex * 0.06;
+        const randomDelay = Math.random() * 0.1;
+        const totalDelay = baseDelay + randomDelay;
 
-        line.innerHTML = html;
-      });
-    }
-
-    // Now animate — always uses latest theme colors
-    const chars = document.querySelectorAll(".demand-block-title .char");
-    if (chars.length === 0) return;
-
-    const tl = gsap.timeline();
-
-    chars.forEach((char, i) => {
-      // Randomize delay slightly for organic feel
-      const delay = i * 0.045 + Math.random() * 0.08;
-
-      tl.to(
-        char,
-        {
-          color: flash,
-          scale: 1.08,
-          duration: 0.14,
-          ease: "power2.out",
-        },
-        delay
-      )
-        .to(
+        // Electrical flicker effect
+        tl.to(
           char,
           {
-            color: electric,
-            scale: 1.03,
-            duration: 0.22,
-            ease: "sine.inOut",
+            duration: 0.12,
+            color: brightElectricColor,
+            scale: 1.05,
+            delay: totalDelay,
+            ease: "power2.out",
           },
-          delay + 0.12
+          0
         )
-        .to(
-          char,
-          {
-            color: text, // ← Always correct current theme color
-            scale: 1,
-            duration: 0.4,
-            ease: "power2.in",
-          },
-          delay + 0.3
-        );
+          .to(
+            char,
+            {
+              duration: 0.18,
+              color: electricColor,
+              scale: 1.02,
+              delay: totalDelay + 0.12,
+              ease: "sine.inOut",
+            },
+            0
+          )
+          .to(
+            char,
+            {
+              duration: 0.3,
+              color: originalColor,
+              scale: 1,
+              delay: totalDelay + 0.3,
+              ease: "power2.in",
+            },
+            0
+          );
+      });
     });
-
-    // Final cleanup — force correct color in case of race conditions
-    tl.add(() => {
-      const { text } = getCurrentColors();
-      gsap.set(".demand-block-title .char", { color: text });
-    });
-  }, [theme]); // ← Re-runs when theme changes to ensure colors are correct
+  }, [theme]);
 
   const startElectricalAnimation = useCallback(() => {
     if (animationIntervalRef.current) {
@@ -969,7 +958,7 @@ export default function DemandSection({ theme = "light" }) {
                   <header className="mb-8 sm:mb-10 md:mb-12">
                     {/* Added demand-block-title class for electric animation */}
                     <h2
-                      className={`demand-block-title font-[Helvetica Now Text,Arial,sans-serif] text-[32px] sm:text-[38px] md:text-[44px] lg:text-[60px] xl:text-[75px] font-semibold tracking-tight ${
+                      className={`hero-title-line font-[Helvetica Now Text,Arial,sans-serif] text-[32px] sm:text-[38px] md:text-[44px] lg:text-[60px] xl:text-[75px] font-semibold tracking-tight ${
                         theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                       }`}
                     >

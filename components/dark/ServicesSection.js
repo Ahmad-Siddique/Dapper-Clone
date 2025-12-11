@@ -353,78 +353,86 @@ export default function ServicesSection({ theme = "light" }) {
     `,
   };
 
+  // Function to create smooth electrical hover effect
   const triggerElectricalAnimation = useCallback(() => {
-  const titleLines = document.querySelectorAll(".services-title-line");
+    const titleLines = document.querySelectorAll(".hero-title-line");
 
-  // Always use current theme colors — critical for theme switching!
-  const getCurrentColors = () => ({
-    text: theme === "dark" ? "#f3f3f3" : "#111111",
-    electric: "#74f5a1",
-    flash: "#ffffff",
-  });
+    // Define colors based on theme
+    const originalColor = theme === "dark" ? "#f3f3f3" : "#111111";
+    const electricColor = theme === "dark" ? "#74F5A1" : "#3BC972";
+    const brightElectricColor = theme === "dark" ? "#FFFFFF" : "#FFFFFF";
 
-  const { text, electric, flash } = getCurrentColors();
-
-  // Split text into characters ONLY ONCE (first run)
-  if (!titleLines[0]?.querySelector(".char")) {
-    titleLines.forEach((line) => {
-      const text = line.textContent;
-      let html = "";
-
-      // Split by words but preserve spaces
-      const parts = text.split(/(\s+)/);
-      parts.forEach((part) => {
-        if (part.trim() === "") {
-          html += part; // keep spaces
-        } else {
-          const chars = part.split("").map((char) => {
-            const isSpace = char === " ";
-            return `<span class="char" style="display:inline-block;position:relative;color:${text}">${
-              isSpace ? "&nbsp;" : char
-            }</span>`;
-          }).join("");
-          html += `<span class="word" style="white-space:nowrap">${chars}</span>`;
-        }
-      });
-
-      line.innerHTML = html;
-    });
-  }
-
-  // Now animate — always uses latest theme colors
-  const chars = document.querySelectorAll(".services-title-line .char");
-  const tl = gsap.timeline();
-
-  chars.forEach((char, i) => {
-    const delay = i * 0.045 + Math.random() * 0.08;
-
-    tl.to(char, {
-      color: flash,
-      scale: 1.08,
-      duration: 0.14,
-      ease: "power2.out",
-    }, delay)
-      .to(char, {
-        color: electric,
-        scale: 1.03,
-        duration: 0.22,
+    // Create a single timeline for all lines
+    const tl = gsap.timeline({
+      defaults: {
         ease: "sine.inOut",
-      }, delay + 0.12)
-      .to(char, {
-        color: text,  // ← Always correct current theme color
-        scale: 1,
-        duration: 0.4,
-        ease: "power2.in",
-      }, delay + 0.3);
-  });
+      },
+    });
 
-  // Final cleanup — force correct color in case of race conditions
-  tl.add(() => {
-    const { text } = getCurrentColors();
-    gsap.set(".services-title-line .char", { color: text });
-  });
+    // Animate each line with an electrical sweep effect
+    titleLines.forEach((line, lineIndex) => {
+      // Get the text content
+      const text = line.textContent;
 
-}, [theme]); // ← Critical: re-run when theme changes
+      // Split text into spans for character-by-character animation
+      if (!line.querySelector(".char")) {
+        const chars = text
+          .split("")
+          .map(
+            (char, i) =>
+              `<span class="char" style="color: ${originalColor}; display: inline-block; position: relative;" data-index="${i}">${
+                char === " " ? "&nbsp;" : char
+              }</span>`
+          )
+          .join("");
+        line.innerHTML = chars;
+      }
+
+      // Animate each character with electrical effect
+      const chars = line.querySelectorAll(".char");
+      chars.forEach((char, charIndex) => {
+        // Randomize timing slightly for electrical feel
+        const baseDelay = lineIndex * 0.5 + charIndex * 0.06;
+        const randomDelay = Math.random() * 0.1;
+        const totalDelay = baseDelay + randomDelay;
+
+        // Electrical flicker effect
+        tl.to(
+          char,
+          {
+            duration: 0.12,
+            color: brightElectricColor,
+            scale: 1.05,
+            delay: totalDelay,
+            ease: "power2.out",
+          },
+          0
+        )
+          .to(
+            char,
+            {
+              duration: 0.18,
+              color: electricColor,
+              scale: 1.02,
+              delay: totalDelay + 0.12,
+              ease: "sine.inOut",
+            },
+            0
+          )
+          .to(
+            char,
+            {
+              duration: 0.3,
+              color: originalColor,
+              scale: 1,
+              delay: totalDelay + 0.3,
+              ease: "power2.in",
+            },
+            0
+          );
+      });
+    });
+  }, [theme]);
 
   // Function to start continuous animation
   const startElectricalAnimation = useCallback(() => {
@@ -453,10 +461,10 @@ export default function ServicesSection({ theme = "light" }) {
 
     const ctx = gsap.context(() => {
       // Clear any existing animations first
-      gsap.killTweensOf(".services-title-line");
+      gsap.killTweensOf(".hero-title-line");
 
       // Set initial state - text is fully visible
-      gsap.set(".services-title-line", {
+      gsap.set(".hero-title-line", {
         opacity: 1,
         y: 0,
       });
@@ -484,7 +492,7 @@ export default function ServicesSection({ theme = "light" }) {
 
       // Animate each line with a staggered reveal
       revealTl.fromTo(
-        ".services-title-line",
+        ".hero-title-line",
         {
           opacity: 0,
           y: 20,
@@ -543,6 +551,17 @@ export default function ServicesSection({ theme = "light" }) {
       }
     };
   }, [triggerElectricalAnimation]);
+
+  // Update character colors when theme changes
+  useEffect(() => {
+    const chars = document.querySelectorAll(".hero-title-line .char");
+    if (chars.length > 0) {
+      const newColor = theme === "dark" ? "#f3f3f3" : "#111111";
+      chars.forEach((char) => {
+        gsap.set(char, { color: newColor });
+      });
+    }
+  }, [theme]);
 
   // Add CSS for the electrical effects and smooth transitions
   useEffect(() => {
@@ -607,9 +626,9 @@ export default function ServicesSection({ theme = "light" }) {
       }
 
       /* Smooth color transitions for theme switching */
-      .services-title-line, 
-      .services-title-line .char,
-      .services-title-line .word {
+      .hero-title-line, 
+      .hero-title-line .char,
+      .hero-title-line .word {
         transition: color 0.5s ease;
       }
 
@@ -690,15 +709,15 @@ export default function ServicesSection({ theme = "light" }) {
               <h2 className="font-fellix leading-[1.02] tracking-tight">
                 {/* Line 1 */}
                 <div
-                  className={`services-title-line text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] text-transition ${
-                    theme == "dark" ? "text-white" : "text-[#111111]"
+                  className={`hero-title-line text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] text-transition ${
+                    theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                   }`}
                 >
                   <span className="font-normal">Level up your marketing,</span>
                 </div>
                 {/* Line 2 */}
                 <div
-                  className={`services-title-line text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] text-transition ${
+                  className={`hero-title-line text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] text-transition ${
                     theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                   }`}
                 >

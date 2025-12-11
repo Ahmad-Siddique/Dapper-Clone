@@ -315,6 +315,11 @@ export default function HeroSection({ theme = "light" }) {
         font-family: 'Fellix', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       }
 
+      /* Smooth theme transition for title */
+      .hero-title-line {
+        transition: color 0.4s ease;
+      }
+
       /* Card hover animation styles */
       .storyteq-card {
         transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
