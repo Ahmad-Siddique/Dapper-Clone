@@ -10,8 +10,8 @@ export default function CursorTrail({ children }) {
 
   const createTriangle = useCallback((x, y) => {
     const id = triangleIdRef.current++;
-    const size = Math.random() * 15 + 25; // Random size between 25-40px
-    const rotation = Math.random() * 360; // Random rotation
+    const size = Math.random() * 5 + 8;
+    const rotation = Math.random() * 360;
     const greenShades = ['#74F5A1', '#5FE08D', '#4DD97F', '#3BC972'];
     const color = greenShades[Math.floor(Math.random() * greenShades.length)];
 
@@ -26,7 +26,6 @@ export default function CursorTrail({ children }) {
 
     setTriangles((prev) => [...prev, newTriangle]);
 
-    // Remove triangle after animation completes
     setTimeout(() => {
       setTriangles((prev) => prev.filter((t) => t.id !== id));
     }, 1050);

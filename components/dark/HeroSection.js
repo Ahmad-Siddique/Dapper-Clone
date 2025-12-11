@@ -26,6 +26,67 @@ export default function HeroSection({ theme = "light" }) {
   const hasAnimatedRef = useRef(false);
   const animationIntervalRef = useRef(null);
   const storyteqCardRef = useRef(null);
+  const [videoStack, setVideoStack] = useState([0, 1, 2, 3]); // Stack order: top to bottom
+  const [playingVideo, setPlayingVideo] = useState(null);
+  const videoRefs = useRef([]);
+
+  const mediaAssets = [
+    {
+      type: 'image',
+      src: 'https://www.datocms-assets.com/151374/1741831437-mudwtr.png?auto=format&fit=max&h=2440&lossless=false&q=75&w=2440',
+      alt: 'MUD\\WTR brand showcase',
+      title: 'MUD\\WTR',
+      subtitle: 'Health & Wellness'
+    },
+    {
+      type: 'image',
+      src: 'https://www.datocms-assets.com/151374/1741910699-cotopaxi_482x858_alternate.png?auto=format&fit=max&h=2440&lossless=false&q=75&w=2440',
+      alt: 'Cotopaxi brand showcase',
+      title: 'Cotopaxi',
+      subtitle: 'Outdoor & Lifestyle'
+    },
+    {
+      type: 'video',
+      src: 'https://stream.mux.com/zaOX00ijKS1dZVZGFpLMjhNOIGbKQ8dmO/medium.mp4',
+      alt: 'Digital marketing campaign showcase',
+      title: 'OREO',
+      subtitle: 'Food & Beverage'
+    },
+    {
+      type: 'video',
+      src: 'https://stream.mux.com/s5S6U18mND3t8caFSka7r7Wrulxm4SAb/medium.mp4',
+      alt: 'Brand impact visualization',
+      title: 'Coca-Cola',
+      subtitle: 'Global Campaigns'
+    }
+  ];
+
+  // Handle clicking on any media asset to bring it to top
+  const handleMediaClick = (clickedIndex) => {
+    // Reorder stack to bring clicked item to top (index 0)
+    const newStack = [clickedIndex, ...videoStack.filter(idx => idx !== clickedIndex)];
+    setVideoStack(newStack);
+    
+    // If it's a video, set it as playing
+    if (mediaAssets[clickedIndex].type === 'video') {
+      setPlayingVideo(clickedIndex);
+    } else {
+      setPlayingVideo(null);
+    }
+  };
+
+  // Control video playback
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (video && mediaAssets[index].type === 'video') {
+        if (index === playingVideo && index === videoStack[0]) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      }
+    });
+  }, [playingVideo, videoStack, mediaAssets]);
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -368,7 +429,7 @@ export default function HeroSection({ theme = "light" }) {
 
   const createTriangle = useCallback((x, y) => {
     const id = triangleIdRef.current++;
-    const size = Math.random() * 15 + 25;
+    const size = Math.random() * 5 + 8;
     const rotation = Math.random() * 360;
     const greenShades = ["#74F5A1", "#5FE08D", "#4DD97F", "#3BC972"];
     const color = greenShades[Math.floor(Math.random() * greenShades.length)];
@@ -599,107 +660,104 @@ export default function HeroSection({ theme = "light" }) {
           </div>
 
           {/* Right column: Storyteq card flush to the right */}
-          <div className="hero-body lg:flex-shrink-0 lg:ml-auto">
-            <div className="w-[420px] max-w-full">
-              <div
-                ref={storyteqCardRef}
-                className={`storyteq-card flex overflow-hidden rounded-xl shadow-[0_18px_45px_rgba(0,0,0,0.22)] transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
-                  theme === "dark"
-                    ? "bg-[#2a2a2a] border border-[rgba(255,255,255,0.08)]"
-                    : "bg-white"
-                }`}
-              >
-                {/* Text area */}
-                <div className="card-content flex flex-1 flex-col justify-between px-5 py-5 md:px-6 md:py-6 transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
-                  <div>
-                    <p
-                      className={`mb-1 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[11px] font-semibold uppercase tracking-[0.18em] ${
-                        theme === "dark" ? "text-[#a0a0a0]" : "text-[#7A7A7A]"
-                      }`}
-                    >
-                      Results
-                    </p>
-                    <h3
-                      className={`mb-3 pr-3 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-bold leading-snug ${
-                        theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"
-                      }`}
-                    >
-                      54% increase in pipeline with demand generation strategy
-                    </h3>
-                  </div>
+          <div className="hero-body lg:flex-shrink-0 lg:ml-auto w-full lg:w-auto relative z-20">
+            <div className="w-full max-w-xl lg:max-w-2xl xl:max-w-4xl 2xl:max-w-5xl">
+              {/* Interactive Media Stack Container */}
+              <div className="relative w-full aspect-[4/5] rounded-2xl" style={{ perspective: '1000px' }}>
+                {videoStack.map((mediaIndex, stackPosition) => (
+                  <div
+                    key={mediaIndex}
+                    className={`absolute w-full h-full transition-all duration-500 ease-out cursor-pointer ${
+                      stackPosition === 0 
+                        ? 'opacity-100 shadow-2xl scale-100 z-40' 
+                        : 'opacity-80 shadow-lg'
+                    }`}
+                    style={{
+                      transform: `
+                        translateX(${stackPosition * 15}px) 
+                        translateY(${stackPosition * 15}px) 
+                        translateZ(-${stackPosition * 30}px)
+                        scale(${1 - stackPosition * 0.05})
+                      `,
+                      zIndex: 40 - stackPosition
+                    }}
+                    onClick={() => handleMediaClick(mediaIndex)}
+                  >
+                    <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black border border-white/10">
+                      {mediaAssets[mediaIndex].type === 'image' ? (
+                        <Image
+                          src={mediaAssets[mediaIndex].src}
+                          alt={mediaAssets[mediaIndex].alt}
+                          fill
+                          className="object-cover"
+                          priority={mediaIndex === videoStack[0]}
+                        />
+                      ) : (
+                        <video
+                          ref={(el) => (videoRefs.current[mediaIndex] = el)}
+                          src={mediaAssets[mediaIndex].src}
+                          muted
+                          loop
+                          playsInline
+                          className="w-full h-full object-cover"
+                        />
+                      )}
 
-                  <div className="mt-3 flex items-center justify-between gap-3">
-                    <div className="relative h-4 w-28">
-                      <Image
-                        src="https://cdn.prod.website-files.com/67bd789ea8377ea95b1724ad/683979c61bb4c3a3f5a9f665_Storyteq_Logo_Light_Final.svg"
-                        alt="Storyteq"
-                        fill
-                        className="object-contain object-left"
-                        sizes="112px"
-                      />
+                      {/* Card Overlay with Brand Info */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none">
+                        <div className="absolute bottom-6 left-6 right-6">
+                          <h3 className="text-white text-xl sm:text-2xl font-bold font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] mb-1">
+                            {mediaAssets[mediaIndex].title}
+                          </h3>
+                          <p className="text-white/80 text-sm font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
+                            {mediaAssets[mediaIndex].subtitle}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Media Type Indicator */}
+                      <div className="absolute top-4 right-4 px-3 py-1 bg-black/50 backdrop-blur-sm rounded-full pointer-events-none">
+                        <span className="text-white text-xs font-medium font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] uppercase">
+                          {mediaAssets[mediaIndex].type}
+                        </span>
+                      </div>
+
+                      {/* Play Indicator for Videos */}
+                      {mediaAssets[mediaIndex].type === 'video' && stackPosition !== 0 && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                            <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      )}
                     </div>
-
-                    {/* Storyteq CTA with straight downward arrow animation */}
-                    <Link
-                      href="#case-storyteq"
-                      aria-label="Open Storyteq case study"
-                      className="group flex h-9 w-9 items-center justify-center"
-                    >
-                      <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
-                        {/* Default downward arrow */}
-                        <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-y-3 group-hover:opacity-0">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 14 14"
-                            aria-hidden="true"
-                          >
-                            <path
-                              d="M7 1V13M7 13L3 9M7 13L11 9"
-                              fill="none"
-                              stroke="#212121"
-                              strokeWidth="1.8"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </span>
-
-                        {/* New downward arrow (flies in from top) */}
-                        <span className="absolute inset-0 flex items-center justify-center translate-y-[-12px] opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 14 14"
-                            aria-hidden="true"
-                          >
-                            <path
-                              d="M7 1V13M7 13L3 9M7 13L11 9"
-                              fill="none"
-                              stroke="#74F5A1"
-                              strokeWidth="1.8"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </span>
-                      </span>
-                    </Link>
                   </div>
-                </div>
+                ))}
+              </div>
 
-                {/* Right visual */}
-                <div className="relative hidden sm:block w-[150px] lg:w-[170px] overflow-hidden">
-                  <div className="card-image absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
-                    <Image
-                      src="https://cdn.prod.website-files.com/67bd789ea8377ea95b1724ad/6863e1a7d3e379059672b955_3.avif"
-                      alt="Campaign creative"
-                      fill
-                      className="object-cover"
-                      sizes="170px"
-                    />
-                  </div>
-                </div>
+              {/* Stack Indicators */}
+              <div className="flex justify-center mt-6 space-x-2">
+                {mediaAssets.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleMediaClick(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      index === videoStack[0] 
+                        ? 'bg-[#74F5A1] scale-110' 
+                        : 'bg-white/30 hover:bg-white/50'
+                    }`}
+                    aria-label={`View ${mediaAssets[index].title}`}
+                  />
+                ))}
+              </div>
+
+              {/* Current Media Info */}
+              <div className="text-center mt-4">
+                <p className={`text-sm font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] ${theme === 'dark' ? 'text-white/60' : 'text-black/60'}`}>
+                  Click any card to bring it to the front
+                </p>
               </div>
             </div>
           </div>

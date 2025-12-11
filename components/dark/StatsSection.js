@@ -110,7 +110,7 @@ export default function StatsSection({ theme = "light" }) {
 
   const createTriangle = useCallback((x, y) => {
     const id = triangleIdRef.current++;
-    const size = Math.random() * 12 + 20;
+    const size = Math.random() * 5 + 8;
     const rotation = Math.random() * 360;
     const greenShades = ["#74F5A1", "#5FE08D", "#4DD97F", "#3BC972"];
     const color = greenShades[Math.floor(Math.random() * greenShades.length)];
