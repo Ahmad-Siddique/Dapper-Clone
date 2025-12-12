@@ -109,6 +109,43 @@
   font-display: swap;
 }
 
+/* === SUISSE INTL FONT === */
+@font-face {
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/fonnts.com-Suisse_Intl_Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/fonnts.com-Suisse_Intl_Medium.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/fonnts.com-Suisse_Intl_Bold.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Suisse Intl';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/fonts/fonnts.com-SuisseIntl-Light.ttf') format('truetype');
+  font-display: swap;
+}
+
+.font-suisse {
+  font-family: 'Suisse Intl', Arial, sans-serif;
+}
+
 .font-ivy-presto {
   font-family: 'Ivy Presto Headline', serif !important;
   font-weight: 300        /* try 300 or even 200 */
@@ -162,26 +199,3 @@ body {
   position: relative;
   overflow-x: hidden;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
