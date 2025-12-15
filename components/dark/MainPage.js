@@ -11,6 +11,8 @@ import ResultsSection from './ResultsSection';
 import CompareSection from './CompareSection';
 import TalkToExpertSection from './TalkToExpertSection';
 import Footer from './Footer';
+import DeepJudgeAnimation from './DeepJudgeAnimation';
+import TestimonialsSection from './TestimonialsSection';
 import CursorTrail from './CursorTrail';
 import './MainPage.css';
 
@@ -56,12 +58,14 @@ const MainPage = () => {
 
         <Header theme={theme} />
         <HeroSection theme={theme} />
+        <DeepJudgeAnimation theme={theme} />
         <StatsSection theme={theme} />
         <ServicesSection theme={theme} />
         <DemandSection theme={theme} />
         {/* <DemandTeamSection theme={theme} /> */}
         <ResultsSection theme={theme} />
         <CompareSection theme={theme} />
+        <TestimonialsSection theme={theme} />
         <TalkToExpertSection theme={theme} />
         <Footer theme={theme} />
       </div>

@@ -1,0 +1,141 @@
+import React from 'react';
+import { ArrowRight } from 'lucide-react';
+
+const testimonials = [
+  {
+    id: 1,
+    company: "TECHFLOW",
+    name: "Sarah Johnson",
+    role: "CTO at TechFlow",
+    content: "The adoption rate has been remarkable, with more than 80% of TechFlow's engineering team incorporating it into their workflow and a level of engagement that is unparalleled compared with other dev tools.",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150"
+  },
+  {
+    id: 2,
+    company: "STARTUPX",
+    name: "Michael Chen",
+    role: "Founder",
+    content: "We've seen a dramatic shift in how we handle our search infrastructure. The precision and speed are exactly what we needed to scale our operations effectively.",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150"
+  },
+  {
+    id: 3,
+    company: "CREATIVECORP",
+    name: "Emily Davis",
+    role: "Product Manager",
+    content: "It's rare to find a tool that balances power with simplicity so well. My team was able to integrate it within days and the results were immediate.",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150"
+  },
+  {
+    id: 4,
+    company: "BRANDIFY",
+    name: "David Wilson",
+    role: "Director of Marketing",
+    content: "The insights we gather now are far more actionable. It's not just about search, it's about understanding our data in a way we couldn't before.",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150&h=150"
+  },
+  {
+    id: 5,
+    company: "INNOVATEDAILY",
+    name: "Jessica Brown",
+    role: "CEO",
+    content: "A game changer for our legal tech stack. The accuracy is impressive, and the support team has been fantastic to work with throughout the process.",
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150&h=150"
+  }
+];
+
+export default function TestimonialsSection({ theme }) {
+  // Theme Color Logic
+  const isDark = theme === 'dark';
+  
+  const bgColor = isDark ? 'bg-[#1c1c1c]' : 'bg-[#F2F2F2]';
+  const textColor = isDark ? 'text-[#e5e5e5]' : 'text-slate-900';
+  const headingColor = isDark ? 'text-[#f0f0f0]' : 'text-slate-900';
+  const cardBg = isDark ? 'bg-[#e6e6e2]' : 'bg-white';
+  const cardText = 'text-[#1a1a1a]'; // Cards are always light based, text is dark
+  const cardShadow = isDark ? 'shadow-xl' : 'shadow-[0_8px_30px_rgb(0,0,0,0.04)]'; // Softer shadow on light
+
+
+
+  const bgStyle =
+    theme === "dark"
+      ? {
+          backgroundColor: "#2b2b2b",
+          backgroundImage: `
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"),
+          radial-gradient(ellipse at top left, rgba(60, 60, 60, 0.3), transparent 50%),
+          radial-gradient(ellipse at bottom right, rgba(50, 50, 50, 0.2), transparent 50%)
+        `,
+          backgroundBlendMode: "overlay, normal, normal",
+        }
+      : { backgroundColor: "#EFEFEF" };
+
+  const noiseOverlayStyle = {
+    backgroundImage: `
+      repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0, 0, 0, 0.03) 1px, rgba(0, 0, 0, 0.03) 2px),
+      repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(0, 0, 0, 0.03) 1px, rgba(0, 0, 0, 0.03) 2px),
+      repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0, 0, 0, 0.015) 2px, rgba(0, 0, 0, 0.015) 4px)
+    `,
+  };
+
+
+
+
+  return (
+    <div style={bgStyle} className={`min-h-[150vh]  ${textColor} font-sans selection:bg-indigo-500/30 transition-colors duration-500`}>
+        
+        <div className="relative">
+            {/* Sticky Heading Section */}
+            <div className="sticky top-0 h-screen flex flex-col items-center justify-center -z-0 overflow-hidden px-4">
+                <h1 className={`text-6xl md:text-8xl font-serif text-center leading-tight tracking-tight ${headingColor} transition-colors duration-500`}>
+                    What people say<br />
+                    about TechEyerie
+                </h1>
+            </div>
+
+            {/* Scrollable Cards Section */}
+            <div className="relative z-10 flex flex-col items-center gap-6 pb-32 pt-[20vh] px-4 w-full">
+                {testimonials.map((t) => (
+                    <div 
+                        key={t.id} 
+                        className={`w-full max-w-xl ${cardBg} ${cardText} p-8 md:p-12 rounded-[2rem] ${cardShadow} transition-all duration-300 hover:scale-[1.01] font-suisse font-light`}
+                    >
+                        {/* Company Name */}
+                        <div className="mb-8">
+                            <h4 className="text-xs font-bold tracking-widest uppercase text-gray-600">{t.company}</h4>
+                        </div>
+
+                        {/* Quote */}
+                        <blockquote className="text-xl md:text-2xl leading-relaxed mb-12 font-light">
+                            "{t.content}"
+                        </blockquote>
+
+                        {/* Profile Footer */}
+                        <div className="flex items-center justify-between border-t border-gray-300/50 pt-8">
+                            <div className="flex items-center gap-4">
+                                <img 
+                                    src={t.image} 
+                                    alt={t.name} 
+                                    className="w-12 h-12 rounded-lg object-cover grayscale"
+                                />
+                                <div>
+                                    <h5 className="font-bold text-sm">{t.name}</h5>
+                                    <p className="text-xs text-gray-600">{t.role}</p>
+                                </div>
+                            </div>
+                            
+                            {/* Arrow Icon Circle */}
+                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm cursor-pointer hover:bg-black hover:text-white transition-colors duration-300">
+                                <ArrowRight className="w-5 h-5" />
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            
+             
+            
+        </div>
+    </div>
+  );
+}
