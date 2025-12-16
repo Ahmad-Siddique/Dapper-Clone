@@ -862,7 +862,7 @@ export default function DemandSection({ theme = "light" }) {
       if (st) st.kill();
       gsap.set([wrapper, phone], { clearProps: "all" });
     };
-  }, []);
+  }, [theme]);
 
   return (
     <>
