@@ -6,17 +6,42 @@ const LEADERS = [
   {
     name: "Darin Brannan",
     title: "Chief Executive Officer",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2574&auto=format&fit=crop", // Male, glasses, professional
+    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2574&auto=format&fit=crop", 
   },
   {
     name: "Chris Brumett",
     title: "Chief Product Officer",
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=2574&auto=format&fit=crop", // Male, smiling, professional
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=2574&auto=format&fit=crop", 
   },
   {
     name: "Kris Evans",
     title: "Chief Technology Officer",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop", // Male, beard, professional
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop", 
+  },
+  {
+    name: "Sarah Jenkins",
+    title: "VP of Operations",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop", 
+  },
+  {
+    name: "Michael Chen",
+    title: "Head of Engineering",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop", 
+  },
+  {
+    name: "Emily Rodriguez",
+    title: "Chief Marketing Officer",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2661&auto=format&fit=crop", 
+  },
+  {
+    name: "David Kim",
+    title: "VP of Sales",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2574&auto=format&fit=crop", 
+  },
+  {
+    name: "Jessica Wong",
+    title: "Head of Product Design",
+    image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?q=80&w=2574&auto=format&fit=crop", 
   },
 ];
 
@@ -77,6 +102,15 @@ const Leaders = () => {
                   className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{
                     background: "radial-gradient(600px circle at var(--x) var(--y), rgba(251, 191, 36, 0.15), transparent 40%)"
+                  }}
+                />
+
+                {/* Border Glow (Revealed by cursor) */}
+                <div 
+                  className="absolute inset-0 pointer-events-none border border-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    maskImage: "radial-gradient(150px circle at var(--x) var(--y), black, transparent)",
+                    WebkitMaskImage: "radial-gradient(150px circle at var(--x) var(--y), black, transparent)"
                   }}
                 />
 

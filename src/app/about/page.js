@@ -4,6 +4,7 @@ import Hero from '../../../components/about/Hero';
 import MissionSection from '../../../components/about/Mission';
 import Values from '../../../components/about/Values';
 import Leaders from '../../../components/about/Leaders';
+import Investors from '../../../components/about/Investors';
 
 export default function AboutPage() {
   return (
@@ -13,6 +14,7 @@ export default function AboutPage() {
       <MissionSection />
       <Values />
       <Leaders />
+      <Investors />
       
     </main>
   );
