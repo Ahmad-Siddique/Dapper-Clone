@@ -45,15 +45,17 @@ const LEADERS = [
   },
 ];
 
-const Leaders = () => {
+const Leaders = ({ theme = "light" }) => {
+  const isDark = theme === "dark";
+
   return (
-    <section className="bg-white text-black py-32 md:py-48 px-6 md:px-12 border-b border-gray-100">
+    <section className={`py-32 md:py-48 px-6 md:px-12 border-b transition-colors duration-500 ${isDark ? 'bg-[#0B0B0B] text-white border-white/10' : 'bg-white text-black border-gray-100'}`}>
       <div className="max-w-[1800px] mx-auto text-center">
         
         {/* Label */}
         <div className="mb-8">
            <MaskedReveal>
-             <span className="text-gray-400 text-sm md:text-base font-medium tracking-wide font-mono uppercase">
+             <span className={`text-sm md:text-base font-medium tracking-wide font-mono uppercase ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
                Our Leaders
              </span>
            </MaskedReveal>
@@ -62,7 +64,7 @@ const Leaders = () => {
         {/* Title */}
         <div className="mb-16 md:mb-24">
           <MaskedReveal delay={0.1}>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[0.9] font-['Figtree'] text-black">
+            <h2 className={`text-5xl md:text-7xl lg:text-8xl tracking-tight leading-[0.9] font-['Figtree'] ${isDark ? 'text-white' : 'text-black'}`}>
               Powered by <br className="hidden md:block" />
               innovators in tech <br className="hidden md:block" />
               & experts in logistics
@@ -73,20 +75,20 @@ const Leaders = () => {
         {/* Subtitles */}
         <div className="max-w-2xl mx-auto space-y-12 mb-32">
           <MaskedReveal delay={0.2}>
-            <p className="text-md md:text-xl text-gray-600 leading-relaxed font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
+            <p className={`text-md md:text-xl leading-relaxed font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
               Terminal leaders drive towards a combined mission with extreme ownership, smart execution, and passionate innovation.
             </p>
           </MaskedReveal>
 
           <MaskedReveal delay={0.3}>
-            <p className="text-md md:text-xl text-gray-600  font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
+            <p className={`text-md md:text-xl font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
               Meet the strategic problem solvers at the helm:
             </p>
           </MaskedReveal>
         </div>
 
         {/* LEADERS GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-3 border-t border-l border-gray-100">
+        <div className={`grid grid-cols-1 md:grid-cols-3 border-t border-l ${isDark ? 'border-white/10' : 'border-gray-100'}`}>
           {LEADERS.map((leader, index) => (
              <div 
                key={index}
@@ -95,7 +97,7 @@ const Leaders = () => {
                  e.currentTarget.style.setProperty("--x", `${e.clientX - rect.left}px`);
                  e.currentTarget.style.setProperty("--y", `${e.clientY - rect.top}px`);
                }}
-               className="relative group border-r border-b border-gray-100 p-8 md:p-12 lg:p-16 flex flex-col items-center overflow-hidden"
+               className={`relative group border-r border-b ${isDark ? 'border-white/10' : 'border-gray-100'} p-8 md:p-12 lg:p-16 flex flex-col items-center overflow-hidden`}
              >
                 {/* Spotlight Glow */}
                 <div 
@@ -123,12 +125,12 @@ const Leaders = () => {
                 )}
 
                 {/* Grid Crosshairs (Decoration) */}
-                <div className="absolute -top-[5px] -left-[5px] w-[11px] h-[11px] text-gray-200 z-10">
+                <div className={`absolute -top-[5px] -left-[5px] w-[11px] h-[11px] z-10 ${isDark ? 'text-gray-700' : 'text-gray-200'}`}>
                    <svg viewBox="0 0 10 10" className="w-full h-full"><path d="M5 0V10 M0 5H10" stroke="currentColor" strokeWidth="1"/></svg>
                 </div>
 
                 {/* Image */}
-                <div className="relative w-full aspect-square mb-8 overflow-hidden bg-gray-50 z-10 transition-transform duration-500 will-change-transform group-hover:scale-105">
+                <div className={`relative w-full aspect-square mb-8 overflow-hidden z-10 transition-transform duration-500 will-change-transform group-hover:scale-105 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`}>
                    <img 
                      src={leader.image} 
                      alt={leader.name} 
@@ -138,10 +140,10 @@ const Leaders = () => {
 
                 {/* Info */}
                 <div className="text-center space-y-2 z-10">
-                   <h3 className="text-2xl font-['Figtree'] font-semibold text-[#032219]">
+                   <h3 className={`text-2xl font-['Figtree'] font-semibold ${isDark ? 'text-white' : 'text-[#032219]'}`}>
                       {leader.name}
                    </h3>
-                   <p className="text-gray-500 font-medium font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
+                   <p className={`font-medium font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       {leader.title}
                    </p>
                 </div>

@@ -1141,7 +1141,7 @@ const navItems = [
   { label: "Expertise", hasDropdown: true, type: "mega" },
   { label: "Cases", hasDropdown: false },
   { label: "Resources", hasDropdown: true, type: "mega" },
-  { label: "About", hasDropdown: false },
+  { label: "About", hasDropdown: false, href: "/about" },
   { label: "Careers", hasDropdown: false },
 ];
 
@@ -1442,37 +1442,51 @@ export default function Header({ theme = "light" }) {
                   }
                   onMouseLeave={handleMouseLeave}
                 >
-                  <button
-                    type="button"
-                    className="header-link flex items-center gap-1 font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] tracking-tight transition-all duration-200 cursor-pointer px-3 py-1.5 rounded-[8px]"
-                    style={{
-                      color: textColor,
-                      backgroundColor:
-                        activeDropdown === item.label ? hoverBg : "transparent",
-                    }}
-                  >
-                    <span>{item.label}</span>
-                    {item.hasDropdown && (
-                      <svg
-                        width="9"
-                        height="5"
-                        viewBox="0 0 10 6"
-                        aria-hidden="true"
-                        className={`transition-transform duration-300 ${
-                          activeDropdown === item.label ? "rotate-180" : ""
-                        }`}
-                      >
-                        <path
-                          d="M1 1L5 5L9 1"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    )}
-                  </button>
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      className="header-link flex items-center gap-1 font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] tracking-tight transition-all duration-200 cursor-pointer px-3 py-1.5 rounded-[8px]"
+                      style={{
+                        color: textColor,
+                        backgroundColor:
+                          activeDropdown === item.label ? hoverBg : "transparent",
+                      }}
+                    >
+                      <span>{item.label}</span>
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      className="header-link flex items-center gap-1 font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] tracking-tight transition-all duration-200 cursor-pointer px-3 py-1.5 rounded-[8px]"
+                      style={{
+                        color: textColor,
+                        backgroundColor:
+                          activeDropdown === item.label ? hoverBg : "transparent",
+                      }}
+                    >
+                      <span>{item.label}</span>
+                      {item.hasDropdown && (
+                        <svg
+                          width="9"
+                          height="5"
+                          viewBox="0 0 10 6"
+                          aria-hidden="true"
+                          className={`transition-transform duration-300 ${
+                            activeDropdown === item.label ? "rotate-180" : ""
+                          }`}
+                        >
+                          <path
+                            d="M1 1L5 5L9 1"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  )}
                 </div>
               ))}
             </nav>

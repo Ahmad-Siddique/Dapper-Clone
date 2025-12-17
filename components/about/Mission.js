@@ -30,11 +30,11 @@ const SECTIONS = [
     title: "Total visibility across your operations",
     text: "Stop guessing and start knowing. Our platform creates a real-time digital twin of your yard, tracking every asset, trailer, and driver movement with precision. Gain actionable insights that drive efficiency and safety from day one.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop", // Dashboard/Analytics/High-tech placeholder
-    layout: "image-left", // Image on Left, Text on Right
+    layout: "text-left", // Text on left, Image on right
   },
 ];
 
-const ScrollTextReveal = ({ children, className = "" }) => {
+const ScrollTextReveal = ({ children, className = "", isDark = false }) => {
   const containerRef = useRef(null);
 
   useLayoutEffect(() => {
@@ -43,7 +43,7 @@ const ScrollTextReveal = ({ children, className = "" }) => {
       
       gsap.fromTo(
         words,
-        { color: "#D1D5DB", opacity: 0.3 }, // Start Gray (gray-300) and dim
+        { color: isDark ? "#6B7280" : "#D1D5DB", opacity: 0.3 }, // Start color
         {
           opacity: 1,
           stagger: 0.1,
@@ -56,14 +56,14 @@ const ScrollTextReveal = ({ children, className = "" }) => {
           },
           keyframes: [
             { color: "#FBBF24", duration: 1 }, // Highlight Yellow
-            { color: "#000000", duration: 1 }, // Settle to Black
+            { color: isDark ? "#FFFFFF" : "#000000", duration: 1 }, // Settle to White/Black
           ]
         }
       );
-    }, containerRef);
+    }, [isDark]);
 
     return () => ctx.revert();
-  }, [children]);
+  }, [children, isDark]);
 
   // Split text into words
   const words = children.split(" ");
@@ -79,9 +79,10 @@ const ScrollTextReveal = ({ children, className = "" }) => {
   );
 };
 
-const MissionSection = () => {
+const MissionSection = ({ theme = "light" }) => {
   const containerRef = useRef(null);
   const imageRefs = useRef([]);
+  const isDark = theme === "dark";
 
   useLayoutEffect(() => {
     let ctx = gsap.context(() => {
@@ -110,7 +111,7 @@ const MissionSection = () => {
   }, []);
 
   return (
-    <section ref={containerRef} className="bg-white text-black py-24 md:py-32 overflow-hidden">
+    <section ref={containerRef} className={`${isDark ? 'bg-[#0B0B0B] text-white' : 'bg-white text-black'} py-24 md:py-32 overflow-hidden transition-colors duration-500`}>
       <div className="w-full space-y-32 md:space-y-48">
         {SECTIONS.map((section, index) => (
           <div
@@ -127,7 +128,7 @@ const MissionSection = () => {
             }`}>
               <div className="max-w-2xl">
                 <div className="flex items-start gap-4 mb-8">
-                  <span className="text-sm font-mono text-gray-400 mt-2">{section.number}</span>
+                  <span className={`text-sm font-mono ${isDark ? 'text-gray-500' : 'text-gray-400'} mt-2`}>{section.number}</span>
                   <MaskedReveal>
                     <h2 className="text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tight leading-[1.1]">
                       {section.title}
@@ -136,7 +137,7 @@ const MissionSection = () => {
                 </div>
 
                 <div className="">
-                  <ScrollTextReveal className="text-lg md:text-xl leading-relaxed font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
+                  <ScrollTextReveal className="text-lg md:text-xl leading-relaxed font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]" isDark={isDark}>
                     {section.text}
                   </ScrollTextReveal>
                 </div>

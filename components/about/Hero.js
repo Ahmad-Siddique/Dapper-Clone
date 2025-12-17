@@ -4,24 +4,26 @@ import { MaskedReveal } from "../ui/MaskedRevel";
 import { SectionLabel } from "../ui/SectionLabel";
 import { GridAnimation } from "./GridAnimation";
 
-const Hero = () => {
+const Hero = ({ theme = "light" }) => {
+  const isDark = theme === 'dark';
+  
   return (
-    <section className="relative pt-48 pb-32 md:pt-[30vh] md:pb-40 px-6 md:px-12 border-b border-gray-200 overflow-hidden">
-      <GridAnimation />
+    <section className={`relative pt-48 pb-32 md:pt-[30vh] md:pb-40 px-6 md:px-12 border-b ${isDark ? 'border-white/10' : 'border-gray-200'} overflow-hidden transition-colors duration-500`}>
+      <GridAnimation theme={theme} />
 
       <div className="relative z-10 max-w-[90%] mx-auto text-center">
         <div className="mb-12">
-          <SectionLabel text="About Terminal" className="text-gray-300 text-xl md:text-4xl" />
+          <SectionLabel text="About Terminal" className={isDark ? "text-gray-500" : "text-gray-300"} />
         </div>
         
         <div className="flex flex-col mb-8 md:mb-12">
           <MaskedReveal className="h-auto pb-1 md:pb-4">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl leading-[0.85] tracking-[-0.04em] text-gray-900">
+            <h1 className={`text-5xl md:text-7xl lg:text-8xl leading-[0.85] tracking-[-0.04em] ${isDark ? 'text-white' : 'text-gray-900'}`}>
               A new industry
             </h1>
           </MaskedReveal>
           <MaskedReveal delay={0.15} className="h-auto pb-1 md:pb-4">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl leading-[0.85] tracking-[-0.04em] text-gray-900">
+            <h1 className={`text-5xl md:text-7xl lg:text-8xl leading-[0.85] tracking-[-0.04em] ${isDark ? 'text-white' : 'text-gray-900'}`}>
               standard in the yard
             </h1>
           </MaskedReveal>
@@ -29,7 +31,7 @@ const Hero = () => {
 
         <div className="max-w-3xl mx-auto">
           <MaskedReveal delay={0.4}>
-            <p className="text-lg md:text-xl font-regular leading-[1.4] tracking-tight text-gray-500 antialiased text-center">
+            <p className={`text-lg md:text-xl font-regular leading-[1.4] tracking-tight ${isDark ? 'text-gray-400' : 'text-gray-500'} antialiased text-center`}>
               Terminal is a different kind of logistics technology company. We exist to create a new industry standard in yard operations by completely rethinking what that yard of future will be — from fragmented bottleneck into a scalable, strategic advantage.
             </p>
           </MaskedReveal>
