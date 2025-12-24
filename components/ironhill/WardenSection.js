@@ -260,7 +260,7 @@ export default function ProductShowcaseSection() {
             >
               <div className="relative w-full aspect-square">
                 <Image
-                  src="https://images.unsplash.com/photo-1585159812596-fac104f2d244?auto=format&fit=crop&w=600"
+                  src="https://images.unsplash.com/photo-1516912481808-3406841bd33c?auto=format&fit=crop&w=600"
                   alt="Hops plant illustration"
                   fill
                   className="object-contain drop-shadow-2xl"

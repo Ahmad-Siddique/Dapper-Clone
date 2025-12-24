@@ -323,7 +323,7 @@ export default function ProduceSection() {
             {/* Bee/Honey Illustration */}
             <div className="relative w-56 h-56 md:w-64 md:h-64 mx-auto">
               <Image
-                src="https://images.unsplash.com/photo-1587049352846-4a222e784587?auto=format&fit=crop&w=400"
+                src="https://images.unsplash.com/photo-1589526261866-ab0d34f8dc19?q=80&w=689&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=400"
                 alt="Honey and bee illustration"
                 fill
                 className="object-contain"
