@@ -1,15 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import { Source_Serif_4 } from "next/font/google";
-import { Inter } from "next/font/google";
-
-
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -18,12 +9,6 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-
-const sourceSerif = Source_Serif_4({
-  variable: "--font-source-serif",
-  subsets: ["latin"],
-  weight: ["400", "600", "700"], // adjust as needed
 });
 
 export const metadata = {
@@ -35,14 +20,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-       
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <Navbar /> */}
-       
-         
-      
         {children}
-       
       </body>
     </html>
   );

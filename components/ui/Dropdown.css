@@ -1,0 +1,103 @@
+/* Dropdown.css */
+.dropdown-container {
+    position: relative;
+    width: 100%;
+    font-family: inherit;
+}
+
+/* The trigger acts like the input field */
+.dropdown-trigger {
+    width: 100%;
+    padding: 8px 0 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--contact-text, #000);
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    outline: none;
+    position: relative;
+}
+
+/* Arrow icon rotation */
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+}
+
+.dropdown-container.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Placeholder styling */
+.dropdown-placeholder {
+    color: transparent;
+    /* Initially transparent to show label */
+}
+
+.dropdown-trigger.has-value .dropdown-value {
+    color: var(--contact-text, #000);
+}
+
+/* When the dropdown has a value, we can style accordingly if needed */
+
+/* The Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--contact-card-bg, #EBEBEB);
+    border-radius: 12px;
+    padding: 8px 0;
+    margin-top: 4px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.dropdown-container.open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Options */
+.dropdown-option {
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 15px;
+    color: var(--contact-text, #000);
+}
+
+.dropdown-option:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-option.selected {
+    background-color: rgba(0, 0, 0, 0.08);
+    /* Slightly darker for selected */
+    font-weight: 500;
+}
+
+/* Custom Scrollbar for the menu */
+.dropdown-menu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}

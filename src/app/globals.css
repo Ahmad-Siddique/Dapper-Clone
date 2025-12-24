@@ -142,6 +142,20 @@
   font-display: swap;
 }
 
+
+@font-face {
+  font-family: 'PPWoodland';
+  font-style: normal;
+  font-weight: normal;
+  src: url('/fonts/PPWoodland-Ultralight.otf') format('opentype');
+  font-display: swap;
+}
+
+.font-ppwoodland {
+  font-family: 'PPWoodland', Arial, sans-serif;
+}
+
+
 .font-suisse {
   font-family: 'Suisse Intl', Arial, sans-serif;
 }
