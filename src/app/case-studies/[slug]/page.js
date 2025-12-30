@@ -1,11 +1,11 @@
-// app/case-studies/page.jsx
+// app/case-studies/[slug]/page.jsx
 import SingleCaseStudy from "../../../../components/case-studies/SingleCaseStudy";
 
 
-export default function Home() {
+export default function CaseStudyDetailPage({ params }) {
   return (
     <div>
-      <SingleCaseStudy />
+      <SingleCaseStudy params={params} />
     </div>
   );
 }

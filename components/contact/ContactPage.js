@@ -1,18 +1,101 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ContactForm from './ContactForm';
+import Header from '../dark/Header';
+import Footer from '../dark/Footer';
 import './ContactPage.css';
 
 export default function ContactPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    // Check for saved theme preference or default to 'light'
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
 
   const openForm = () => setIsFormOpen(true);
   const closeForm = () => setIsFormOpen(false);
 
+  // Theme-based CSS variables
+  const themeStyles = theme === 'dark' ? {
+    '--contact-bg': '#111111',
+    '--contact-text': '#FFFFFF',
+    '--contact-card-bg': '#1A1A1A',
+    '--contact-btn-dark': '#FFFFFF',
+    '--contact-btn-light': '#111111',
+    '--contact-border': 'rgba(255, 255, 255, 0.1)',
+    '--contact-label': '#A0A0A0',
+  } : {
+    '--contact-bg': '#FFFFFF',
+    '--contact-text': '#000000',
+    '--contact-card-bg': '#EBEBEB',
+    '--contact-btn-dark': '#1D1D1B',
+    '--contact-btn-light': '#FFFFFF',
+    '--contact-border': '#CCCCCC',
+    '--contact-label': '#666666',
+  };
+
   return (
-    <div className="contact-page">
-      {/* Large Heading - Left Aligned */}
-      <h1 className="contact-heading">Contact Us</h1>
+    <div style={{ position: 'relative', zIndex: 1 }} data-theme={theme}>
+      {/* Theme Toggle Button */}
+      <button 
+        className="theme-toggle-btn" 
+        onClick={toggleTheme}
+        aria-label="Toggle theme"
+        style={{
+          position: 'fixed',
+          top: '100px',
+          right: '20px',
+          zIndex: 1000,
+          width: '44px',
+          height: '44px',
+          borderRadius: '50%',
+          border: 'none',
+          backgroundColor: theme === 'dark' ? '#1A1A1A' : '#EBEBEB',
+          color: theme === 'dark' ? '#FFFFFF' : '#000000',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'all 0.3s ease',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.1)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+        }}
+      >
+        {theme === 'light' ? (
+          // Moon icon for dark mode
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" fill="currentColor"/>
+          </svg>
+        ) : (
+          // Sun icon for light mode
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 2v2m0 12v2M4.22 4.22l1.42 1.42m8.72 8.72l1.42 1.42M2 10h2m12 0h2M4.22 15.78l1.42-1.42m8.72-8.72l1.42-1.42" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            <circle cx="10" cy="10" r="3" stroke="currentColor" strokeWidth="2" fill="none"/>
+          </svg>
+        )}
+      </button>
+
+      <Header theme={theme} />
+      
+      <div className="contact-page" style={themeStyles}>
+        {/* Large Heading - Left Aligned */}
+        <h1 className="contact-heading">Contact Us</h1>
 
       {/* Info Row: P | E | A */}
       <div className="contact-info-row">
@@ -110,8 +193,11 @@ export default function ContactPage() {
         </div>
       </div>
 
-      {/* Contact Form Panel */}
-      <ContactForm isOpen={isFormOpen} onClose={closeForm} />
+        {/* Contact Form Panel */}
+        <ContactForm isOpen={isFormOpen} onClose={closeForm} />
+      </div>
+
+      <Footer theme={theme} />
     </div>
   );
 }

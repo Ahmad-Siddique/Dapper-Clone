@@ -1,7 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Header from "../dark/Header";
+import Footer from "../dark/Footer";
 
 const CASE_STUDIES = {
   "privilee-website": {
@@ -83,9 +86,19 @@ function getCaseStudy(slug) {
 
 export default function CaseStudyPage({ params }) {
   const cs = getCaseStudy(params?.slug || "privilee-website");
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    // Check for saved theme preference or default to 'light'
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
 
   return (
-    <main className="min-h-screen w-full bg-[#050114] text-white text-base">
+    <div style={{ position: 'relative', zIndex: 1 }} data-theme={theme}>
+      <Header theme={theme} />
+      <main className="min-h-screen w-full bg-[#050114] text-white text-base">
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute -top-44 left-[-4rem] h-80 w-80 rounded-full bg-[#F27CE0]/26 blur-3xl" />
         <div className="absolute -top-32 right-[-6rem] h-96 w-96 rounded-full bg-[#37B4FF]/24 blur-[90px]" />
@@ -314,6 +327,8 @@ export default function CaseStudyPage({ params }) {
         </section>
       </div>
     </main>
+    <Footer theme={theme} />
+    </div>
   );
 }
 

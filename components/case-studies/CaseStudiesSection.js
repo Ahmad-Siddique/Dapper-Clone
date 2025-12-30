@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Header from "../dark/Header";
+import Footer from "../dark/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -56,6 +58,14 @@ const CASE_STUDIES = [
 export default function CaseStudiesPage() {
   // plain JS ref (no TS generic)
   const rootRef = useRef(null);
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    // Check for saved theme preference or default to 'light'
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  }, []);
 
   useEffect(() => {
     if (!rootRef.current) return;
@@ -151,10 +161,12 @@ export default function CaseStudiesPage() {
   }, []);
 
   return (
-    <main
-      ref={rootRef}
-      className="min-h-screen w-full bg-[#090316] text-white overflow-hidden"
-    >
+    <div style={{ position: 'relative', zIndex: 1 }} data-theme={theme}>
+      <Header theme={theme} />
+      <main
+        ref={rootRef}
+        className="min-h-screen w-full bg-[#090316] text-white overflow-hidden"
+      >
       {/* dreamy background glows */}
       <div className="pointer-events-none fixed inset-0 -z-10 opacity-60">
         <div className="absolute -top-40 left-10 h-72 w-72 rounded-full bg-[#F27CE0]/15 blur-3xl" />
@@ -279,5 +291,7 @@ export default function CaseStudiesPage() {
         </section>
       </div>
     </main>
+    <Footer theme={theme} />
+    </div>
   );
 }

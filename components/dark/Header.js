@@ -1139,10 +1139,10 @@ import Link from "next/link";
 const navItems = [
   { label: "Services", hasDropdown: true, type: "mega" },
   { label: "Expertise", hasDropdown: true, type: "mega" },
-  { label: "Cases", hasDropdown: false },
+  { label: "Cases", hasDropdown: false, href: "/case-studies" },
   { label: "Resources", hasDropdown: true, type: "mega" },
   { label: "About", hasDropdown: false, href: "/about" },
-  { label: "Careers", hasDropdown: false },
+  { label: "Careers", hasDropdown: false, href: "/work" },
 ];
 
 const SERVICES_ROW_1 = [
@@ -1410,7 +1410,7 @@ export default function Header({ theme = "light" }) {
             }}
           >
             {/* Logo */}
-            <Link href="/" className="flex flex-shrink-0 items-center gap-2">
+            <Link href="/dark" className="flex flex-shrink-0 items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center">
                 <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden="true">
                   <path
@@ -1492,10 +1492,10 @@ export default function Header({ theme = "light" }) {
             </nav>
 
             {/* Desktop CTA */}
-            <div className="hidden flex-shrink-0 items-center lg:flex">
+              <div className="hidden flex-shrink-0 items-center lg:flex">
               {/* Desktop CTA */}
               <div className="hidden flex-shrink-0 items-center lg:flex">
-                <Link href="#talk" className="group flex items-center gap-2">
+                <Link href="/contact" className="group flex items-center gap-2">
                   <span
                     className="font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] tracking-tight"
                     style={{ color: textColor }}
@@ -2110,32 +2110,44 @@ export default function Header({ theme = "light" }) {
             >
               <nav className="flex flex-col gap-2">
                 {navItems.map((item) => (
-                  <button
-                    key={item.label}
-                    type="button"
-                    className="flex items-center justify-between rounded-[8px] px-1 py-2 text-left font-[Helvetica_Now_Text,Arial,sans-serif] text-[16px] tracking-tight transition-colors hover:bg-[rgba(255,255,255,0.1)]"
-                    style={{ color: mobilePanelText }}
-                  >
-                    <span>{item.label}</span>
-                    {item.hasDropdown && (
-                      <svg
-                        width="9"
-                        height="5"
-                        viewBox="0 0 10 6"
-                        aria-hidden="true"
-                        style={{ color: mobilePanelText, opacity: 0.7 }}
-                      >
-                        <path
-                          d="M1 1L5 5L9 1"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    )}
-                  </button>
+                  item.href ? (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center justify-between rounded-[8px] px-1 py-2 text-left font-[Helvetica_Now_Text,Arial,sans-serif] text-[16px] tracking-tight transition-colors hover:bg-[rgba(255,255,255,0.1)]"
+                      style={{ color: mobilePanelText }}
+                    >
+                      <span>{item.label}</span>
+                    </Link>
+                  ) : (
+                    <button
+                      key={item.label}
+                      type="button"
+                      className="flex items-center justify-between rounded-[8px] px-1 py-2 text-left font-[Helvetica_Now_Text,Arial,sans-serif] text-[16px] tracking-tight transition-colors hover:bg-[rgba(255,255,255,0.1)]"
+                      style={{ color: mobilePanelText }}
+                    >
+                      <span>{item.label}</span>
+                      {item.hasDropdown && (
+                        <svg
+                          width="9"
+                          height="5"
+                          viewBox="0 0 10 6"
+                          aria-hidden="true"
+                          style={{ color: mobilePanelText, opacity: 0.7 }}
+                        >
+                          <path
+                            d="M1 1L5 5L9 1"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      )}
+                    </button>
+                  )
                 ))}
               </nav>
 
@@ -2144,7 +2156,7 @@ export default function Header({ theme = "light" }) {
                 style={{ borderColor: mobileBorder }}
               >
                 <Link
-                  href="#talk"
+                  href="/contact"
                   onClick={() => setMobileOpen(false)}
                   className={`group inline-flex w-full items-center justify-between rounded-[10px] px-4 py-3 font-[Helvetica_Now_Text,Arial,sans-serif] text-[15px] font-semibold tracking-tight ${
                     theme === "dark" ? "text-[#111111]" : "text-white"
