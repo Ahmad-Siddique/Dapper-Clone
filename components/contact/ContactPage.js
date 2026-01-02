@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import ContactForm from './ContactForm';
 import Header from '../dark/Header';
 import Footer from '../dark/Footer';
+import '../dark/MainPage.css';
 import './ContactPage.css';
 
 export default function ContactPage() {
@@ -52,30 +53,6 @@ export default function ContactPage() {
         className="theme-toggle-btn" 
         onClick={toggleTheme}
         aria-label="Toggle theme"
-        style={{
-          position: 'fixed',
-          top: '100px',
-          right: '20px',
-          zIndex: 1000,
-          width: '44px',
-          height: '44px',
-          borderRadius: '50%',
-          border: 'none',
-          backgroundColor: theme === 'dark' ? '#1A1A1A' : '#EBEBEB',
-          color: theme === 'dark' ? '#FFFFFF' : '#000000',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'all 0.3s ease',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'scale(1.1)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1)';
-        }}
       >
         {theme === 'light' ? (
           // Moon icon for dark mode

@@ -1137,7 +1137,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 const navItems = [
-  { label: "Services", hasDropdown: true, type: "mega" },
+  { label: "Services", hasDropdown: true, type: "mega", href: "/services1" },
   { label: "Expertise", hasDropdown: true, type: "mega" },
   { label: "Cases", hasDropdown: false, href: "/case-studies" },
   { label: "Resources", hasDropdown: true, type: "mega" },
@@ -1163,6 +1163,12 @@ const SERVICES_ROW_1 = [
     title: "Data & Measurement",
     description: "We make the invisible visible.",
     href: "/services/data-measurement",
+  },
+  {
+    id: "services1",
+    title: "Services",
+    description: "Global qualitative research services.",
+    href: "/services1",
   },
 ];
 
@@ -1453,6 +1459,26 @@ export default function Header({ theme = "light" }) {
                       }}
                     >
                       <span>{item.label}</span>
+                      {item.hasDropdown && (
+                        <svg
+                          width="9"
+                          height="5"
+                          viewBox="0 0 10 6"
+                          aria-hidden="true"
+                          className={`transition-transform duration-300 ${
+                            activeDropdown === item.label ? "rotate-180" : ""
+                          }`}
+                        >
+                          <path
+                            d="M1 1L5 5L9 1"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      )}
                     </Link>
                   ) : (
                     <button
@@ -1633,18 +1659,20 @@ export default function Header({ theme = "light" }) {
                   />
                 ))}
 
-              {/* Row 1: 3 Cards */}
+              {/* Row 1: 4 Cards */}
               <div
                 className="grid gap-4 mb-4 transition-all duration-500 ease-out"
                 style={{
                   gridTemplateColumns:
                     hoveredCard === "content"
-                      ? "1.28fr 0.86fr 0.86fr"
+                      ? "1.28fr 0.86fr 0.86fr 0.86fr"
                       : hoveredCard === "paid"
-                      ? "0.86fr 1.28fr 0.86fr"
+                      ? "0.86fr 1.28fr 0.86fr 0.86fr"
                       : hoveredCard === "data"
-                      ? "0.86fr 0.86fr 1.28fr"
-                      : "1fr 1fr 1fr",
+                      ? "0.86fr 0.86fr 1.28fr 0.86fr"
+                      : hoveredCard === "services1"
+                      ? "0.86fr 0.86fr 0.86fr 1.28fr"
+                      : "1fr 1fr 1fr 1fr",
                 }}
               >
                 {SERVICES_ROW_1.map((service) => {

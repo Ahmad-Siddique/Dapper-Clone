@@ -1,0 +1,67 @@
+"use client";
+import React from 'react';
+import Image from 'next/image';
+
+export default function Services1MainServices({ theme = 'light' }) {
+  const isDark = theme === 'dark';
+  
+  return (
+    <section className={`relative py-20 md:py-28 lg:py-36 xl:py-40 rounded-[32px] md:rounded-[40px] lg:rounded-[48px] -mt-12 md:-mt-16 lg:-mt-20 xl:-mt-24 z-20 ${isDark ? 'bg-[#1a1a1a]' : 'bg-[#EDE8E0]'}`}>
+      <div className="mx-auto max-w-[1400px] px-6 md:px-8 lg:px-12 xl:px-16">
+        <div className="grid gap-12 md:gap-16 lg:gap-20 xl:gap-24 md:grid-cols-2">
+          
+          {/* Qualitative Research Card */}
+          <div className={`rounded-[16px] md:rounded-[20px] p-8 md:p-10 lg:p-12 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col gap-6 md:gap-8 ${isDark ? 'bg-[#2a2a2a]' : 'bg-white'}`}>
+            {/* Icon with GIF */}
+            <div className="flex-shrink-0">
+              <div className="relative w-[80px] h-[80px] md:w-[90px] md:h-[90px] lg:w-[100px] lg:h-[100px] rounded-full bg-gradient-to-br from-[#FF6B5A] to-[#FF8A7A] flex items-center justify-center overflow-hidden">
+                <img
+                  src="https://media.giphy.com/media/3oKIPnAiaMCws8nOsE/giphy.gif"
+                  alt="Qualitative Research Animation"
+                  className="w-[65%] h-[65%] object-contain"
+                />
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1">
+              <h2 className={`font-suisse text-[24px] md:text-[26px] lg:text-[30px] font-light leading-[1.2] tracking-[-0.01em] mb-4 md:mb-5 ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>
+                Qualitative Research
+              </h2>
+              
+              <p className={`font-suisse text-[16px] md:text-[17px] lg:text-[18px] leading-[1.7] font-light ${isDark ? 'text-[#b0b0b0]' : 'text-[#4a4a4a]'}`}>
+                This is what we do best. Our qualitative research uncovers the "why" behind human behaviour through interviews, focus groups, and in-market conversations led by cultural experts. We go deep, not wide, to surface insights that drive real impact across multiple markets.
+              </p>
+            </div>
+          </div>
+
+          {/* Behavioural Analysis Card */}
+          <div className={`rounded-[16px] md:rounded-[20px] p-8 md:p-10 lg:p-12 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col gap-6 md:gap-8 ${isDark ? 'bg-[#2a2a2a]' : 'bg-white'}`}>
+            {/* Icon with GIF */}
+            <div className="flex-shrink-0">
+              <div className="relative w-[80px] h-[80px] md:w-[90px] md:h-[90px] lg:w-[100px] lg:h-[100px] rounded-full bg-gradient-to-br from-[#7EC977] to-[#9ED999] flex items-center justify-center overflow-hidden">
+                <img
+                  src="https://media.giphy.com/media/26BRuo6sLetdllPAQ/giphy.gif"
+                  alt="Behavioural Analysis Animation"
+                  className="w-[65%] h-[65%] object-contain"
+                />
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1">
+              <h2 className={`font-suisse text-[24px] md:text-[26px] lg:text-[30px] font-light leading-[1.2] tracking-[-0.01em] mb-4 md:mb-5 ${isDark ? 'text-white' : 'text-[#1a1a1a]'}`}>
+                Behavioural Analysis
+              </h2>
+              
+              <p className={`font-suisse text-[16px] md:text-[17px] lg:text-[18px] leading-[1.7] font-light ${isDark ? 'text-[#b0b0b0]' : 'text-[#4a4a4a]'}`}>
+                Behavioural analysis complements our qualitative work by focusing on what people actually do, not just what they say. Using observational methods and real-time data, we help you understand habits, patterns, and decision-making at a granular level, so you can respond with confidence.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+}
