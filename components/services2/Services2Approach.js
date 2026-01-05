@@ -1,0 +1,238 @@
+"use client";
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default function ApproachSection({ theme = 'light' }) {
+  const isDark = theme === 'dark';
+  const sectionRef = useRef(null);
+  const videoSectionRef = useRef(null);
+  const textSectionRef = useRef(null);
+  const labelRef = useRef(null);
+  const headingRef = useRef(null);
+  const subheadingRef = useRef(null);
+  const buttonsRef = useRef(null);
+  const mainTextRef = useRef(null);
+  const iconRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Video section animations
+      gsap.from(labelRef.current, {
+        opacity: 0,
+        y: 20,
+        duration: 0.8,
+        ease: 'power3.out',
+        delay: 0.2,
+      });
+
+      gsap.from(headingRef.current, {
+        opacity: 0,
+        y: 40,
+        duration: 1,
+        ease: 'power3.out',
+        delay: 0.4,
+      });
+
+      gsap.from(subheadingRef.current, {
+        opacity: 0,
+        y: 30,
+        duration: 1,
+        ease: 'power3.out',
+        delay: 0.6,
+      });
+
+      gsap.from(buttonsRef.current.children, {
+        opacity: 0,
+        y: 20,
+        duration: 0.8,
+        ease: 'power3.out',
+        stagger: 0.1,
+        delay: 0.8,
+      });
+
+      // Text section animation on scroll
+      gsap.from(mainTextRef.current, {
+        opacity: 0,
+        y: 60,
+        duration: 1.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: textSectionRef.current,
+          start: 'top 70%',
+          toggleActions: 'play none none none',
+        }
+      });
+
+      gsap.from(iconRef.current, {
+        opacity: 0,
+        scale: 0.8,
+        duration: 1,
+        ease: 'back.out(1.7)',
+        scrollTrigger: {
+          trigger: iconRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        }
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section 
+      ref={sectionRef}
+      className="relative w-full"
+      style={{ 
+        background: isDark 
+          ? 'linear-gradient(to bottom, #1a1a1a 0%, #0a0a0a 100%)'
+          : 'linear-gradient(to bottom, #e8ddd3 0%, #d4c4b8 100%)'
+      }}
+    >
+      {/* Video/Hero Section */}
+      <div 
+        ref={videoSectionRef}
+        className="relative mx-12 sm:mx-16 md:mx-24 lg:mx-32 xl:mx-40 pt-16 md:pt-20 lg:pt-24"
+      >
+        <div 
+          className="relative w-full h-[500px] md:h-[600px] lg:h-[680px] rounded-3xl overflow-hidden"
+          style={{
+            boxShadow: '0 20px 60px rgba(0,0,0,0.15)'
+          }}
+        >
+          {/* Background Video */}
+          <div className="absolute inset-0 w-full h-full">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            >
+              <source src="https://videos.pexels.com/video-files/3130284/3130284-uhd_2560_1440_30fps.mp4" type="video/mp4" />
+              {/* Fallback for browsers that don't support video */}
+              Your browser does not support the video tag.
+            </video>
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/50" />
+          </div>
+
+          {/* Content */}
+          <div className="relative z-10 h-full flex flex-col justify-between p-8 md:p-12 lg:p-16">
+            {/* Top Label */}
+            <div ref={labelRef}>
+              <span className="text-white/90 text-sm md:text-base font-space-grotesk font-medium">
+                Approach
+              </span>
+            </div>
+
+            {/* Center Content */}
+            <div className="flex-1 flex flex-col justify-center max-w-[800px]">
+              <h2 
+                ref={headingRef}
+                className="text-white font-semibold mb-4 md:mb-6 font-space-grotesk"
+                style={{
+                  fontSize: 'clamp(36px, 5vw, 60px)',
+                  lineHeight: '1.1',
+                  letterSpacing: '-0.02em'
+                }}
+              >
+                Future Catalists
+              </h2>
+              <p 
+                ref={subheadingRef}
+                className="text-white/90 font-space-grotesk font-normal"
+                style={{
+                  fontSize: 'clamp(16px, 2vw, 20px)',
+                  lineHeight: '1.5'
+                }}
+              >
+                From Idea to Plan. Turn your vision into action
+              </p>
+            </div>
+
+            {/* Bottom Buttons */}
+            <div 
+              ref={buttonsRef}
+              className="flex flex-wrap gap-3"
+            >
+              <button 
+                className="px-5 py-2.5 rounded-full text-white font-space-grotesk text-sm hover:bg-white/10 transition-colors cursor-pointer"
+                style={{
+                  border: '1px solid #e8ddd3'
+                }}
+              >
+                The Idea Forge
+              </button>
+              <button 
+                className="px-5 py-2.5 rounded-full text-white font-space-grotesk text-sm hover:bg-white/10 transition-colors cursor-pointer"
+                style={{
+                  border: '1px solid #e8ddd3'
+                }}
+              >
+                The Reality Engine
+              </button>
+              <button 
+                className="px-5 py-2.5 rounded-full text-white font-space-grotesk text-sm hover:bg-white/10 transition-colors cursor-pointer"
+                style={{
+                  border: '1px solid #e8ddd3'
+                }}
+              >
+                The Growth Driver
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Text Section */}
+      <div 
+        ref={textSectionRef}
+        className="relative px-6 sm:px-8 md:px-12 lg:px-20 xl:px-32 py-20 md:py-28 lg:py-36"
+      >
+        <div className="max-w-[1400px] mx-auto">
+          {/* Main Text */}
+          <h3 
+            ref={mainTextRef}
+            className="text-center font-normal font-space-grotesk mb-16 md:mb-20"
+            style={{
+              fontSize: 'clamp(24px, 3.5vw, 52px)',
+              lineHeight: '1.4',
+              letterSpacing: '-0.01em',
+              color: isDark ? '#74F5A1' : '#c7006e'
+            }}
+          >
+            We're more than problem solvers; we're dream weavers and future shapers. We transform bold ideas into extraordinary digital experiences that echo through generations.
+          </h3>
+
+          {/* Decorative Icon */}
+          <div ref={iconRef} className="flex justify-center">
+            <div className="w-24 h-24 md:w-32 md:h-32">
+              <svg 
+                viewBox="0 0 100 100" 
+                fill="none" 
+                className="w-full h-full"
+              >
+                <g transform="translate(50,50)">
+                  {[...Array(12)].map((_, i) => (
+                    <g key={i} transform={`rotate(${i * 30})`}>
+                      <path
+                        d="M 0,-35 Q 5,-25 0,-15 Q -5,-25 0,-35"
+                        fill={isDark ? '#74F5A1' : '#c7006e'}
+                        opacity="0.8"
+                      />
+                    </g>
+                  ))}
+                  <circle cx="0" cy="0" r="8" fill={isDark ? '#74F5A1' : '#c7006e'} />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

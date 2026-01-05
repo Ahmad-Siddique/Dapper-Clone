@@ -51,6 +51,13 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "wearebrain.com",
+        port: "",
+        pathname: "/**",
+      },
+     
      
     ],
   },

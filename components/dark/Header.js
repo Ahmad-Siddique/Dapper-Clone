@@ -1135,10 +1135,11 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { gsap } from "gsap";
 
 const navItems = [
   { label: "Services", hasDropdown: true, type: "mega", href: "/services1" },
-  { label: "Expertise", hasDropdown: true, type: "mega" },
+  { label: "Expertise", hasDropdown: true, type: "mega", href: "/expertise" },
   { label: "Cases", hasDropdown: false, href: "/case-studies" },
   { label: "Resources", hasDropdown: true, type: "mega" },
   { label: "About", hasDropdown: false, href: "/about" },
@@ -1237,6 +1238,15 @@ export default function Header({ theme = "light" }) {
   const [triangles, setTriangles] = useState([]);
   const triangleIdRef = useRef(0);
 
+  // Refs for Get a Quote button animation
+  const getQuoteBtnRef = useRef(null);
+  const getQuoteOverlayRef = useRef(null);
+  const faceIconRef = useRef(null);
+  const leftEyeRef = useRef(null);
+  const rightEyeRef = useRef(null);
+  const smileRef = useRef(null);
+  const faceContainerRef = useRef(null);
+
   const handleMouseEnter = (label) => {
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
@@ -1333,6 +1343,159 @@ export default function Header({ theme = "light" }) {
     };
   }, []);
 
+  // GSAP animation for Get a Quote button
+  useEffect(() => {
+    const btn = getQuoteBtnRef.current;
+    const overlay = getQuoteOverlayRef.current;
+    const leftEye = leftEyeRef.current;
+    const rightEye = rightEyeRef.current;
+    const smile = smileRef.current;
+    const faceContainer = faceContainerRef.current;
+    const faceIcon = faceIconRef.current;
+
+    if (!btn || !overlay || !faceIcon) return;
+
+    // Initialize overlay to scaleY: 0
+    gsap.set(overlay, {
+      scaleY: 0,
+      transformOrigin: "bottom center",
+    });
+
+    // Initialize face rotation
+    if (faceContainer) {
+      gsap.set(faceContainer, {
+        rotation: 0,
+        transformOrigin: "center center",
+      });
+    }
+
+    const calculateAngle = (e) => {
+      if (!faceIcon || !faceContainer) return 0;
+      const rect = faceIcon.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      // Calculate angle from face center to cursor
+      // atan2 gives angle in radians, convert to degrees
+      // Y is first parameter (vertical), X is second (horizontal)
+      const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI);
+      
+      // Return the angle directly (atan2 already gives correct direction)
+      return angle;
+    };
+
+    // Global mouse move handler - tracks cursor everywhere on the page
+    const handleGlobalMouseMove = (e) => {
+      if (!faceContainer || !faceIcon) return;
+      
+      const rect = faceIcon.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      // Calculate relative position
+      const deltaX = e.clientX - centerX;
+      const deltaY = e.clientY - centerY;
+      
+      // Calculate angle - atan2 gives angle in radians, convert to degrees
+      // atan2(y, x) gives angle from positive x-axis
+      let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+      
+      // Limit rotation to make it subtle (max 25 degrees)
+      const limitedAngle = Math.max(-25, Math.min(25, angle));
+      
+      gsap.to(faceContainer, {
+        rotation: limitedAngle,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+
+      // Move eyes slightly towards cursor based on horizontal position
+      if (leftEye && rightEye) {
+        // Normalize eye movement based on horizontal distance (max 2px movement)
+        const eyeOffset = Math.max(-2, Math.min(2, deltaX * 0.1));
+        
+        gsap.to(leftEye, {
+          x: eyeOffset,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+        gsap.to(rightEye, {
+          x: eyeOffset,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      }
+    };
+
+    const handleMouseEnter = () => {
+      // Animate overlay
+      gsap.to(overlay, {
+        scaleY: 1,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+
+      // Animate face - eyes get bigger and smile widens
+      if (leftEye && rightEye) {
+        gsap.to([leftEye, rightEye], {
+          scale: 1.2,
+          duration: 0.3,
+          ease: "back.out(1.7)",
+        });
+      }
+
+      if (smile) {
+        gsap.to(smile, {
+          scaleY: 1.3,
+          scaleX: 1.1,
+          transformOrigin: "center center",
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      }
+    };
+
+    const handleMouseLeave = () => {
+      // Animate overlay back
+      gsap.to(overlay, {
+        scaleY: 0,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+
+      // Don't reset face rotation - keep tracking cursor globally
+      // Animate face back to normal size
+      if (leftEye && rightEye) {
+        gsap.to([leftEye, rightEye], {
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      }
+
+      if (smile) {
+        gsap.to(smile, {
+          scaleY: 1,
+          scaleX: 1,
+          duration: 0.3,
+          ease: "power2.out",
+        });
+      }
+    };
+
+    // Add global mouse move listener to track cursor everywhere
+    document.addEventListener("mousemove", handleGlobalMouseMove);
+    
+    btn.addEventListener("mouseenter", handleMouseEnter);
+    btn.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      document.removeEventListener("mousemove", handleGlobalMouseMove);
+      btn.removeEventListener("mouseenter", handleMouseEnter);
+      btn.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+
   // Theme-based styles
   const headerBg = theme === "dark" ? "#111111" : "#FFFFFF"; // Black for dark theme
   const textColor = theme === "dark" ? "#FFFFFF" : "#111111"; // White text for dark theme
@@ -1401,10 +1564,36 @@ export default function Header({ theme = "light" }) {
         .dropdown-card:hover {
           transform: translateY(-2px);
         }
+
+        /* Get a Quote button overlay */
+        .get-quote-btn {
+          position: relative;
+          overflow: hidden;
+        }
+
+        .get-quote-overlay {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: #FFEB3B;
+          z-index: 0;
+          pointer-events: none;
+          border-radius: 10px;
+        }
+
+        .get-quote-btn-content {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
       `}</style>
 
       <header className="fixed left-0 right-0 top-6 z-50 antialiased md:top-8">
-        <div className="flex justify-center px-2 md:px-4">
+        <div className="flex items-center justify-center px-2 md:px-4 gap-3">
           <div
             className="flex w-full max-w-[800px] items-center gap-2 rounded-[14px] px-3 py-[8px] shadow-[0_10px_30px_rgba(0,0,0,0.15)] md:gap-4 md:px-5 md:py-[10px] lg:px-6"
             style={{
@@ -1518,61 +1707,60 @@ export default function Header({ theme = "light" }) {
             </nav>
 
             {/* Desktop CTA */}
-              <div className="hidden flex-shrink-0 items-center lg:flex">
-              {/* Desktop CTA */}
-              <div className="hidden flex-shrink-0 items-center lg:flex">
-                <Link href="/contact" className="group flex items-center gap-2">
-                  <span
-                    className="font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] tracking-tight"
-                    style={{ color: textColor }}
-                  >
-                    Talk to us
-                  </span>
+            <div className="hidden flex-shrink-0 items-center gap-3 lg:flex">
+              {/* Talk to us Button */}
+              <Link href="/contact" className="group flex items-center gap-2">
+                <span
+                  className="font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] tracking-tight"
+                  style={{ color: textColor }}
+                >
+                  Talk to us
+                </span>
 
-                  <span
-                    className={`relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-colors duration-500 ${
-                      theme === "dark"
-                        ? "group-hover:bg-white"
-                        : "group-hover:bg-black"
-                    }`}
-                  >
-                    <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:opacity-0">
-                      <svg
-                        width="11"
-                        height="11"
-                        viewBox="0 0 14 14"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M1 13L13 1M13 1H5M13 1V9"
-                          fill="none"
-                          stroke={theme === "dark" ? "#111111" : "#111111"}
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    <span className="absolute inset-0 flex items-center justify-center translate-x-[-10px] translate-y-[10px] opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100">
-                      <svg
-                        width="11"
-                        height="11"
-                        viewBox="0 0 14 14"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M1 13L13 1M13 1H5M13 1V9"
-                          fill="none"
-                          stroke={theme === "dark" ? "#111111" : "#74F5A1"}
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
+                <span
+                  className={`relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-colors duration-500 ${
+                    theme === "dark"
+                      ? "group-hover:bg-white"
+                      : "group-hover:bg-black"
+                  }`}
+                >
+                  <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:opacity-0">
+                    <svg
+                      width="11"
+                      height="11"
+                      viewBox="0 0 14 14"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M1 13L13 1M13 1H5M13 1V9"
+                        fill="none"
+                        stroke={theme === "dark" ? "#111111" : "#111111"}
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </span>
-                </Link>
-              </div>
+                  <span className="absolute inset-0 flex items-center justify-center translate-x-[-10px] translate-y-[10px] opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100">
+                    <svg
+                      width="11"
+                      height="11"
+                      viewBox="0 0 14 14"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M1 13L13 1M13 1H5M13 1V9"
+                        fill="none"
+                        stroke={theme === "dark" ? "#111111" : "#74F5A1"}
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </Link>
+
             </div>
 
             {/* Mobile hamburger */}
@@ -1618,6 +1806,68 @@ export default function Header({ theme = "light" }) {
               </div>
             </button>
           </div>
+
+          {/* Get a Quote Button - Outside Header */}
+          <Link 
+            ref={getQuoteBtnRef}
+            href="/contact" 
+            className="get-quote-btn group hidden lg:flex items-center gap-2 px-4 py-2 rounded-[10px] transition-all duration-300 hover:scale-105 shadow-[0_10px_30px_rgba(0,0,0,0.15)] flex-shrink-0"
+            style={{
+              backgroundColor: theme === "dark" ? "#FFFFFF" : "#FFFFFF",
+            }}
+          >
+            {/* Animated overlay */}
+            <div ref={getQuoteOverlayRef} className="get-quote-overlay" />
+            
+            <div className="get-quote-btn-content">
+              <span
+                className="font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] font-semibold tracking-tight"
+                style={{ color: theme === "dark" ? "#111111" : "#111111" }}
+              >
+                Get a quote
+              </span>
+              
+              {/* Smiling Face Icon */}
+              <div 
+                ref={faceIconRef}
+                className="flex h-7 w-7 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110"
+                style={{ backgroundColor: "#4285F4" }}
+              >
+              <svg
+                ref={faceContainerRef}
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ transformOrigin: "12px 12px" }}
+              >
+                {/* Face circle */}
+                <circle cx="12" cy="12" r="11" fill="#FFFFFF" />
+                {/* Left eye */}
+                <circle ref={leftEyeRef} cx="9" cy="10" r="1.8" fill="#4285F4" style={{ transformOrigin: "9px 10px" }} />
+                {/* Right eye */}
+                <circle ref={rightEyeRef} cx="15" cy="10" r="1.8" fill="#4285F4" style={{ transformOrigin: "15px 10px" }} />
+                {/* Eye highlights */}
+                <circle cx="9.5" cy="9.5" r="0.6" fill="#FFFFFF" />
+                <circle cx="15.5" cy="9.5" r="0.6" fill="#FFFFFF" />
+                {/* Big friendly smile */}
+                <path
+                  ref={smileRef}
+                  d="M8 15.5C8 15.5 9.5 18 12 18C14.5 18 16 15.5 16 15.5"
+                  stroke="#4285F4"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ transformOrigin: "12px 16.75px" }}
+                />
+                {/* Cheek blush */}
+                <ellipse cx="7" cy="13" rx="1.5" ry="1" fill="#FFB6C1" opacity="0.6" />
+                <ellipse cx="17" cy="13" rx="1.5" ry="1" fill="#FFB6C1" opacity="0.6" />
+              </svg>
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* MEGA MENU DROPDOWN - Services */}
@@ -2180,9 +2430,10 @@ export default function Header({ theme = "light" }) {
               </nav>
 
               <div
-                className="mt-4 border-t pt-4"
+                className="mt-4 border-t pt-4 space-y-3"
                 style={{ borderColor: mobileBorder }}
               >
+                {/* Talk to us Button - Mobile */}
                 <Link
                   href="/contact"
                   onClick={() => setMobileOpen(false)}
@@ -2236,6 +2487,47 @@ export default function Header({ theme = "light" }) {
                       </svg>
                     </span>
                   </span>
+                </Link>
+
+                {/* Get a Quote Button - Mobile */}
+                <Link
+                  href="/contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="group inline-flex w-full items-center justify-between rounded-[10px] px-4 py-3 font-[Helvetica_Now_Text,Arial,sans-serif] text-[15px] font-semibold tracking-tight transition-transform duration-300 ease-out hover:scale-[1.02]"
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    color: "#111111",
+                  }}
+                >
+                  <span>Get a quote</span>
+                  <div 
+                    className="flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110"
+                    style={{ backgroundColor: "#4285F4" }}
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle cx="12" cy="12" r="10" fill="#FFFFFF" />
+                      <circle cx="8" cy="9" r="1.5" fill="#4285F4" />
+                      <circle cx="16" cy="9" r="1.5" fill="#4285F4" />
+                      <path
+                        d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14"
+                        stroke="#4285F4"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M10 12.5C10 12.5 11 13 12 13C13 13 14 12.5 14 12.5"
+                        stroke="#4285F4"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
                 </Link>
               </div>
             </div>

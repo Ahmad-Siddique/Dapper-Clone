@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 const navItems = [
   { label: 'Services', hasDropdown: true, type: 'mega', href: '/services1' },
-  { label: 'Expertise', hasDropdown: true, type: 'mega' },
+  { label: 'Expertise', hasDropdown: true, type: 'mega', href: '/expertise' },
   { label: 'Cases', hasDropdown: false },
   { label: 'Resources', hasDropdown: true, type: 'mega' },
   { label: 'About', hasDropdown: false },
