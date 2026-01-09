@@ -125,11 +125,12 @@ export default function AIAgentDetailHero({ agent, theme = 'light' }) {
       {/* Back Button */}
       <Link 
         href="/ai-agents"
-        className={`absolute top-8 left-6 md:left-8 z-20 flex items-center gap-2 px-4 py-2 rounded-[4px] transition-all duration-300 ${
+        className={`absolute top-8 left-6 md:left-8 z-[100] flex items-center gap-2 px-4 py-2 rounded-[4px] transition-all duration-300 cursor-pointer ${
           isDark 
             ? 'bg-black/40 hover:bg-black/60 text-white border border-white/20' 
             : 'bg-white/80 hover:bg-white text-black border border-black/20'
         } hover:scale-105`}
+        style={{ pointerEvents: 'auto' }}
       >
         <ArrowLeft className="w-4 h-4" />
         <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm font-semibold">Back</span>
