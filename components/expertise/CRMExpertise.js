@@ -4,8 +4,7 @@ import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import Link from 'next/link';
 
-export default function CRMSection({ theme = 'light' }) {
-  const isDark = theme === 'dark';
+export default function CRMSection() {
   const sectionRef = useRef(null);
   const squaresRef = useRef([]);
 
@@ -75,7 +74,7 @@ export default function CRMSection({ theme = 'light' }) {
   return (
     <section
       ref={sectionRef}
-      className={`relative overflow-hidden ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#EFEFEF]'} py-28 md:py-36 lg:py-44`}
+      className="relative overflow-hidden bg-[#EFEFEF] py-28 md:py-36 lg:py-44"
     >
       {/* Animated Floating Squares */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -126,17 +125,17 @@ export default function CRMSection({ theme = 'light' }) {
               {/* Badge */}
               <div className="crm-badge mb-10 flex items-center gap-3">
                 <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-                <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase ${isDark ? 'text-white' : 'text-[#212121]'}`}>
+                <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#212121]">
                   CRM
                 </span>
               </div>
 
               {/* Title - 2 Lines */}
               <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[0.95] tracking-[-0.02em]">
-                <span className={`crm-title-line block text-[52px] sm:text-[64px] md:text-[76px] lg:text-[84px] xl:text-[96px] font-bold ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                <span className="crm-title-line block text-[52px] sm:text-[64px] md:text-[76px] lg:text-[84px] xl:text-[96px] font-bold text-[#111111]">
                   Our Marketers
                 </span>
-                <span className={`crm-title-line mt-1 block text-[52px] sm:text-[64px] md:text-[76px] lg:text-[84px] xl:text-[96px] font-bold ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                <span className="crm-title-line mt-1 block text-[52px] sm:text-[64px] md:text-[76px] lg:text-[84px] xl:text-[96px] font-bold text-[#111111]">
                   are in your <span className="italic font-light">CRM</span>
                 </span>
               </h2>
@@ -150,13 +149,13 @@ export default function CRMSection({ theme = 'light' }) {
           <div className="mt-12 lg:mt-16 lg:ml-[50%]">
             <div className="lg:max-w-[650px]">
               <div className="crm-description mb-10 space-y-6">
-                <p className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[19px] md:text-[21px] lg:text-[22px] font-normal leading-[1.65] ${isDark ? 'text-gray-300' : 'text-[#212121]'}`}>
+                <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[19px] md:text-[21px] lg:text-[22px] font-normal leading-[1.65] text-[#212121]">
                   Measuring impact in marketing isn't always easy — which is why
                   many agencies report onvanity metrics. But we believe marketing
                   should drive real business outcomes.
                 </p>
 
-                <p className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[19px] md:text-[21px] lg:text-[22px] font-normal leading-[1.65] ${isDark ? 'text-gray-300' : 'text-[#212121]'}`}>
+                <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[19px] md:text-[21px] lg:text-[22px] font-normal leading-[1.65] text-[#212121]">
                   Our north star is pipeline, but when marketing is done right, it
                   drives improvements across the board — reducing <span className="font-bold">CAC</span>, increasing{' '}
                   <span className="font-bold">Win Rates</span>, accelerating{' '}
@@ -164,7 +163,7 @@ export default function CRMSection({ theme = 'light' }) {
                   <span className="font-bold">Deal Size.</span>
                 </p>
 
-                <p className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[19px] md:text-[21px] lg:text-[22px] font-normal leading-[1.65] ${isDark ? 'text-gray-300' : 'text-[#212121]'}`}>
+                <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[19px] md:text-[21px] lg:text-[22px] font-normal leading-[1.65] text-[#212121]">
                   We don't just optimize campaigns; we optimize outcomes.
                 </p>
               </div>

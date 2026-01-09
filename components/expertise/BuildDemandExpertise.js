@@ -37,9 +37,8 @@ const SERVICES = [
   },
 ];
 
-export default function BuildDemandSection({ theme = 'light' }) {
+export default function BuildDemandSection() {
   const [activeId, setActiveId] = useState(null);
-  const isDark = theme === 'dark';
 
   return (
     <>
@@ -60,7 +59,7 @@ export default function BuildDemandSection({ theme = 'light' }) {
         }
       `}</style>
 
-      <section className={`relative overflow-hidden ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#EFEFEF]'} py-28 md:py-36 lg:py-44`}>
+      <section className="relative overflow-hidden bg-[#EFEFEF] py-28 md:py-36 lg:py-44">
         {/* Decorative Squares */}
         <div className="pointer-events-none absolute left-0 top-40 h-16 w-12 bg-[#74F5A1] opacity-70" />
         <div className="pointer-events-none absolute left-16 top-48 h-12 w-12 bg-[#5FE08D] opacity-60" />
@@ -72,7 +71,7 @@ export default function BuildDemandSection({ theme = 'light' }) {
             <div>
               <div className="flex items-center gap-3">
                 <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-                <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase ${isDark ? 'text-white' : 'text-[#212121]'}`}>
+                <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#212121]">
                   Build demand
                 </span>
               </div>
@@ -81,10 +80,10 @@ export default function BuildDemandSection({ theme = 'light' }) {
             {/* Right: Title */}
             <div>
               <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[1.05] tracking-[-0.02em]">
-                <span className={`block text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                <span className="block text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold text-[#111111]">
                   We help you build
                 </span>
-                <span className={`mt-1 block text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                <span className="mt-1 block text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold text-[#111111]">
                   <span className="italic font-light">demand</span> for your SaaS
                 </span>
               </h2>
@@ -131,10 +130,10 @@ export default function BuildDemandSection({ theme = 'light' }) {
                       key={item.id}
                       onMouseEnter={() => setActiveId(item.id)}
                       onMouseLeave={() => setActiveId(null)}
-                      className={`demand-card group relative flex h-full flex-col justify-between rounded-lg border ${isDark ? 'border-white/10 bg-[#1a1a1a] hover:bg-[#252525]' : 'border-black/6 bg-white hover:bg-[#FAFAFA]'} p-8 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]`}
+                      className="demand-card group relative flex h-full flex-col justify-between rounded-lg border border-black/6 bg-white p-8 hover:bg-[#FAFAFA] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]"
                     >
                       {/* Title */}
-                      <h3 className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[24px] md:text-[28px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                      <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[24px] md:text-[28px] font-bold tracking-tight text-[#111111]">
                         {item.title}
                       </h3>
 
@@ -142,7 +141,7 @@ export default function BuildDemandSection({ theme = 'light' }) {
                       <div className="mt-auto flex items-end justify-between gap-4">
                         {/* Description - fades in on hover */}
                         <p
-                          className={`demand-description max-w-[280px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-medium leading-snug ${isDark ? 'text-gray-300' : 'text-[#555555]'} ${
+                          className={`demand-description max-w-[280px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-medium leading-snug text-[#555555] ${
                             isActive
                               ? 'translate-y-0 opacity-100'
                               : 'translate-y-4 opacity-0'
@@ -220,10 +219,10 @@ export default function BuildDemandSection({ theme = 'light' }) {
                       key={item.id}
                       onMouseEnter={() => setActiveId(item.id)}
                       onMouseLeave={() => setActiveId(null)}
-                      className={`demand-card group relative flex h-full flex-col justify-between rounded-lg border ${isDark ? 'border-white/10 bg-[#1a1a1a] hover:bg-[#252525]' : 'border-black/6 bg-white hover:bg-[#FAFAFA]'} p-8 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]`}
+                      className="demand-card group relative flex h-full flex-col justify-between rounded-lg border border-black/6 bg-white p-8 hover:bg-[#FAFAFA] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]"
                     >
                       {/* Title */}
-                      <h3 className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[24px] md:text-[28px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                      <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[24px] md:text-[28px] font-bold tracking-tight text-[#111111]">
                         {item.title}
                       </h3>
 
@@ -231,7 +230,7 @@ export default function BuildDemandSection({ theme = 'light' }) {
                       <div className="mt-auto flex items-end justify-between gap-4">
                         {/* Description - fades in on hover */}
                         <p
-                          className={`demand-description max-w-[280px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-medium leading-snug ${isDark ? 'text-gray-300' : 'text-[#555555]'} ${
+                          className={`demand-description max-w-[280px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-medium leading-snug text-[#555555] ${
                             isActive
                               ? 'translate-y-0 opacity-100'
                               : 'translate-y-4 opacity-0'

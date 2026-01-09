@@ -37,11 +37,11 @@ const logos = [
   },
 ];
 
-export default function ClientsSection({ theme = 'dark' }) {
+export default function ClientsSection() {
   const containerRef = useRef(null);
   const scrollerRef = useRef(null);
   const animationRef = useRef(null);
-  const [baseSpeed, setBaseSpeed] = useState(30);
+  const [baseSpeed, setBaseSpeed] = useState(60);
   const lastScrollY = useRef(0);
   const currentDirection = useRef(1); // 1 for right-to-left, -1 for left-to-right
   const targetDirection = useRef(1);
@@ -172,10 +172,8 @@ export default function ClientsSection({ theme = 'dark' }) {
     };
   }, [baseSpeed]);
 
-  const isDark = theme === 'dark';
-  
   return (
-    <section className={`relative w-full overflow-hidden ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#EFEFEF]'} py-20 md:py-28`}>
+    <section className="relative w-full overflow-hidden bg-[#EFEFEF] py-20 md:py-28">
       <div className="mx-auto max-w-[1800px] px-4 md:px-6 lg:px-10">
         {/* Header */}
         <div className="mb-16 md:mb-20">
@@ -185,13 +183,13 @@ export default function ClientsSection({ theme = 'dark' }) {
               {/* Badge */}
               <div className="mb-8 flex items-center gap-3">
                 <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-                <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase ${isDark ? 'text-white' : 'text-[#212121]'}`}>
+                <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#212121]">
                   Clients
                 </span>
               </div>
 
               {/* Title */}
-              <h2 className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold leading-[1.05] tracking-[-0.02em] ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+              <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold leading-[1.05] tracking-[-0.02em] text-[#111111]">
                 <span className="block">50+ B2B software companies</span>
                 <span className="block mt-1">trust us to improve their</span>
                 <span className="block mt-1 italic font-light">Marketing ROI</span>
@@ -200,8 +198,8 @@ export default function ClientsSection({ theme = 'dark' }) {
 
             {/* Right: CTA Button - Bottom Right Aligned */}
             <div className="lg:flex items-end pb-2">
-              <button className={`group flex items-center gap-3 rounded-lg ${isDark ? 'bg-white hover:bg-gray-100' : 'bg-white hover:bg-gray-100'} px-6 py-4 transition-all duration-300 hover:scale-105 hover:shadow-lg`}>
-                <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-bold ${isDark ? 'text-[#111111]' : 'text-[#111111]'}`}>
+              <button className="group flex items-center gap-3 rounded-lg bg-white px-6 py-4 transition-all duration-300 hover:bg-gray-100 hover:scale-105 hover:shadow-lg">
+                <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-bold text-[#111111]">
                   Explore our results
                 </span>
                 <span className="flex h-5 w-5 items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
@@ -214,7 +212,7 @@ export default function ClientsSection({ theme = 'dark' }) {
                   >
                     <path
                       d="M4 12L12 4M12 4H6M12 4V10"
-                      stroke={isDark ? "#111111" : "#111111"}
+                      stroke="#111111"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -230,8 +228,8 @@ export default function ClientsSection({ theme = 'dark' }) {
       {/* Infinite Scrolling Logos */}
       <div ref={containerRef} className="relative w-full overflow-hidden">
         {/* Gradient Overlays */}
-        <div className={`pointer-events-none absolute left-0 top-0 z-10 h-full w-32 bg-gradient-to-r ${isDark ? 'from-[#0a0a0a]' : 'from-[#EFEFEF]'} to-transparent`} />
-        <div className={`pointer-events-none absolute right-0 top-0 z-10 h-full w-32 bg-gradient-to-l ${isDark ? 'from-[#0a0a0a]' : 'from-[#EFEFEF]'} to-transparent`} />
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-32 bg-gradient-to-r from-[#EFEFEF] to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-32 bg-gradient-to-l from-[#EFEFEF] to-transparent" />
 
         {/* Scrolling Container */}
         <div

@@ -1,11 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function CaseExpertise({ theme = 'dark' }) {
-  const isDark = theme === 'dark';
-  
+export default function CaseExpertise() {
   return (
-    <section className={`relative overflow-hidden ${isDark ? 'bg-[#0a0a0a]' : 'bg-white'} py-28 md:py-36 lg:py-44`}>
+    <section className="relative overflow-hidden bg-white py-28 md:py-36 lg:py-44">
       <div className="relative z-10 mx-auto max-w-[1800px] px-4 md:px-6 lg:px-10">
         {/* Grid - 2 Cards */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">

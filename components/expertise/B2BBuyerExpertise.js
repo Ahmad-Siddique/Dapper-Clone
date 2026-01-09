@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef } from 'react';
 import gsap from 'gsap';
 import Link from 'next/link';
 
-export default function B2BBuyersSection({ theme = 'light' }) {
+export default function B2BBuyersSection() {
   const sectionRef = useRef(null);
   const squaresRef = useRef([]);
 
@@ -71,12 +71,10 @@ export default function B2BBuyersSection({ theme = 'light' }) {
     return () => ctx.revert();
   }, []);
 
-  const isDark = theme === 'dark';
-  
   return (
     <section
       ref={sectionRef}
-      className={`relative overflow-hidden ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#EFEFEF]'} py-28 md:py-36 lg:py-44`}
+      className="relative overflow-hidden bg-[#EFEFEF] py-28 md:py-36 lg:py-44"
     >
       {/* Animated Floating Squares */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -127,20 +125,20 @@ export default function B2BBuyersSection({ theme = 'light' }) {
               {/* Badge */}
               <div className="b2b-badge mb-10 flex items-center gap-3">
                 <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-                <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase ${isDark ? 'text-white' : 'text-[#212121]'}`}>
+                <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#212121]">
                   B2B buyers
                 </span>
               </div>
 
               {/* Title */}
               <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[0.95] tracking-[-0.02em]">
-                <span className={`b2b-title-line block text-[52px] sm:text-[64px] md:text-[76px] lg:text-[84px] xl:text-[96px] font-bold ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                <span className="b2b-title-line block text-[52px] sm:text-[64px] md:text-[76px] lg:text-[84px] xl:text-[96px] font-bold text-[#111111]">
                   Marketing for
                 </span>
-                <span className={`b2b-title-line mt-1 block text-[52px] sm:text-[64px] md:text-[76px] lg:text-[84px] xl:text-[96px] font-bold ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                <span className="b2b-title-line mt-1 block text-[52px] sm:text-[64px] md:text-[76px] lg:text-[84px] xl:text-[96px] font-bold text-[#111111]">
                   modern-day
                 </span>
-                <span className={`b2b-title-line mt-1 block text-[52px] sm:text-[64px] md:text-[76px] lg:text-[84px] xl:text-[96px] italic font-light ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+                <span className="b2b-title-line mt-1 block text-[52px] sm:text-[64px] md:text-[76px] lg:text-[84px] xl:text-[96px] italic font-light text-[#111111]">
                   Go-To-Market
                 </span>
               </h2>
@@ -154,7 +152,7 @@ export default function B2BBuyersSection({ theme = 'light' }) {
           <div className="mt-12 lg:mt-16 lg:ml-[50%]">
             <div className="lg:max-w-[650px]">
               <div className="b2b-description mb-10">
-                <p className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[19px] md:text-[21px] lg:text-[22px] font-normal leading-[1.65] ${isDark ? 'text-gray-300' : 'text-[#212121]'}`}>
+                <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[19px] md:text-[21px] lg:text-[22px] font-normal leading-[1.65] text-[#212121]">
                   How B2B buyers buy has changed. B2B buyers research themselves,
                   and will reach out to you when they're ready to buy. The job of
                   marketing is to educate and nurture prospects with great

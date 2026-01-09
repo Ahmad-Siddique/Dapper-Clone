@@ -58,8 +58,7 @@ const PROCESS_STEPS = [
   },
 ];
 
-export default function ProcessSection({ theme = 'dark' }) {
-  const isDark = theme === 'dark';
+export default function ProcessSection() {
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
@@ -126,24 +125,24 @@ export default function ProcessSection({ theme = 'dark' }) {
   };
 
   return (
-    <section className={`relative overflow-hidden ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#EFEFEF]'} py-28 md:py-36 lg:py-44`}>
+    <section className="relative overflow-hidden bg-[#EFEFEF] py-28 md:py-36 lg:py-44">
       <div className="relative z-10 mx-auto max-w-[1800px] px-4 md:px-6 lg:px-10">
         {/* Header */}
         <div className="mb-16">
           {/* Badge */}
           <div className="mb-10 flex items-center gap-3">
             <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-            <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase ${isDark ? 'text-white' : 'text-[#212121]'}`}>
+            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#212121]">
               Process
             </span>
           </div>
 
           {/* Title */}
           <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[1.05] tracking-[-0.02em]">
-            <span className={`block text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+            <span className="block text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold text-[#111111]">
               Our <span className="italic font-light">process</span> to improve
             </span>
-            <span className={`mt-1 block text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+            <span className="mt-1 block text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold text-[#111111]">
               your SaaS pipeline
             </span>
           </h2>
@@ -154,7 +153,7 @@ export default function ProcessSection({ theme = 'dark' }) {
           <button
             onClick={() => scroll('left')}
             disabled={!canScrollLeft}
-            className={`flex h-12 w-12 items-center justify-center rounded-lg ${isDark ? 'bg-[#1a1a1a] text-white hover:bg-[#74F5A1] hover:text-black' : 'bg-white hover:bg-[#74F5A1]'} transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed ${isDark ? 'disabled:hover:bg-[#1a1a1a]' : 'disabled:hover:bg-white'}`}
+            className="flex h-12 w-12 items-center justify-center rounded-lg bg-white transition-all duration-300 hover:bg-[#74F5A1] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white"
             aria-label="Scroll left"
           >
             <svg
@@ -173,7 +172,7 @@ export default function ProcessSection({ theme = 'dark' }) {
           <button
             onClick={() => scroll('right')}
             disabled={!canScrollRight}
-            className={`flex h-12 w-12 items-center justify-center rounded-lg ${isDark ? 'bg-[#74F5A1] text-black hover:bg-[#5FE08D]' : 'bg-black text-white hover:bg-[#74F5A1] hover:text-black'} transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed ${isDark ? 'disabled:hover:bg-[#74F5A1]' : 'disabled:hover:bg-black disabled:hover:text-white'}`}
+            className="flex h-12 w-12 items-center justify-center rounded-lg bg-black text-white transition-all duration-300 hover:bg-[#74F5A1] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
             aria-label="Scroll right"
           >
             <svg
@@ -207,21 +206,21 @@ export default function ProcessSection({ theme = 'dark' }) {
           {PROCESS_STEPS.map((step, index) => (
             <article
               key={step.id}
-              className={`flex-shrink-0 w-[calc(33.333%-16px)] min-w-[450px] h-[500px] rounded-2xl ${isDark ? 'bg-[#1a1a1a] border-white/10' : 'bg-white border border-black/6'} p-12 flex flex-col justify-between transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]`}
+              className="flex-shrink-0 w-[calc(33.333%-16px)] min-w-[450px] h-[500px] rounded-2xl bg-white border border-black/6 p-12 flex flex-col justify-between transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]"
             >
               {/* Top: Title and Icon */}
               <div className="flex items-start justify-between gap-6">
                 {/* Title */}
-                <h3 className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[32px] md:text-[38px] lg:text-[43px] font-regular tracking-tight ${isDark ? 'text-white' : 'text-[#111111]'} leading-tight`}>
+                <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[32px] md:text-[38px] lg:text-[43px] font-regular tracking-tight text-[#111111] leading-tight">
                   {index + 1}. {step.title}
                 </h3>
 
                 {/* Icon */}
-                <div className={`flex-shrink-0 ${isDark ? 'text-white' : 'text-[#111111]'}`}>{step.icon}</div>
+                <div className="flex-shrink-0 text-[#111111]">{step.icon}</div>
               </div>
 
               {/* Bottom: Description */}
-              <p className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[16px] md:text-[18px] font-medium leading-relaxed ${isDark ? 'text-gray-300' : 'text-[#555555]'}`}>
+              <p className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[16px] md:text-[18px] font-medium leading-relaxed text-[#555555]">
                 {step.description}
               </p>
             </article>

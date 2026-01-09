@@ -5,7 +5,7 @@ import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function HeroExpertise({ theme = 'light' }) {
+export default function HeroExpertise() {
   const sectionRef = useRef(null);
   const [triangles, setTriangles] = useState([]);
   const triangleIdRef = useRef(0);
@@ -98,12 +98,10 @@ export default function HeroExpertise({ theme = 'light' }) {
     };
   }, [createTriangle]);
 
-  const isDark = theme === 'dark';
-
   return (
     <section
       ref={sectionRef}
-      className={`relative overflow-hidden ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#EFEFEF]'} pt-40 md:pt-48 pb-36 md:pb-44 min-h-[85vh]`}
+      className="relative overflow-hidden bg-[#EFEFEF] pt-40 md:pt-48 pb-36 md:pb-44 min-h-[85vh]"
     >
       {/* CURSOR TRAIL TRIANGLES */}
       {triangles.map((triangle) => (
@@ -131,13 +129,13 @@ export default function HeroExpertise({ theme = 'light' }) {
           {/* Badge */}
           <div className="hero-badge mb-10 flex items-center gap-3">
             <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-            <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase ${isDark ? 'text-white' : 'text-[#212121]'}`}>
+            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#212121]">
               B2B SaaS Agency
             </span>
           </div>
 
           {/* Title */}
-          <h1 className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[0.92] tracking-[-0.02em] ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+          <h1 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[0.92] tracking-[-0.02em] text-[#111111]">
             <span className="hero-title-line block text-[56px] sm:text-[72px] md:text-[88px] lg:text-[104px] xl:text-[120px] font-bold">
               Hire an agency
             </span>
@@ -154,12 +152,12 @@ export default function HeroExpertise({ theme = 'light' }) {
         <div className="mt-2 flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between lg:gap-14">
           {/* Left column: subcopy + CTA */}
           <div className="hero-body lg:flex-1 max-w-[640px] flex flex-col">
-            <p className={`mb-16 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[18px] md:text-[20px] font-medium leading-relaxed ${isDark ? 'text-gray-300' : 'text-[#212121]'}`}>
+            <p className="mb-16 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[18px] md:text-[20px] font-medium leading-relaxed text-[#212121]">
               We help SaaS businesses build and scale marketing engines that generate pipeline.
             </p>
 
             {/* CTA Buttons */}
-            <div className={`inline-flex flex-wrap items-center gap-4 ${isDark ? 'bg-[#1a1a1a]' : 'bg-white'} rounded-2xl px-6 py-4 w-fit`}>
+            <div className="inline-flex flex-wrap items-center gap-4 bg-white rounded-2xl px-6 py-4 w-fit">
               {/* Book a Strategy Call Button */}
               <Link
                 href="/contact"
@@ -168,7 +166,7 @@ export default function HeroExpertise({ theme = 'light' }) {
                 <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-bold text-[#111111]">
                   Book a Strategy Call
                 </span>
-                <span className="flex h-5 w-5 items-center justify-center transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                <span className="flex h-5 w-5 items-center justify-center transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                   <svg
                     width="16"
                     height="16"
@@ -195,7 +193,7 @@ export default function HeroExpertise({ theme = 'light' }) {
                 <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-bold tracking-tight text-[#111111]">
                   Discover more
                 </span>
-                <span className="flex h-5 w-5 items-center justify-center transition-transform duration-150 group-hover:translate-y-0.5">
+                <span className="flex h-5 w-5 items-center justify-center transition-transform duration-300 group-hover:translate-y-0.5">
                   <svg
                     width="16"
                     height="16"
@@ -219,8 +217,8 @@ export default function HeroExpertise({ theme = 'light' }) {
           {/* Right column: Card flush to the right */}
           <div className="hero-body lg:flex-shrink-0 lg:ml-auto lg:pb-12">
             <div className="w-[420px] max-w-full">
-              <div className={`rounded-2xl overflow-hidden ${isDark ? 'shadow-[0_18px_45px_rgba(255,255,255,0.1)]' : 'shadow-[0_18px_45px_rgba(0,0,0,0.22)]'}`}>
-                <div className={`relative h-40 w-full ${isDark ? 'bg-gradient-to-br from-[#2a1a4a] to-[#1a0f2e]' : 'bg-gradient-to-br from-[#B8A3FF] to-[#E8DEFF]'}`}>
+              <div className="rounded-2xl overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.22)]">
+                <div className="relative h-40 w-full bg-gradient-to-br from-[#B8A3FF] to-[#E8DEFF]">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="relative h-16 w-32">
                       <Image
@@ -233,8 +231,8 @@ export default function HeroExpertise({ theme = 'light' }) {
                     </div>
                   </div>
                 </div>
-                <div className={`${isDark ? 'bg-[#1a1a1a]' : 'bg-white'} px-5 py-5 md:px-6 md:py-6`}>
-                  <p className={`mb-3 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-bold leading-snug ${isDark ? 'text-white' : 'text-[#4A3D8F]'}`}>
+                <div className="bg-white px-5 py-5 md:px-6 md:py-6">
+                  <p className="mb-3 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] md:text-[16px] font-bold leading-snug text-[#4A3D8F]">
                     Trusted by 200+ platforms and marketplaces across Europe Solutions.
                   </p>
                   <div className="flex items-center justify-between gap-3">
@@ -287,7 +285,7 @@ export default function HeroExpertise({ theme = 'light' }) {
         </div>
 
         {/* Bottom divider */}
-        <div className={`mt-20 h-px w-full border-b ${isDark ? 'border-white/10' : 'border-black/10'}`} />
+        <div className="mt-20 h-px w-full border-b border-black/10" />
       </div>
     </section>
   );
