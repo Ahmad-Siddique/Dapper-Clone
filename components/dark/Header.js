@@ -1810,7 +1810,7 @@ export default function Header({ theme = "light" }) {
           {/* Get a Quote Button - Outside Header */}
           <Link 
             ref={getQuoteBtnRef}
-            href="/contact" 
+            href="/pricing-calculator" 
             className="get-quote-btn group hidden lg:flex items-center gap-2 px-4 py-2 rounded-[10px] transition-all duration-300 hover:scale-105 shadow-[0_10px_30px_rgba(0,0,0,0.15)] flex-shrink-0"
             style={{
               backgroundColor: theme === "dark" ? "#FFFFFF" : "#FFFFFF",
@@ -2491,7 +2491,7 @@ export default function Header({ theme = "light" }) {
 
                 {/* Get a Quote Button - Mobile */}
                 <Link
-                  href="/contact"
+                  href="/pricing-calculator"
                   onClick={() => setMobileOpen(false)}
                   className="group inline-flex w-full items-center justify-between rounded-[10px] px-4 py-3 font-[Helvetica_Now_Text,Arial,sans-serif] text-[15px] font-semibold tracking-tight transition-transform duration-300 ease-out hover:scale-[1.02]"
                   style={{
