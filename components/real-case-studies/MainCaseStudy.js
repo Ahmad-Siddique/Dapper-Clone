@@ -548,10 +548,11 @@ export default function CaseStudiesPage({ projects = PROJECTS, theme = "light" }
                 data-index={index}
               >
                 <div
-                  className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl group cursor-pointer"
+                  className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden group cursor-pointer"
                   style={{ 
                     background: isDark ? '#1a1a1a' : 'transparent',
-                    backgroundColor: isDark ? '#1a1a1a' : 'transparent'
+                    backgroundColor: isDark ? '#1a1a1a' : 'transparent',
+                    boxShadow: 'none'
                   }}
                   onClick={() => handleImageClick(project)}
                 >
