@@ -169,7 +169,7 @@ export default function TalkToExpertSection({ theme = 'light' }) {
 
       <section
         ref={sectionRef}
-        className="relative overflow-hidden py-20 sm:py-24 md:py-28 lg:py-32"
+        className="relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24 xl:py-28 2xl:py-32"
         style={bgStyle}
       >
         {/* Noise texture overlay */}
@@ -263,46 +263,46 @@ export default function TalkToExpertSection({ theme = 'light' }) {
           </svg>
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[1800px] px-4 md:px-8">
+        <div className="relative z-10 mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8">
           {/* Main content centered */}
-          <div className="flex flex-col items-center justify-center gap-8 lg:flex-row lg:gap-12 xl:gap-20">
+          <div className="flex flex-col items-center justify-center gap-6 sm:gap-8 md:gap-10 lg:flex-row lg:gap-12 xl:gap-20">
             {/* Left text: "Talk to" */}
             <div
               ref={leftTextRef}
               className="text-center lg:text-right will-change-transform"
             >
-              <h2 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[48px] sm:text-[56px] md:text-[64px] lg:text-[72px] xl:text-[80px] 2xl:text-[96px] font-bold leading-[1.05] tracking-[-0.02em] ${theme === 'light' ? 'text-white' : 'text-[#111111]'}`}>
+              <h2 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] xl:text-[64px] 2xl:text-[72px] 3xl:text-[80px] 4xl:text-[96px] font-bold leading-[1.05] tracking-[-0.02em] ${theme === 'light' ? 'text-white' : 'text-[#111111]'}`}>
                 Talk to
               </h2>
             </div>
 
             {/* Center: Stacked phone cards with expert images */}
-            <div className="relative flex-shrink-0 my-8 lg:my-0">
+            <div className="relative flex-shrink-0 my-6 sm:my-8 lg:my-0">
               {/* Back phone frame */}
               <div 
-                className={`absolute -right-6 -top-4 z-0 h-[420px] w-[240px] sm:h-[460px] sm:w-[260px] md:h-[500px] md:w-[280px] lg:h-[520px] lg:w-[300px] rounded-[36px] border-[3px] p-3 ${theme === 'light' ? 'border-white/20 bg-[#1A1A1A] shadow-[0_20px_50px_rgba(0,0,0,0.5)]' : 'border-black/10 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)]'}`}
+                className={`absolute -right-3 -top-2 sm:-right-4 sm:-top-3 md:-right-5 md:-top-4 lg:-right-6 lg:-top-4 z-0 h-[280px] w-[160px] sm:h-[340px] sm:w-[200px] md:h-[400px] md:w-[240px] lg:h-[460px] lg:w-[260px] xl:h-[500px] xl:w-[280px] 2xl:h-[520px] 2xl:w-[300px] rounded-[24px] sm:rounded-[28px] md:rounded-[32px] lg:rounded-[36px] border-[2px] sm:border-[2.5px] md:border-[3px] p-2 sm:p-2.5 md:p-3 ${theme === 'light' ? 'border-white/20 bg-[#1A1A1A] shadow-[0_20px_50px_rgba(0,0,0,0.5)]' : 'border-black/10 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)]'}`}
                 style={{ opacity: 0.4 }}
               >
-                <div className={`relative h-full w-full overflow-hidden rounded-[28px] ${theme === 'light' ? 'bg-gradient-to-b from-[#3A3A3A] to-[#2A2A2A]' : 'bg-gradient-to-b from-gray-100 to-gray-200'}`}>
+                <div className={`relative h-full w-full overflow-hidden rounded-[18px] sm:rounded-[22px] md:rounded-[24px] lg:rounded-[28px] ${theme === 'light' ? 'bg-gradient-to-b from-[#3A3A3A] to-[#2A2A2A]' : 'bg-gradient-to-b from-gray-100 to-gray-200'}`}>
                   <div className="relative h-full w-full">
                     <Image
                       src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=600&fit=crop"
                       alt="Expert team member"
                       fill
                       className="object-cover object-top"
-                      sizes="(max-width: 640px) 240px, (max-width: 768px) 260px, (max-width: 1024px) 280px, 300px"
+                      sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, (max-width: 1024px) 240px, (max-width: 1280px) 260px, (max-width: 1536px) 280px, 300px"
                     />
                   </div>
                 </div>
                 {/* Top notch */}
-                <div className={`absolute left-1/2 top-4 z-20 h-5 w-20 -translate-x-1/2 rounded-full ${theme === 'light' ? 'bg-[#1A1A1A]' : 'bg-white'}`} />
+                <div className={`absolute left-1/2 top-2 sm:top-3 md:top-4 z-20 h-3 w-12 sm:h-4 sm:w-16 md:h-5 md:w-20 -translate-x-1/2 rounded-full ${theme === 'light' ? 'bg-[#1A1A1A]' : 'bg-white'}`} />
               </div>
 
               {/* Front phone frame */}
               <div 
-                className={`relative z-10 h-[420px] w-[240px] sm:h-[460px] sm:w-[260px] md:h-[500px] md:w-[280px] lg:h-[520px] lg:w-[300px] rounded-[36px] border-[3px] p-3 ${theme === 'light' ? 'border-white/30 bg-[#1A1A1A] shadow-[0_35px_90px_rgba(0,0,0,0.6)]' : 'border-black/10 bg-white shadow-[0_25px_60px_rgba(0,0,0,0.2)]'}`}
+                className={`relative z-10 h-[280px] w-[160px] sm:h-[340px] sm:w-[200px] md:h-[400px] md:w-[240px] lg:h-[460px] lg:w-[260px] xl:h-[500px] xl:w-[280px] 2xl:h-[520px] 2xl:w-[300px] rounded-[24px] sm:rounded-[28px] md:rounded-[32px] lg:rounded-[36px] border-[2px] sm:border-[2.5px] md:border-[3px] p-2 sm:p-2.5 md:p-3 ${theme === 'light' ? 'border-white/30 bg-[#1A1A1A] shadow-[0_35px_90px_rgba(0,0,0,0.6)]' : 'border-black/10 bg-white shadow-[0_25px_60px_rgba(0,0,0,0.2)]'}`}
               >
-                <div className={`relative h-full w-full overflow-hidden rounded-[28px] ${theme === 'light' ? 'bg-gradient-to-b from-[#3A3A3A] to-[#2A2A2A]' : 'bg-gradient-to-b from-gray-100 to-gray-200'}`}>
+                <div className={`relative h-full w-full overflow-hidden rounded-[18px] sm:rounded-[22px] md:rounded-[24px] lg:rounded-[28px] ${theme === 'light' ? 'bg-gradient-to-b from-[#3A3A3A] to-[#2A2A2A]' : 'bg-gradient-to-b from-gray-100 to-gray-200'}`}>
                   {/* Expert image */}
                   <div className="relative h-full w-full">
                     <Image
@@ -311,20 +311,21 @@ export default function TalkToExpertSection({ theme = 'light' }) {
                       fill
                       className="object-cover object-top"
                       priority
-                      sizes="(max-width: 640px) 240px, (max-width: 768px) 260px, (max-width: 1024px) 280px, 300px"
+                      sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, (max-width: 1024px) 240px, (max-width: 1280px) 260px, (max-width: 1536px) 280px, 300px"
                     />
                   </div>
 
                   {/* Green action badge at bottom */}
-                  <div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
+                  <div className="absolute bottom-3 sm:bottom-4 md:bottom-6 left-1/2 z-10 -translate-x-1/2">
                     <Link
                       href="/contact"
                       aria-label="Contact an expert"
-                      className="group flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-xl sm:rounded-2xl bg-[#74F5A1] shadow-[0_8px_25px_rgba(116,245,161,0.4)] transition-all duration-300 hover:scale-110 hover:shadow-[0_12px_35px_rgba(116,245,161,0.6)] active:scale-95"
+                      className="group flex h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 items-center justify-center rounded-lg sm:rounded-xl md:rounded-2xl bg-[#74F5A1] shadow-[0_8px_25px_rgba(116,245,161,0.4)] transition-all duration-300 hover:scale-110 hover:shadow-[0_12px_35px_rgba(116,245,161,0.6)] active:scale-95"
                     >
                       <svg
-                        width="22"
-                        height="22"
+                        width="16"
+                        height="16"
+                        className="sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-[22px] lg:h-[22px]"
                         viewBox="0 0 24 24"
                         fill="none"
                         aria-hidden="true"
@@ -343,11 +344,11 @@ export default function TalkToExpertSection({ theme = 'light' }) {
                 </div>
 
                 {/* Top notch/camera cutout effect */}
-                <div className={`absolute left-1/2 top-4 z-20 h-5 w-20 -translate-x-1/2 rounded-full ${theme === 'light' ? 'bg-[#1A1A1A]' : 'bg-white'}`} />
+                <div className={`absolute left-1/2 top-2 sm:top-3 md:top-4 z-20 h-3 w-12 sm:h-4 sm:w-16 md:h-5 md:w-20 -translate-x-1/2 rounded-full ${theme === 'light' ? 'bg-[#1A1A1A]' : 'bg-white'}`} />
               </div>
 
               {/* Subtle glow behind phones */}
-              <div className={`absolute inset-0 -z-10 scale-110 rounded-[36px] ${theme === 'light' ? 'bg-[#74F5A1]/8' : 'bg-[#74F5A1]/5'} blur-2xl`} />
+              <div className={`absolute inset-0 -z-10 scale-110 rounded-[24px] sm:rounded-[28px] md:rounded-[32px] lg:rounded-[36px] ${theme === 'light' ? 'bg-[#74F5A1]/8' : 'bg-[#74F5A1]/5'} blur-2xl`} />
             </div>
 
             {/* Right text: "an expert" */}
@@ -355,7 +356,7 @@ export default function TalkToExpertSection({ theme = 'light' }) {
               ref={rightTextRef}
               className="text-center lg:text-left will-change-transform"
             >
-              <h2 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[48px] sm:text-[56px] md:text-[64px] lg:text-[72px] xl:text-[80px] 2xl:text-[96px] font-normal italic leading-[1.05] tracking-[-0.02em] ${theme === 'light' ? 'text-white' : 'text-[#111111]'}`}>
+              <h2 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] xl:text-[64px] 2xl:text-[72px] 3xl:text-[80px] 4xl:text-[96px] font-normal italic leading-[1.05] tracking-[-0.02em] ${theme === 'light' ? 'text-white' : 'text-[#111111]'}`}>
                 an expert
               </h2>
             </div>

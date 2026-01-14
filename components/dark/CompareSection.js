@@ -273,7 +273,7 @@ export default function CompareSection({ theme = 'light' }) {
 
       <section
         ref={sectionRef}
-        className="relative overflow-hidden py-20 sm:py-24 md:py-32"
+        className="relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32"
         style={bgStyle}
       >
         {/* Noise texture overlay */}
@@ -323,49 +323,49 @@ export default function CompareSection({ theme = 'light' }) {
           </svg>
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[1500px] px-4 md:px-8">
+        <div className="relative z-10 mx-auto max-w-[1500px] px-4 sm:px-6 md:px-8">
           {/* Label */}
-          <div className="mb-8 sm:mb-10 flex items-center justify-center gap-3">
-            <span className="inline-flex h-5 w-5 sm:h-6 sm:w-6 rounded-sm bg-[#74F5A1]" />
-            <span className={`font-[Helvetica Now Text,Arial,sans-serif] text-[12px] sm:text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
+          <div className="mb-6 sm:mb-8 md:mb-10 flex items-center justify-center gap-2 sm:gap-3">
+            <span className="inline-flex h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 rounded-sm bg-[#74F5A1]" />
+            <span className={`font-[Helvetica Now Text,Arial,sans-serif] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] font-semibold tracking-[0.16em] uppercase ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
               Compare
             </span>
           </div>
 
           {/* Heading */}
-          <h2 className={`mx-auto mb-8 sm:mb-10 max-w-5xl text-center font-fellix leading-[1.08] tracking-[-0.02em] ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
-            <span className="hero-title-line block text-[32px] sm:text-[40px] md:text-[48px] lg:text-[58px] xl:text-[68px] font-normal italic">
+          <h2 className={`mx-auto mb-6 sm:mb-8 md:mb-10 max-w-5xl text-center font-fellix leading-[1.08] tracking-[-0.02em] ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
+            <span className="hero-title-line block text-[24px] sm:text-[28px] md:text-[36px] lg:text-[44px] xl:text-[52px] 2xl:text-[58px] 3xl:text-[68px] font-normal italic">
               Traditional B2B marketing
             </span>
-            <span className="hero-title-line block text-[32px] sm:text-[40px] md:text-[48px] lg:text-[58px] xl:text-[68px] font-semibold">
+            <span className="hero-title-line block text-[24px] sm:text-[28px] md:text-[36px] lg:text-[44px] xl:text-[52px] 2xl:text-[58px] 3xl:text-[68px] font-semibold">
               vs modern B2B marketing
             </span>
           </h2>
 
           {/* Subheading */}
-          <p className={`mx-auto mb-16 sm:mb-20 md:mb-24 max-w-3xl text-center font-[Helvetica Now Text,Arial,sans-serif] text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] font-regular leading-relaxed tracking-tight ${theme === 'dark' ? 'text-[#a0a0a0]' : 'text-[#444444]'}`}>
+          <p className={`mx-auto mb-10 sm:mb-14 md:mb-16 lg:mb-20 xl:mb-24 max-w-3xl text-center font-[Helvetica Now Text,Arial,sans-serif] text-[13px] sm:text-[15px] md:text-[16px] lg:text-[18px] xl:text-[20px] 2xl:text-[22px] font-regular leading-relaxed tracking-tight ${theme === 'dark' ? 'text-[#a0a0a0]' : 'text-[#444444]'}`}>
             B2B marketing is changing, fast. Attention spans are getting shorter,
             AI is getting smarter, and competition is increasing. That&apos;s why you
             need a partner who is a frontrunner in the industry.
           </p>
 
           {/* Comparison Grid */}
-          <div className="grid gap-10 md:grid-cols-2 md:gap-14 lg:gap-20">
+          <div className="grid gap-6 sm:gap-8 md:gap-10 lg:gap-14 xl:gap-20 md:grid-cols-2">
             {/* Traditional Column */}
             <div>
-              <h3 className={`mb-8 sm:mb-10 md:mb-12 text-center font-[Helvetica Now Text,Arial,sans-serif] text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] xl:text-[40px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
+              <h3 className={`mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-center font-[Helvetica Now Text,Arial,sans-serif] text-[18px] sm:text-[22px] md:text-[24px] lg:text-[28px] xl:text-[32px] 2xl:text-[36px] 3xl:text-[40px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
                 Traditional B2B Marketing
               </h3>
-              <div className="space-y-4 sm:space-y-5 md:space-y-6">
+              <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
                 {TRADITIONAL_ITEMS.map((item, index) => (
                   <div
                     key={index}
                     className={[
-                      'flex items-center gap-4 sm:gap-5 md:gap-6 rounded-xl sm:rounded-2xl border',
+                      'flex items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 rounded-lg sm:rounded-xl md:rounded-2xl border',
                       theme === 'dark' 
                         ? 'border-white/[0.08] bg-[#3a3a3a]' 
                         : 'border-black/[0.08] bg-[#F9F9F9]',
-                      'px-4 py-4 sm:px-6 sm:py-5 md:px-6 md:py-6 lg:px-8 lg:py-7',
+                      'px-3 py-3 sm:px-4 sm:py-4 md:px-5 md:py-5 lg:px-6 lg:py-6 xl:px-8 xl:py-7',
                       'transition-all duration-600 ease-out',
                       hasEntered
                         ? 'opacity-100 translate-y-0'
@@ -376,12 +376,13 @@ export default function CompareSection({ theme = 'light' }) {
                     }}
                   >
                     <div 
-                      className="flex h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 flex-shrink-0 items-center justify-center rounded-lg"
+                      className="flex h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 flex-shrink-0 items-center justify-center rounded-lg"
                       style={{ backgroundColor: traditionalIconBg }}
                     >
                       <svg
-                        width="18"
-                        height="3"
+                        width="14"
+                        height="2"
+                        className="sm:w-[16px] sm:h-[2.5px] md:w-[18px] md:h-3"
                         viewBox="0 0 22 3"
                         fill="none"
                         aria-hidden="true"
@@ -396,7 +397,7 @@ export default function CompareSection({ theme = 'light' }) {
                         />
                       </svg>
                     </div>
-                    <p className={`flex-1 font-[Helvetica Now Text,Arial,sans-serif] text-[15px] sm:text-[16px] md:text-[17px] lg:text-[19px] xl:text-[23px] font-semibold leading-snug tracking-tight ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
+                    <p className={`flex-1 font-[Helvetica Now Text,Arial,sans-serif] text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px] xl:text-[17px] 2xl:text-[19px] 3xl:text-[23px] font-semibold leading-snug tracking-tight ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
                       {item}
                     </p>
                   </div>
@@ -406,19 +407,19 @@ export default function CompareSection({ theme = 'light' }) {
 
             {/* Modern Column */}
             <div>
-              <h3 className={`mb-8 sm:mb-10 md:mb-12 text-center font-[Helvetica Now Text,Arial,sans-serif] text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] xl:text-[40px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
+              <h3 className={`mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-center font-[Helvetica Now Text,Arial,sans-serif] text-[18px] sm:text-[22px] md:text-[24px] lg:text-[28px] xl:text-[32px] 2xl:text-[36px] 3xl:text-[40px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
                 Modern B2B Marketing
               </h3>
-              <div className="space-y-4 sm:space-y-5 md:space-y-6">
+              <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
                 {MODERN_ITEMS.map((item, index) => (
                   <div
                     key={index}
                     className={[
-                      'flex items-center gap-4 sm:gap-5 md:gap-6 rounded-xl sm:rounded-2xl border border-[#74F5A1]/30',
+                      'flex items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 rounded-lg sm:rounded-xl md:rounded-2xl border border-[#74F5A1]/30',
                       theme === 'dark' 
                         ? 'bg-[#74F5A1]/[0.12]' 
                         : 'bg-[#74F5A1]/[0.08]',
-                      'px-4 py-4 sm:px-6 sm:py-5 md:px-6 md:py-6 lg:px-8 lg:py-7',
+                      'px-3 py-3 sm:px-4 sm:py-4 md:px-5 md:py-5 lg:px-6 lg:py-6 xl:px-8 xl:py-7',
                       'transition-all duration-600 ease-out',
                       hasEntered
                         ? 'opacity-100 translate-y-0'
@@ -431,12 +432,13 @@ export default function CompareSection({ theme = 'light' }) {
                     }}
                   >
                     <div 
-                      className="flex h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 flex-shrink-0 items-center justify-center rounded-lg"
+                      className="flex h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 flex-shrink-0 items-center justify-center rounded-lg"
                       style={{ backgroundColor: modernIconBg }}
                     >
                       <svg
-                        width="18"
-                        height="18"
+                        width="14"
+                        height="14"
+                        className="sm:w-[16px] sm:h-[16px] md:w-[18px] md:h-[18px]"
                         viewBox="0 0 22 22"
                         fill="none"
                         aria-hidden="true"
@@ -459,7 +461,7 @@ export default function CompareSection({ theme = 'light' }) {
                         />
                       </svg>
                     </div>
-                    <p className={`flex-1 font-[Helvetica Now Text,Arial,sans-serif] text-[15px] sm:text-[16px] md:text-[17px] lg:text-[19px] xl:text-[23px] font-semibold leading-snug tracking-tight ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
+                    <p className={`flex-1 font-[Helvetica Now Text,Arial,sans-serif] text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px] xl:text-[17px] 2xl:text-[19px] 3xl:text-[23px] font-semibold leading-snug tracking-tight ${theme === 'dark' ? 'text-[#f3f3f3]' : 'text-[#111111]'}`}>
                       {item}
                     </p>
                   </div>

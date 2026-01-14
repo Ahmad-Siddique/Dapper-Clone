@@ -644,7 +644,7 @@ export default function StatsSection({ theme = "light" }) {
 
       <section
         ref={sectionRef}
-        className="relative overflow-hidden py-18 sm:py-22 md:py-24"
+        className="relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24"
         style={bgStyle}
       >
         {/* Noise texture overlay */}
@@ -674,9 +674,9 @@ export default function StatsSection({ theme = "light" }) {
           />
         ))}
 
-        <div className="relative z-10 mx-auto max-w-[1800px] px-4 md:px-8">
+        <div className="relative z-10 mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8">
           {/* TOP ROW */}
-          <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)] mb-40">
+          <div className="grid items-start gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)] mb-20 sm:mb-28 md:mb-32 lg:mb-40">
             <div ref={titleContainerRef}>
               <div className="mb-4 flex items-center gap-3">
                 <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
@@ -713,9 +713,9 @@ export default function StatsSection({ theme = "light" }) {
               </h2>
             </div>
 
-            <div className="max-w-[520px] lg:ml-auto lg:mt-10">
+            <div className="max-w-full lg:max-w-[520px] lg:ml-auto lg:mt-10">
               <p
-                className={`font-[Helvetica Now Text,Arial,sans-serif] text-[16px] sm:text-[17px] md:text-[18px] lg:text-[19px] font-semibold leading-relaxed ${
+                className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[17px] lg:text-[18px] xl:text-[19px] font-semibold leading-relaxed ${
                   theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"
                 }`}
               >
@@ -725,14 +725,14 @@ export default function StatsSection({ theme = "light" }) {
 
               <Link
                 href="#cases"
-                className={`group mt-6 inline-flex items-center gap-2 rounded-[10px] border ${
+                className={`group mt-4 sm:mt-6 inline-flex items-center gap-2 rounded-[8px] sm:rounded-[10px] border ${
                   theme === "dark"
                     ? "border-white/10 bg-[#2a2a2a]"
                     : "border-black/10 bg-white"
-                } px-4 py-2 shadow-sm transition-transform duration-300 ease-out hover:scale-[1.10] hover:-translate-y-[1px]`}
+                } px-3 py-1.5 sm:px-4 sm:py-2 shadow-sm transition-transform duration-300 ease-out hover:scale-[1.10] hover:-translate-y-[1px]`}
               >
                 <span
-                  className={`font-[Helvetica Now Text,Arial,sans-serif] text-[16px] md:text-[18px] font-semibold tracking-tight ${
+                  className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[15px] md:text-[16px] lg:text-[18px] font-semibold tracking-tight ${
                     theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"
                   }`}
                 >
@@ -740,7 +740,7 @@ export default function StatsSection({ theme = "light" }) {
                 </span>
 
                 <span
-                  className={`relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-[4px] ${
+                  className={`relative flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center overflow-hidden rounded-[4px] ${
                     theme === "dark"
                       ? "bg-[#74F5A1] group-hover:bg-white"
                       : "bg-[#74F5A1] group-hover:bg-black"
@@ -861,7 +861,7 @@ export default function StatsSection({ theme = "light" }) {
               {/* Track with smooth drag-to-scroll */}
               <div
                 ref={trackRef}
-                className="flex gap-6 overflow-x-auto pb-4 cursor-grab snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 cursor-grab snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               >
                 {COMPANY_CARDS.map((card) => {
                   const isHovered = hoveredCardId === card.id;
@@ -872,15 +872,15 @@ export default function StatsSection({ theme = "light" }) {
                       data-card
                       onMouseEnter={() => setHoveredCardId(card.id)}
                       onMouseLeave={() => setHoveredCardId(null)}
-                      className={`stats-card snap-start shrink-0 w-[90vw] sm:w-[380px] md:w-[420px] lg:w-[520px] flex flex-col rounded-lg border ${
+                      className={`stats-card snap-start shrink-0 w-[85vw] sm:w-[340px] md:w-[380px] lg:w-[420px] xl:w-[520px] flex flex-col rounded-lg border ${
                         theme === "dark"
                           ? "border-white/10 bg-[#2a2a2a]"
                           : "border-black/[0.06] bg-white"
                       } shadow-[0_10px_35px_rgba(0,0,0,0.08)] select-none transition-shadow duration-300 hover:shadow-[0_15px_40px_rgba(0,0,0,0.12)]`}
                     >
                       {/* Logo section */}
-                      <div className="relative h-[140px] sm:h-[170px] md:h-[190px] lg:h-[220px] px-6 pt-6">
-                        <div className="relative flex h-8 sm:h-9 md:h-10 w-auto items-center">
+                      <div className="relative h-[120px] sm:h-[140px] md:h-[170px] lg:h-[190px] xl:h-[220px] px-4 sm:px-5 md:px-6 pt-4 sm:pt-5 md:pt-6">
+                        <div className="relative flex h-7 sm:h-8 md:h-9 lg:h-10 w-auto items-center">
                           {card.logoSrc ? (
                             <Image
                               src={card.logoSrc}
@@ -909,10 +909,10 @@ export default function StatsSection({ theme = "light" }) {
                           theme === "dark"
                             ? "border-white/[0.05]"
                             : "border-black/[0.05]"
-                        } px-4 pb-4 pt-3`}
+                        } px-3 sm:px-4 pb-3 sm:pb-4 pt-2 sm:pt-3`}
                       >
                         <div
-                          className="grid gap-3 transition-all duration-500 ease-out"
+                          className="grid gap-2 sm:gap-3 transition-all duration-500 ease-out"
                           style={{
                             gridTemplateColumns: isHovered
                               ? "1fr 1fr auto"
@@ -923,14 +923,14 @@ export default function StatsSection({ theme = "light" }) {
                           {card.metrics.map((metric) => (
                             <div
                               key={metric.value + metric.label}
-                              className={`rounded-md px-5 py-4 ${
+                              className={`rounded-md px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-4 ${
                                 theme === "dark"
                                   ? "bg-[#3a3a3a]"
                                   : "bg-[#F4F4F4]"
                               }`}
                             >
                               <p
-                                className={`font-[Helvetica Now Text,Arial,sans-serif] text-[22px] sm:text-[26px] md:text-[28px] font-bold tracking-tight ${
+                                className={`font-[Helvetica Now Text,Arial,sans-serif] text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[28px] font-bold tracking-tight ${
                                   theme === "dark"
                                     ? "text-[#f3f3f3]"
                                     : "text-[#111111]"
@@ -939,7 +939,7 @@ export default function StatsSection({ theme = "light" }) {
                                 {metric.value}
                               </p>
                               <p
-                                className={`mt-1 max-w-[220px] font-[Helvetica Now Text,Arial,sans-serif] text-[13px] sm:text-[14px] md:text-[15px] font-semibold leading-snug ${
+                                className={`mt-0.5 sm:mt-1 max-w-full sm:max-w-[220px] font-[Helvetica Now Text,Arial,sans-serif] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] font-semibold leading-snug ${
                                   theme === "dark"
                                     ? "text-[#a0a0a0]"
                                     : "text-[#444444]"
@@ -954,7 +954,7 @@ export default function StatsSection({ theme = "light" }) {
                           <div
                             className="overflow-hidden transition-all duration-500 ease-out"
                             style={{
-                              width: isHovered ? "90px" : "0px",
+                              width: isHovered ? "70px" : "0px",
                               opacity: isHovered ? 1 : 0,
                             }}
                           >
@@ -967,8 +967,9 @@ export default function StatsSection({ theme = "light" }) {
                               {/* Default arrow */}
                               <span className="absolute flex items-center justify-center transition-all duration-500 ease-out group-hover/arrow:translate-x-2 group-hover/arrow:-translate-y-2 group-hover/arrow:opacity-0">
                                 <svg
-                                  width="20"
-                                  height="20"
+                                  width="16"
+                                  height="16"
+                                  className="sm:w-5 sm:h-5"
                                   viewBox="0 0 14 14"
                                   aria-hidden="true"
                                 >
@@ -986,8 +987,9 @@ export default function StatsSection({ theme = "light" }) {
                               {/* New arrow */}
                               <span className="absolute flex items-center justify-center translate-x-[-10px] translate-y-[10px] opacity-0 transition-all duration-500 ease-out group-hover/arrow:translate-x-0 group-hover/arrow:translate-y-0 group-hover/arrow:opacity-100">
                                 <svg
-                                  width="20"
-                                  height="20"
+                                  width="16"
+                                  height="16"
+                                  className="sm:w-5 sm:h-5"
                                   viewBox="0 0 14 14"
                                   aria-hidden="true"
                                 >
@@ -1011,7 +1013,7 @@ export default function StatsSection({ theme = "light" }) {
               </div>
 
               {/* Mobile / tablet buttons */}
-              <div className="mt-4 flex justify-center gap-3 lg:hidden">
+              <div className="mt-4 sm:mt-6 flex justify-center gap-2 sm:gap-3 lg:hidden">
                 <button
                   type="button"
                   onClick={() => scrollByCard("prev")}

@@ -52,6 +52,18 @@ const nextConfig = {
         pathname: "/**",
       },
       {
+        protocol: "http",
+        hostname: "app.thetecheyrie.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "app.thetecheyrie.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
         protocol: "https",
         hostname: "wearebrain.com",
         port: "",

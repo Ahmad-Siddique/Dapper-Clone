@@ -7,11 +7,19 @@ import Image from 'next/image';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function BlogSection({ theme = 'light' }) {
+export default function BlogSection({ theme = 'light', blogPosts = [] }) {
   const isDark = theme === 'dark';
   const [activeCategory, setActiveCategory] = useState('All');
   const titleRef = useRef(null);
-  const categories = ['All', 'Demand Generation', 'Other'];
+  
+  // Extract unique categories from posts
+  const allCategories = ['All', ...new Set(blogPosts.map(post => post.category).filter(Boolean))];
+  const categories = allCategories.length > 1 ? allCategories : ['All', 'Demand Generation', 'Other'];
+  
+  // Filter posts by category
+  const filteredPosts = activeCategory === 'All' 
+    ? blogPosts 
+    : blogPosts.filter(post => post.category === activeCategory);
 
   useEffect(() => {
     // Refresh ScrollTrigger on mount
@@ -93,484 +101,214 @@ export default function BlogSection({ theme = 'light' }) {
         <div className="mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8 lg:px-12">
           
           {/* First Row - 2 Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-5 mb-8 md:mb-10">
-            
-            {/* LEFT CARD - Takes 3 columns */}
-            <Link href="/blog/why-brand-is-underrated-growth-channel" className="group block lg:col-span-3">
-              <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/20 h-full">
-                
-                {/* Flex Container - 2 Columns */}
-                <div className="flex flex-col md:flex-row h-full min-h-[600px]">
-                  
-                  {/* LEFT COLUMN - Image */}
-                  <div className="relative w-full md:w-1/2 overflow-hidden">
+          {filteredPosts.length > 0 && (
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-5 mb-8 md:mb-10">
+              
+              {/* LEFT CARD - Takes 3 columns (First post) */}
+              {filteredPosts[0] && (
+                <Link href={`/blog/${filteredPosts[0].slug}`} className="group block lg:col-span-3">
+                  <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/20 h-full">
+                    
+                    {/* Flex Container - 2 Columns */}
+                    <div className="flex flex-col md:flex-row h-full min-h-[600px]">
+                      
+                      {/* LEFT COLUMN - Image */}
+                      <div className="relative w-full md:w-1/2 overflow-hidden">
+                        <Image
+                          src={filteredPosts[0].image || "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=600&fit=crop"}
+                          alt={filteredPosts[0].title}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                      </div>
+
+                      {/* RIGHT COLUMN - Content */}
+                      <div className="relative w-full md:w-1/2 bg-[#2a2a2a] p-6 md:p-8 lg:p-10 xl:p-12 flex flex-col justify-between">
+                        
+                        {/* Top - Category Badge */}
+                        <div>
+                          <span className="inline-block px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
+                            {filteredPosts[0].category || 'Blog'}
+                          </span>
+                        </div>
+
+                        {/* Middle - Title */}
+                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[36px] lg:text-[42px] xl:text-[48px] font-bold leading-[1.1] text-white transition-colors duration-300 group-hover:text-[#74F5A1]">
+                          {filteredPosts[0].title.length > 60 
+                            ? `${filteredPosts[0].title.substring(0, 60)}...` 
+                            : filteredPosts[0].title}
+                        </h2>
+
+                        {/* Bottom - Author Info */}
+                        <div className="flex items-center gap-4">
+                          <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold text-[#74F5A1]">
+                              {filteredPosts[0].author?.charAt(0) || 'A'}
+                            </span>
+                          </div>
+                          
+                          <div className="flex flex-col gap-1">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base font-medium text-white">
+                              {filteredPosts[0].author || 'Author'}
+                            </span>
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm text-white/60">
+                              {filteredPosts[0].readTime || '5 min read'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+              )}
+
+              {/* RIGHT CARD - Image background with white content overlay (Second post) */}
+              {filteredPosts[1] && (
+                <Link href={`/blog/${filteredPosts[1].slug}`} className="group block lg:col-span-1">
+                  <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
+                    
+                    {/* Background Image - Full Card */}
                     <Image
-                      src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=600&fit=crop"
-                      alt="Demand Generation"
+                      src={filteredPosts[1].image || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&h=800&fit=crop"}
+                      alt={filteredPosts[1].title}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                      sizes="(max-width: 1024px) 100vw, 25vw"
                     />
-                  </div>
 
-                  {/* RIGHT COLUMN - Content */}
-                  <div className="relative w-full md:w-1/2 bg-[#2a2a2a] p-6 md:p-8 lg:p-10 xl:p-12 flex flex-col justify-between">
-                    
-                    {/* Top - Category Badge */}
-                    <div>
-                      <span className="inline-block px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                        Demand Generation
-                      </span>
-                    </div>
+                    {/* White Content Box Overlay */}
+                    <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
+                      <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
+                        
+                        {/* Category */}
+                        <div className="mb-4">
+                          <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
+                            {filteredPosts[1].category || 'Blog'}
+                          </span>
+                        </div>
 
-                    {/* Middle - Title */}
-                    <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[36px] lg:text-[42px] xl:text-[48px] font-bold leading-[1.1] text-white transition-colors duration-300 group-hover:text-[#74F5A1]">
-                      What Is Demand Generation? A Simple Guide for...
-                    </h2>
+                        {/* Title */}
+                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
+                          {filteredPosts[1].title}
+                        </h2>
 
-                    {/* Bottom - Author Info */}
-                    <div className="flex items-center gap-4">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                        <Image
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-                          alt="Tycho Luijten"
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                      
-                      <div className="flex flex-col gap-1">
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base font-medium text-white">
-                          Tycho Luijten
-                        </span>
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm text-white/60">
-                          8 min read
-                        </span>
+                        {/* Meta Info */}
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold text-[#74F5A1]">
+                              {filteredPosts[1].author?.charAt(0) || 'A'}
+                            </span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
+                              {filteredPosts[1].author || 'Author'}
+                            </span>
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
+                              {filteredPosts[1].readTime || '5 min read'}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
+                  </article>
+                </Link>
+              )}
 
-            {/* RIGHT CARD - Image background with white content overlay */}
-            <Link href="/blog/why-brand-is-underrated-growth-channel" className="group block lg:col-span-1">
-              <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                
-                {/* Background Image - Full Card */}
-                <Image
-                  src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&h=800&fit=crop"
-                  alt="Brand Growth"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 1024px) 100vw, 25vw"
-                />
-
-                {/* White Content Box Overlay */}
-                <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                  <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                    
-                    {/* Category */}
-                    <div className="mb-4">
-                      <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                        Demand Generation
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
-                      Why Brand Is Your Most Underrated Growth Channel
-                    </h2>
-
-                    {/* Meta Info */}
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                        <Image
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-                          alt="Tycho Luijten"
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
-                          Tycho Luijten
-                        </span>
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
-                          5 min read
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-
-          </div>
+            </div>
+          )}
 
           {/* Second Row - 4 Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-8 md:mb-10">
-            
-            {/* Card 1 */}
-            <Link href="/blog/why-brand-is-underrated-growth-channel" className="group block">
-              <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                <Image
-                  src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=800&fit=crop"
-                  alt="Blog Post"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                  <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                    <div className="mb-4">
-                      <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                        Demand Generation
-                      </span>
-                    </div>
-                    <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
-                      What Is Thought Leadership in B2B Marketing?
-                    </h2>
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                        <Image
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-                          alt="Tycho Luijten"
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
-                          Tycho Luijten
-                        </span>
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
-                          4 min read
-                        </span>
+          {filteredPosts.length > 2 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-8 md:mb-10">
+              {filteredPosts.slice(2, 6).map((post) => (
+                <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
+                  <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
+                    <Image
+                      src={post.image || "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=800&fit=crop"}
+                      alt={post.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    />
+                    <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
+                      <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
+                        <div className="mb-4">
+                          <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
+                            {post.category || 'Blog'}
+                          </span>
+                        </div>
+                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
+                          {post.title}
+                        </h2>
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold text-[#74F5A1]">
+                              {post.author?.charAt(0) || 'A'}
+                            </span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
+                              {post.author || 'Author'}
+                            </span>
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
+                              {post.readTime || '5 min read'}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-
-            {/* Card 2 */}
-            <Link href="/blog/why-brand-is-underrated-growth-channel" className="group block">
-              <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                <Image
-                  src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&h=800&fit=crop"
-                  alt="Blog Post"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                  <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                    <div className="mb-4">
-                      <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                        Demand Generation
-                      </span>
-                    </div>
-                    <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
-                      How to Build Brand Awareness in B2B Marketing
-                    </h2>
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                        <Image
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-                          alt="Tycho Luijten"
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
-                          Tycho Luijten
-                        </span>
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
-                          4 min read
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-
-            {/* Card 3 */}
-            <Link href="/blog/why-brand-is-underrated-growth-channel" className="group block">
-              <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                <Image
-                  src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=600&h=800&fit=crop"
-                  alt="Blog Post"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                  <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                    <div className="mb-4">
-                      <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                        Other
-                      </span>
-                    </div>
-                    <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
-                      9 Signs It's Time to Hire a Marketing Agency
-                    </h2>
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                        <Image
-                          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"
-                          alt="Eleni Zakof"
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
-                          Eleni Zakof
-                        </span>
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
-                          5 min read
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-
-            {/* Card 4 */}
-            <Link href="/blog/why-brand-is-underrated-growth-channel" className="group block">
-              <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                <Image
-                  src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=600&h=800&fit=crop"
-                  alt="Blog Post"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                  <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                    <div className="mb-4">
-                      <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                        Demand Generation
-                      </span>
-                    </div>
-                    <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
-                      What is the Niche Famous Framework?
-                    </h2>
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                        <Image
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-                          alt="Tycho Luijten"
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
-                          Tycho Luijten
-                        </span>
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
-                          6 min read
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-
-          </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          )}
 
           {/* Third Row - 4 Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            
-            {/* Card 1 */}
-            <Link href="/blog/why-brand-is-underrated-growth-channel" className="group block">
-              <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                <Image
-                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=800&fit=crop"
-                  alt="Blog Post"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                  <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                    <div className="mb-4">
-                      <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                        Demand Generation
-                      </span>
-                    </div>
-                    <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
-                      Content Marketing Strategy for B2B Success
-                    </h2>
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                        <Image
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-                          alt="Tycho Luijten"
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
-                          Tycho Luijten
-                        </span>
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
-                          7 min read
-                        </span>
+          {filteredPosts.length > 6 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+              {filteredPosts.slice(6, 10).map((post) => (
+                <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
+                  <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
+                    <Image
+                      src={post.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=800&fit=crop"}
+                      alt={post.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    />
+                    <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
+                      <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
+                        <div className="mb-4">
+                          <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
+                            {post.category || 'Blog'}
+                          </span>
+                        </div>
+                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
+                          {post.title}
+                        </h2>
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold text-[#74F5A1]">
+                              {post.author?.charAt(0) || 'A'}
+                            </span>
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
+                              {post.author || 'Author'}
+                            </span>
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
+                              {post.readTime || '5 min read'}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-
-            {/* Card 2 */}
-            <Link href="/blog/why-brand-is-underrated-growth-channel" className="group block">
-              <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                <Image
-                  src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&h=800&fit=crop"
-                  alt="Blog Post"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                  <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                    <div className="mb-4">
-                      <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                        Other
-                      </span>
-                    </div>
-                    <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
-                      The Future of Digital Marketing in 2026
-                    </h2>
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                        <Image
-                          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"
-                          alt="Eleni Zakof"
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
-                          Eleni Zakof
-                        </span>
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
-                          6 min read
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-
-            {/* Card 3 */}
-            <Link href="/blog/why-brand-is-underrated-growth-channel" className="group block">
-              <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                <Image
-                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&h=800&fit=crop"
-                  alt="Blog Post"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                  <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                    <div className="mb-4">
-                      <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                        Demand Generation
-                      </span>
-                    </div>
-                    <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
-                      Lead Generation vs Demand Generation
-                    </h2>
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                        <Image
-                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop"
-                          alt="Tycho Luijten"
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
-                          Tycho Luijten
-                        </span>
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
-                          5 min read
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-
-            {/* Card 4 */}
-            <Link href="/blog/why-brand-is-underrated-growth-channel" className="group block">
-              <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                <Image
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=800&fit=crop"
-                  alt="Blog Post"
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                  <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                    <div className="mb-4">
-                      <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                        Other
-                      </span>
-                    </div>
-                    <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
-                      Building a High-Performance Marketing Team
-                    </h2>
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                        <Image
-                          src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop"
-                          alt="Eleni Zakof"
-                          fill
-                          className="object-cover"
-                          sizes="48px"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
-                          Eleni Zakof
-                        </span>
-                        <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
-                          8 min read
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-
-          </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          )}
 
         </div>
       </section>

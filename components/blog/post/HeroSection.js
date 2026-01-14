@@ -7,14 +7,14 @@ import Link from 'next/link';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function BlogPostHero({ theme = 'light' }) {
+export default function BlogPostHero({ theme = 'light', post }) {
   const isDark = theme === 'dark';
   const titleRef = useRef(null);
   const metaRef = useRef(null);
   const imageRef = useRef(null);
 
-  // Post data
-  const post = {
+  // Default post data (fallback if no post provided)
+  const defaultPost = {
     category: "Demand Generation",
     title: "Why Brand Is Your Most Underrated Growth Channel",
     author: "Tycho Luijten",
@@ -24,6 +24,9 @@ export default function BlogPostHero({ theme = 'light' }) {
     image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=800&fit=crop",
     hasVideo: false
   };
+
+  // Use provided post or fallback to default
+  const postData = post || defaultPost;
 
   useEffect(() => {
     // Refresh ScrollTrigger on mount
@@ -118,7 +121,7 @@ export default function BlogPostHero({ theme = 'light' }) {
             {/* Category Badge */}
             <div className="mb-8">
               <span className="inline-block px-5 py-2.5 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
-                {post.category}
+                {postData.category}
               </span>
             </div>
 
@@ -130,7 +133,7 @@ export default function BlogPostHero({ theme = 'light' }) {
               }`}
               style={{ opacity: 1 }}
             >
-              {renderTitle(post.title)}
+              {renderTitle(postData.title)}
             </h1>
 
             {/* Meta Information */}
@@ -141,11 +144,11 @@ export default function BlogPostHero({ theme = 'light' }) {
             >
               {/* Author Avatar & Name */}
               <div className="flex items-center gap-4">
-                {post.authorAvatar ? (
+                {postData.authorAvatar ? (
                   <div className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
                     <Image
-                      src={post.authorAvatar}
-                      alt={post.author}
+                      src={postData.authorAvatar}
+                      alt={postData.author}
                       fill
                       className="object-cover"
                       sizes="64px"
@@ -157,13 +160,13 @@ export default function BlogPostHero({ theme = 'light' }) {
                       ? 'bg-[#74F5A1]/20 text-[#74F5A1]' 
                       : 'bg-[#111111] text-white'
                   }`}>
-                    {post.author?.charAt(0) || 'A'}
+                    {postData.author?.charAt(0) || 'A'}
                   </div>
                 )}
                 <p className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold ${
                   isDark ? 'text-white' : 'text-[#111111]'
                 }`}>
-                  {post.author}
+                  {postData.author}
                 </p>
               </div>
               
@@ -176,12 +179,12 @@ export default function BlogPostHero({ theme = 'light' }) {
                 <p className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg ${
                   isDark ? 'text-white/60' : 'text-[#666666]'
                 }`}>
-                  {post.readTime}
+                  {postData.readTime}
                 </p>
               </div>
 
               {/* Date */}
-              {post.date && (
+              {postData.date && (
                 <div className="flex items-center gap-2">
                   <svg className={`w-5 h-5 ${isDark ? 'text-white/60' : 'text-[#666666]'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -189,7 +192,7 @@ export default function BlogPostHero({ theme = 'light' }) {
                   <p className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg ${
                     isDark ? 'text-white/60' : 'text-[#666666]'
                   }`}>
-                    {post.date}
+                    {postData.date}
                   </p>
                 </div>
               )}
@@ -197,14 +200,14 @@ export default function BlogPostHero({ theme = 'light' }) {
           </div>
 
           {/* RIGHT SIDE - Featured Image */}
-          {post.image && (
+          {postData.image && (
             <div 
               ref={imageRef}
               className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] xl:h-[800px] rounded-3xl overflow-hidden group"
             >
               <Image
-                src={post.image}
-                alt={post.title}
+                src={postData.image}
+                alt={postData.title}
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
                 priority
@@ -212,7 +215,7 @@ export default function BlogPostHero({ theme = 'light' }) {
               />
               
               {/* Play Button Overlay (if video) */}
-              {post.hasVideo && (
+              {postData.hasVideo && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <button className="w-24 h-24 bg-[#74F5A1] rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-[#5FE08D]">
                     <svg className="w-12 h-12 text-[#0a0a0a] ml-1" fill="currentColor" viewBox="0 0 24 24">

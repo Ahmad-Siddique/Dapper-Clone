@@ -10,9 +10,10 @@ import ReadMoreBlogs from '../../../../components/blog/post/ReadMoreBlogs';
 import Footer from '../../../../components/dark/Footer';
 import '../../../../components/dark/MainPage.css';
 import TalkToExpertSection from '../../../../components/dark/TalkToExpertSection';
+import { fetchWordPressPostBySlug, fetchWordPressPosts } from '../../../../utils/wordpress';
 
-// Blog posts data with full content
-const blogPostsData = [
+// Demo blog posts data with full content (backup/fallback)
+const DEMO_BLOG_POSTS_DATA = [
   {
     id: 1,
     title: "What Is Demand Generation? A Simple Guide for B2B Marketers",
@@ -265,6 +266,7 @@ export default function BlogPostPage({ params }) {
   const resolvedParams = use(params);
   const [theme, setTheme] = useState('light');
   const [post, setPost] = useState(null);
+  const [allPosts, setAllPosts] = useState(DEMO_BLOG_POSTS_DATA);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -294,13 +296,42 @@ export default function BlogPostPage({ params }) {
       currentSlug = pathParts[pathParts.length - 1] || '';
     }
 
-    // Find the post
-    if (currentSlug) {
-      const foundPost = blogPostsData.find(p => p.slug === currentSlug);
-      setPost(foundPost);
-    }
-    
-    setLoading(false);
+    // Fetch the post from WordPress API
+    const loadPost = async () => {
+      if (!currentSlug) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        // Fetch all posts for ReadMoreBlogs component
+        const wpPosts = await fetchWordPressPosts();
+        if (wpPosts && wpPosts.length > 0) {
+          setAllPosts(wpPosts);
+        }
+
+        // Try to fetch the specific post from WordPress first
+        const wpPost = await fetchWordPressPostBySlug(currentSlug);
+        
+        if (wpPost) {
+          setPost(wpPost);
+        } else {
+          // Fallback to demo content
+          const foundPost = DEMO_BLOG_POSTS_DATA.find(p => p.slug === currentSlug);
+          setPost(foundPost);
+        }
+      } catch (error) {
+        console.error('Error loading blog post:', error);
+        // Fallback to demo content on error
+        const foundPost = DEMO_BLOG_POSTS_DATA.find(p => p.slug === currentSlug);
+        setPost(foundPost);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPost();
   }, [resolvedParams]);
 
   const toggleTheme = () => {
@@ -364,12 +395,30 @@ export default function BlogPostPage({ params }) {
       </button>
 
       <Header theme={theme} />
-      <BlogPostHero  theme={theme} />
-       <BlogPostContent  theme={theme} />
-    <BlogNewsletter theme={theme} />
-      {post && <ReadMoreBlogs posts={blogPostsData} currentSlug={post.slug} theme={theme} />}
-      <TalkToExpertSection theme={theme} />
-      <Footer theme={theme} />
+      {loading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#74F5A1]"></div>
+            <p className="mt-4 text-lg">Loading blog post...</p>
+          </div>
+        </div>
+      ) : post ? (
+        <>
+          <BlogPostHero theme={theme} post={post} />
+          <BlogPostContent theme={theme} post={post} />
+          <BlogNewsletter theme={theme} />
+          <ReadMoreBlogs posts={allPosts} currentSlug={post.slug} theme={theme} />
+          <TalkToExpertSection theme={theme} />
+          <Footer theme={theme} />
+        </>
+      ) : (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Post not found</h1>
+            <a href="/blog" className="text-[#74F5A1] hover:underline">Back to blog</a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

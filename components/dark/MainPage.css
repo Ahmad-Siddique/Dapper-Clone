@@ -61,8 +61,23 @@ body {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .theme-toggle-btn {
-    right: 20px;
-    width: 45px;
-    height: 45px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+@media (max-width: 640px) {
+  .theme-toggle-btn {
+    right: 12px;
+    width: 36px;
+    height: 36px;
+  }
+  
+  .theme-toggle-btn svg {
+    width: 16px;
+    height: 16px;
   }
 }

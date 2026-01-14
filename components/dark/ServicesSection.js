@@ -679,7 +679,7 @@ export default function ServicesSection({ theme = "light" }) {
 
       <section
         ref={sectionRef}
-        className="relative overflow-hidden pt-32 pb-32 md:pt-40 md:pb-40 bg-transition"
+        className="relative overflow-hidden pt-20 sm:pt-24 md:pt-32 lg:pt-40 pb-20 sm:pb-24 md:pb-32 lg:pb-40 bg-transition"
         style={bgStyle}
       >
         {/* Noise overlay — only in dark mode */}
@@ -690,13 +690,13 @@ export default function ServicesSection({ theme = "light" }) {
           />
         )}
 
-        <div className="relative z-10 mx-auto max-w-[1800px] px-4 md:px-8">
+        <div className="relative z-10 mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8">
           {/* TOP ROW */}
-          <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)] mb-20">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
+          <div className="grid items-start gap-6 sm:gap-8 md:gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2fr)] mb-12 sm:mb-16 md:mb-20">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="inline-flex h-4 w-4 sm:h-5 sm:w-5 rounded-sm bg-[#74F5A1]" />
               <span
-                className={`font-[Helvetica_Now_Text,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-transition ${
+                className={`font-[Helvetica_Now_Text,Arial,sans-serif] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] font-semibold tracking-[0.16em] uppercase text-transition ${
                   theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"
                 }`}
               >
@@ -704,12 +704,12 @@ export default function ServicesSection({ theme = "light" }) {
               </span>
             </div>
 
-            <div className="max-w-[1100px]" ref={titleContainerRef}>
+            <div className="max-w-full lg:max-w-[1100px]" ref={titleContainerRef}>
               {/* Title with FELLIX font and electrical animation */}
               <h2 className="font-fellix leading-[1.02] tracking-tight">
                 {/* Line 1 */}
                 <div
-                  className={`hero-title-line text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] text-transition ${
+                  className={`hero-title-line text-[28px] sm:text-[36px] md:text-[48px] lg:text-[60px] xl:text-[70px] 2xl:text-[82px] 3xl:text-[90px] text-transition ${
                     theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                   }`}
                 >
@@ -717,7 +717,7 @@ export default function ServicesSection({ theme = "light" }) {
                 </div>
                 {/* Line 2 */}
                 <div
-                  className={`hero-title-line text-[40px] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px] text-transition ${
+                  className={`hero-title-line text-[28px] sm:text-[36px] md:text-[48px] lg:text-[60px] xl:text-[70px] 2xl:text-[82px] 3xl:text-[90px] text-transition ${
                     theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                   }`}
                 >
@@ -729,7 +729,7 @@ export default function ServicesSection({ theme = "light" }) {
               </h2>
 
               <p
-                className={`mt-8 max-w-[640px] font-[Helvetica_Now_Text,Arial,sans-serif] text-[17px] md:text-[19px] lg:text-[22px] font-semibold leading-relaxed text-transition ${
+                className={`mt-4 sm:mt-6 md:mt-8 max-w-full lg:max-w-[640px] font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[17px] lg:text-[19px] xl:text-[22px] font-semibold leading-relaxed text-transition ${
                   theme === "dark" ? "text-[#d0d0d0]" : "text-[#212121]"
                 }`}
               >
@@ -742,7 +742,7 @@ export default function ServicesSection({ theme = "light" }) {
 
           {/* Divider */}
           <div
-            className={`h-px w-full border-transition mb-20 ${
+            className={`h-px w-full border-transition mb-12 sm:mb-16 md:mb-20 ${
               theme === "dark"
                 ? "border-b border-white/10"
                 : "border-b border-black/10"
@@ -750,10 +750,10 @@ export default function ServicesSection({ theme = "light" }) {
           />
 
           {/* MAIN ROW: Image + Interactive Cards */}
-          <div className="flex flex-col gap-10 lg:flex-row">
+          <div className="flex flex-col gap-6 sm:gap-8 md:gap-10 lg:flex-row">
             {/* LEFT: Image */}
-            <div className="relative w-full overflow-hidden rounded-2xl lg:w-[28%] service-card">
-              <div className="relative h-[520px] sm:h-[560px] lg:h-[640px] border border-transition shadow-2xl">
+            <div className="relative w-full overflow-hidden rounded-xl sm:rounded-2xl lg:w-[28%] service-card">
+              <div className="relative h-[300px] sm:h-[400px] md:h-[480px] lg:h-[560px] xl:h-[640px] border border-transition shadow-2xl">
                 <Image
                   src="https://cdn.prod.website-files.com/67b320fe114d5e148783d276/68947cf33c69a1ceddbdf83d_Dapper%20Flash%20Photos-04.avif"
                   alt="Dapper team"
@@ -765,14 +765,14 @@ export default function ServicesSection({ theme = "light" }) {
               </div>
 
               {/* Green accent blocks */}
-              <span className="pointer-events-none absolute left-6 top-6 h-12 w-8 bg-[#74F5A1]" />
-              <span className="pointer-events-none absolute left-20 top-32 h-10 w-6 bg-[#74F5A1]" />
+              <span className="pointer-events-none absolute left-3 top-3 sm:left-4 sm:top-4 md:left-6 md:top-6 h-8 w-6 sm:h-10 sm:w-7 md:h-12 md:w-8 bg-[#74F5A1]" />
+              <span className="pointer-events-none absolute left-12 top-20 sm:left-16 sm:top-24 md:left-20 md:top-32 h-6 w-4 sm:h-8 sm:w-5 md:h-10 md:w-6 bg-[#74F5A1]" />
             </div>
 
             {/* RIGHT: Interactive service cards */}
             <div className="flex-1">
               <div
-                className="grid h-full gap-4 lg:gap-6 transition-all duration-700 ease-out"
+                className="grid h-full gap-3 sm:gap-4 md:gap-6 transition-all duration-700 ease-out"
                 style={{
                   gridTemplateColumns:
                     activeId === "content"
@@ -794,7 +794,7 @@ export default function ServicesSection({ theme = "light" }) {
                       onMouseLeave={() => setActiveId(null)}
                       className={`
                         service-card group relative flex flex-col justify-between 
-                        rounded-2xl border px-10 py-9 
+                        rounded-xl sm:rounded-2xl border px-4 py-4 sm:px-6 sm:py-6 md:px-8 md:py-7 lg:px-10 lg:py-9
                         transition-all duration-700 ease-out
                         ${
                           theme === "dark"
@@ -805,16 +805,16 @@ export default function ServicesSection({ theme = "light" }) {
                       `}
                     >
                       <h3
-                        className={`font-[Helvetica_Now_Text,Arial,sans-serif] text-[26px] sm:text-[30px] md:text-[36px] lg:text-[40px] font-bold tracking-tight text-transition ${
+                        className={`font-[Helvetica_Now_Text,Arial,sans-serif] text-[18px] sm:text-[22px] md:text-[26px] lg:text-[30px] xl:text-[36px] 2xl:text-[40px] font-bold tracking-tight text-transition ${
                           theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                         }`}
                       >
                         {service.title}
                       </h3>
 
-                      <div className="mt-6 flex items-end justify-between">
+                      <div className="mt-4 sm:mt-6 flex items-end justify-between gap-3 sm:gap-4">
                         <p
-                          className={`max-w-[400px] text-[15px] md:text-[16px] font-semibold leading-snug transition-all duration-500 ease-out text-transition ${
+                          className={`max-w-full sm:max-w-[300px] md:max-w-[400px] text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px] font-semibold leading-snug transition-all duration-500 ease-out text-transition ${
                             theme === "dark"
                               ? "text-[#aaaaaa]"
                               : "text-[#444444]"
@@ -830,7 +830,7 @@ export default function ServicesSection({ theme = "light" }) {
                         {/* Arrow Button */}
                         <Link
                           href={`/services/${service.id}`}
-                          className={`relative flex h-10 w-10 items-center justify-center rounded-[6px] bg-[#74F5A1] transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 ${
+                          className={`relative flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 items-center justify-center rounded-[6px] bg-[#74F5A1] transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 flex-shrink-0 ${
                             theme === "dark"
                               ? "group-hover:bg-white"
                               : "group-hover:bg-black"
@@ -838,7 +838,7 @@ export default function ServicesSection({ theme = "light" }) {
                         >
                           {/* Default arrow */}
                           <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 group-hover:translate-x-3 group-hover:-translate-y-3 group-hover:opacity-0">
-                            <svg width="16" height="16" viewBox="0 0 14 14">
+                            <svg width="12" height="12" className="sm:w-4 sm:h-4" viewBox="0 0 14 14">
                               <path
                                 d="M1 13L13 1M13 1H5M13 1V9"
                                 fill="none"
@@ -854,7 +854,7 @@ export default function ServicesSection({ theme = "light" }) {
 
                           {/* Hover arrow */}
                           <span className="absolute inset-0 flex items-center justify-center translate-x-[-12px] translate-y-[12px] opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100">
-                            <svg width="16" height="16" viewBox="0 0 14 14">
+                            <svg width="12" height="12" className="sm:w-4 sm:h-4" viewBox="0 0 14 14">
                               <path
                                 d="M1 13L13 1M13 1H5M13 1V9"
                                 fill="none"

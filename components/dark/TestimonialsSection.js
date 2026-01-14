@@ -82,51 +82,51 @@ export default function TestimonialsSection({ theme }) {
 
 
   return (
-    <div style={bgStyle} className={`min-h-[150vh]  ${textColor} font-sans selection:bg-indigo-500/30 transition-colors duration-500`}>
+    <div style={bgStyle} className={`min-h-[150vh] ${textColor} font-sans selection:bg-indigo-500/30 transition-colors duration-500`}>
         
         <div className="relative">
             {/* Sticky Heading Section */}
             <div className="sticky top-0 h-screen flex flex-col items-center justify-center -z-0 overflow-hidden px-4">
-                <h1 className={`text-6xl md:text-8xl font-serif text-center leading-tight tracking-tight ${headingColor} transition-colors duration-500`}>
-                    What people say<br />
-                    about TechEyerie
+                <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-serif text-center leading-tight tracking-tight ${headingColor} transition-colors duration-500`}>
+                    What people say<br className="hidden sm:block" />
+                    <span className="sm:hidden"> </span>about TechEyerie
                 </h1>
             </div>
 
             {/* Scrollable Cards Section */}
-            <div className="relative z-10 flex flex-col items-center gap-6 pb-32 pt-[20vh] px-4 w-full">
+            <div className="relative z-10 flex flex-col items-center gap-4 sm:gap-5 md:gap-6 pb-16 sm:pb-20 md:pb-24 lg:pb-32 pt-[15vh] sm:pt-[18vh] md:pt-[20vh] px-4 sm:px-6 w-full">
                 {testimonials.map((t) => (
                     <div 
                         key={t.id} 
-                        className={`w-full max-w-xl ${cardBg} ${cardText} p-8 md:p-12 rounded-[2rem] ${cardShadow} transition-all duration-300 hover:scale-[1.01] font-suisse font-light`}
+                        className={`w-full max-w-full sm:max-w-lg md:max-w-xl ${cardBg} ${cardText} p-5 sm:p-6 md:p-8 lg:p-10 xl:p-12 rounded-xl sm:rounded-2xl ${cardShadow} transition-all duration-300 hover:scale-[1.01] font-suisse font-light`}
                     >
                         {/* Company Name */}
-                        <div className="mb-8">
-                            <h4 className="text-xs font-bold tracking-widest uppercase text-gray-600">{t.company}</h4>
+                        <div className="mb-4 sm:mb-6 md:mb-8">
+                            <h4 className="text-[10px] sm:text-xs font-bold tracking-widest uppercase text-gray-600">{t.company}</h4>
                         </div>
 
                         {/* Quote */}
-                        <blockquote className="text-xl md:text-2xl leading-relaxed mb-12 font-light">
+                        <blockquote className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed mb-8 sm:mb-10 md:mb-12 font-light">
                             "{t.content}"
                         </blockquote>
 
                         {/* Profile Footer */}
-                        <div className="flex items-center justify-between border-t border-gray-300/50 pt-8">
-                            <div className="flex items-center gap-4">
+                        <div className="flex items-center justify-between border-t border-gray-300/50 pt-5 sm:pt-6 md:pt-8">
+                            <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
                                 <img 
                                     src={t.image} 
                                     alt={t.name} 
-                                    className="w-12 h-12 rounded-lg object-cover grayscale"
+                                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover grayscale"
                                 />
                                 <div>
-                                    <h5 className="font-bold text-sm">{t.name}</h5>
-                                    <p className="text-xs text-gray-600">{t.role}</p>
+                                    <h5 className="font-bold text-xs sm:text-sm">{t.name}</h5>
+                                    <p className="text-[10px] sm:text-xs text-gray-600">{t.role}</p>
                                 </div>
                             </div>
                             
                             {/* Arrow Icon Circle */}
-                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm cursor-pointer hover:bg-black hover:text-white transition-colors duration-300">
-                                <ArrowRight className="w-5 h-5" />
+                            <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-white flex items-center justify-center shadow-sm cursor-pointer hover:bg-black hover:text-white transition-colors duration-300 flex-shrink-0">
+                                <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5" />
                             </div>
                         </div>
                     </div>

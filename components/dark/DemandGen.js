@@ -883,7 +883,7 @@ export default function DemandSection({ theme = "light" }) {
       `}</style>
       <section
         ref={sectionRef}
-        className="relative overflow-hidden py-24 bg-transition"
+        className="relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24 bg-transition"
         style={bgStyle}
       >
         {/* Noise texture overlay - matched to ServicesSection */}
@@ -913,22 +913,22 @@ export default function DemandSection({ theme = "light" }) {
           />
         ))}
 
-        <div className="relative z-10 mx-auto max-w-[1800px] px-4 md:px-8">
-          <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.7fr)]">
+        <div className="relative z-10 mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8">
+          <div className="grid items-start gap-8 sm:gap-10 md:gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.7fr)]">
             {/* LEFT – Sticky Phone */}
-            <div ref={phoneWrapperRef} className="relative lg:sticky lg:top-28">
+            <div ref={phoneWrapperRef} className="relative lg:sticky lg:top-28 mb-8 lg:mb-0">
               <div
                 ref={phoneRef}
-                className="relative w-full max-w-[360px] lg:max-w-[380px] xl:max-w-[420px] mx-auto lg:mx-0"
+                className="relative w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[380px] xl:max-w-[420px] mx-auto lg:mx-0"
               >
                 <div
-                  className={`relative overflow-hidden rounded-[32px] border ${
+                  className={`relative overflow-hidden rounded-[24px] sm:rounded-[28px] md:rounded-[32px] border ${
                     theme === "dark"
                       ? "border-white/[0.06] bg-[#2a2a2a]"
                       : "border-black/[0.06] bg-white"
                   } shadow-[0_24px_60px_rgba(0,0,0,0.20)]`}
                 >
-                  <div className="relative h-[520px] sm:h-[560px] lg:h-[600px]">
+                  <div className="relative h-[400px] sm:h-[480px] md:h-[520px] lg:h-[560px] xl:h-[600px]">
                     <Image
                       src="https://cdn.prod.website-files.com/67b320fe114d5e148783d276/68947cf33c69a1ceddbdf83d_Dapper%20Flash%20Photos-04.avif"
                       alt="Demand gen creative on mobile"
@@ -939,42 +939,42 @@ export default function DemandSection({ theme = "light" }) {
                     />
                   </div>
                 </div>
-                <span className="pointer-events-none absolute -left-6 top-16 h-14 w-8 bg-[#74F5A1]" />
-                <span className="pointer-events-none absolute left-16 -bottom-6 h-10 w-24 bg-[#74F5A1]" />
+                <span className="pointer-events-none absolute -left-3 top-12 sm:-left-4 sm:top-14 md:-left-6 md:top-16 h-10 w-6 sm:h-12 sm:w-7 md:h-14 md:w-8 bg-[#74F5A1]" />
+                <span className="pointer-events-none absolute left-10 -bottom-3 sm:left-12 sm:-bottom-4 md:left-16 md:-bottom-6 h-6 w-16 sm:h-8 sm:w-20 md:h-10 md:w-24 bg-[#74F5A1]" />
               </div>
             </div>
 
             {/* RIGHT – Content blocks */}
-            <div className="space-y-12">
+            <div className="space-y-8 sm:space-y-10 md:space-y-12">
               {DEMAND_BLOCKS.map((block) => (
                 <article
                   key={block.id}
-                  className={`rounded-2xl border ${
+                  className={`rounded-xl sm:rounded-2xl border ${
                     theme === "dark"
                       ? "border-white/[0.06] bg-[#2a2a2a]"
                       : "border-black/[0.06] bg-white"
-                  } px-8 py-12 sm:px-16 sm:py-16 md:px-20 md:py-20 lg:px-24 lg:py-24 shadow-[0_18px_45px_rgba(0,0,0,0.10)]`}
+                  } px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-12 lg:py-12 xl:px-20 xl:py-16 2xl:px-24 2xl:py-24 shadow-[0_18px_45px_rgba(0,0,0,0.10)]`}
                 >
-                  <header className="mb-8 sm:mb-10 md:mb-12">
+                  <header className="mb-6 sm:mb-8 md:mb-10 lg:mb-12">
                     {/* Added demand-block-title class for electric animation */}
                     <h2
-                      className={`hero-title-line font-[Helvetica Now Text,Arial,sans-serif] text-[32px] sm:text-[38px] md:text-[44px] lg:text-[60px] xl:text-[75px] font-semibold tracking-tight ${
+                      className={`hero-title-line font-[Helvetica Now Text,Arial,sans-serif] text-[24px] sm:text-[28px] md:text-[32px] lg:text-[44px] xl:text-[60px] 2xl:text-[75px] font-semibold tracking-tight ${
                         theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                       }`}
                     >
                       {block.label}
                     </h2>
                     <p
-                      className={`mt-3 sm:mt-4 font-ivy-presto italic text-[20px] sm:text-[22px] md:text-[26px] lg:text-[28px] xl:text-[32px] ${
+                      className={`mt-2 sm:mt-3 md:mt-4 font-ivy-presto italic text-[16px] sm:text-[18px] md:text-[20px] lg:text-[22px] xl:text-[26px] 2xl:text-[28px] 3xl:text-[32px] ${
                         theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                       }`}
                     >
                       {block.tagline}
                     </p>
                   </header>
-                  <div className="max-w-[800px] space-y-4 md:space-y-5 font-[Helvetica Now Text,Arial,sans-serif]">
+                  <div className="max-w-full lg:max-w-[800px] space-y-3 sm:space-y-4 md:space-y-5 font-[Helvetica Now Text,Arial,sans-serif]">
                     <p
-                      className={`text-[17px] sm:text-[18px] md:text-[19px] lg:text-[20px] leading-relaxed font-semibold ${
+                      className={`text-[14px] sm:text-[16px] md:text-[17px] lg:text-[18px] xl:text-[19px] 2xl:text-[20px] leading-relaxed font-semibold ${
                         theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"
                       }`}
                     >
@@ -983,7 +983,7 @@ export default function DemandSection({ theme = "light" }) {
                     {block.body.map((p, i) => (
                       <p
                         key={i}
-                        className={`text-[16px] sm:text-[17px] md:text-[18px] lg:text-[19px] xl:text-[20px] leading-relaxed ${
+                        className={`text-[13px] sm:text-[15px] md:text-[16px] lg:text-[17px] xl:text-[18px] 2xl:text-[19px] 3xl:text-[20px] leading-relaxed ${
                           theme === "dark"
                             ? "text-[#a0a0a0]"
                             : "text-[#555555]"
@@ -993,20 +993,20 @@ export default function DemandSection({ theme = "light" }) {
                       </p>
                     ))}
                   </div>
-                  <div className="mt-10 sm:mt-12 md:mt-14">
+                  <div className="mt-6 sm:mt-8 md:mt-10 lg:mt-12 xl:mt-14">
                     <p
-                      className={`text-[12px] sm:text-[13px] font-semibold uppercase tracking-[0.18em] ${
+                      className={`text-[11px] sm:text-[12px] md:text-[13px] font-semibold uppercase tracking-[0.18em] ${
                         theme === "dark" ? "text-[#a0a0a0]" : "text-[#777777]"
                       }`}
                     >
                       The result?
                     </p>
-                    <ul className="mt-4 sm:mt-6 space-y-3 sm:space-y-4">
+                    <ul className="mt-3 sm:mt-4 md:mt-6 space-y-2 sm:space-y-3 md:space-y-4">
                       {block.results.map((item) => (
-                        <li key={item} className="flex items-start gap-3">
-                          <span className="mt-[3px] h-5 w-5 shrink-0 rounded-md bg-[#74F5A1]" />
+                        <li key={item} className="flex items-start gap-2 sm:gap-3">
+                          <span className="mt-[3px] h-4 w-4 sm:h-5 sm:w-5 shrink-0 rounded-md bg-[#74F5A1]" />
                           <span
-                            className={`text-[16px] sm:text-[17px] md:text-[18px] ${
+                            className={`text-[13px] sm:text-[15px] md:text-[16px] lg:text-[17px] xl:text-[18px] ${
                               theme === "dark"
                                 ? "text-[#f3f3f3]"
                                 : "text-[#212121]"
@@ -1017,20 +1017,20 @@ export default function DemandSection({ theme = "light" }) {
                         </li>
                       ))}
                     </ul>
-                    <div className="mt-8 sm:mt-10 flex justify-end">
+                    <div className="mt-6 sm:mt-8 md:mt-10 flex justify-end">
                       <Link
                         href={block.href}
-                        className={`group inline-flex items-center gap-2 rounded-[10px] border ${
+                        className={`group inline-flex items-center gap-2 rounded-[8px] sm:rounded-[10px] border ${
                           theme === "dark"
                             ? "border-white/10 bg-[#3a3a3a]"
                             : "border-black/10 bg-white"
-                        } px-5 py-3 sm:px-6 sm:py-3 text-[14px] sm:text-[15px] md:text-[16px] font-semibold tracking-tight ${
+                        } px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px] font-semibold tracking-tight ${
                           theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                         } shadow-sm transition-transform duration-300 ease-out hover:scale-[1.10] hover:-translate-y-[1px]`}
                       >
                         Discover more
                         <span
-                          className={`relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-[4px] ${
+                          className={`relative flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center overflow-hidden rounded-[4px] ${
                             theme === "dark"
                               ? "bg-[#74F5A1] group-hover:bg-white"
                               : "bg-[#74F5A1] group-hover:bg-black"
@@ -1038,8 +1038,9 @@ export default function DemandSection({ theme = "light" }) {
                         >
                           <svg
                             className="absolute transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:opacity-0"
-                            width="12"
-                            height="12"
+                            width="10"
+                            height="10"
+                            className="sm:w-3 sm:h-3"
                             viewBox="0 0 14 14"
                             aria-hidden="true"
                           >
@@ -1054,8 +1055,9 @@ export default function DemandSection({ theme = "light" }) {
                           </svg>
                           <svg
                             className="absolute translate-x-[-10px] translate-y-[10px] opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
-                            width="12"
-                            height="12"
+                            width="10"
+                            height="10"
+                            className="sm:w-3 sm:h-3"
                             viewBox="0 0 14 14"
                             aria-hidden="true"
                           >

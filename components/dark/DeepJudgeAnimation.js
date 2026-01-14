@@ -283,18 +283,18 @@ export default function DeepJudgeAnimation({ theme }) {
       <div ref={wrapperRef} className="h-screen w-full relative flex items-center justify-center overflow-hidden">
         
         {/* === HEADINGS (Z-20) === */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 px-4">
-          <h1 ref={heading1Ref} className={`text-4xl md:text-7xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute max-w-5xl transition-colors duration-500`}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 px-4 sm:px-6">
+          <h1 ref={heading1Ref} className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute max-w-5xl transition-colors duration-500`}>
             Your collective knowledge is
-            <br className="hidden md:block" /> your unique asset
+            <br className="hidden sm:block" /> your unique asset
           </h1>
-          <h1 ref={heading2Ref} className={`text-4xl md:text-7xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute opacity-0 max-w-5xl transition-colors duration-500`}>
+          <h1 ref={heading2Ref} className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute opacity-0 max-w-5xl transition-colors duration-500`}>
             Search the way you think
-            <br className="hidden md:block" /> to unlock everything
+            <br className="hidden sm:block" /> to unlock everything
           </h1>
-          <h1 ref={heading3Ref} className={`text-3xl md:text-6xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute opacity-0 max-w-5xl top-[50%] transition-colors duration-500`}>
+          <h1 ref={heading3Ref} className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute opacity-0 max-w-5xl top-[50%] transition-colors duration-500`}>
             Build, deploy and orchestrate
-            <br className="hidden md:block" /> AI agents powered by your data
+            <br className="hidden sm:block" /> AI agents powered by your data
           </h1>
         </div>
 
@@ -307,7 +307,7 @@ export default function DeepJudgeAnimation({ theme }) {
                     {/* Background Blob (Independent) */}
                     <div 
                         ref={el => circleBgRefs.current[i] = el}
-                        className={`circle-bg absolute w-24 h-24 md:w-28 md:h-28 ${circleBlobColor} backdrop-blur-xl shadow-xl rounded-[2rem] z-10 transition-colors duration-500`}
+                        className={`circle-bg absolute w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 ${circleBlobColor} backdrop-blur-xl shadow-xl rounded-xl sm:rounded-2xl z-10 transition-colors duration-500`}
                         style={{
                             left: "50%",
                             top: "50%",
@@ -318,15 +318,15 @@ export default function DeepJudgeAnimation({ theme }) {
                     {/* Content (Independent) */}
                     <div 
                         ref={el => circleContentRefs.current[i] = el}
-                        className="circle-content absolute w-24 h-24 md:w-28 md:h-28 flex flex-col items-center justify-center z-20 gap-2 pointer-events-none"
+                        className="circle-content absolute w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 flex flex-col items-center justify-center z-20 gap-1 sm:gap-1.5 md:gap-2 pointer-events-none"
                         style={{
                             left: "50%",
                             top: "50%",
                             transform: "translate(-50%, -50%)" // Initial Centered, GSAP will Set X/Y
                         }}
                     >
-                        <item.icon size={32} className={`${iconColor}`} strokeWidth={1.5} />
-                        <span className={`text-xs md:text-sm font-semibold ${subTextColor} text-center leading-tight px-1`}>{item.text}</span>
+                        <item.icon size={20} className={`sm:w-6 sm:h-6 md:w-8 md:h-8 ${iconColor}`} strokeWidth={1.5} />
+                        <span className={`text-[9px] sm:text-[10px] md:text-xs lg:text-sm font-semibold ${subTextColor} text-center leading-tight px-0.5 sm:px-1`}>{item.text}</span>
                     </div>
                 </React.Fragment>
             ))}
@@ -338,9 +338,9 @@ export default function DeepJudgeAnimation({ theme }) {
                 // INITIAL STATE: White background, 0 size
                 style={{ width: '0px', height: '0px', opacity: 0, borderRadius: '50%', backgroundColor: '#FFFFFF' }} 
             >
-                <div ref={searchFieldRef} className="flex items-center w-full px-6 opacity-0">
-                  <Search className="text-slate-500 mr-4 shrink-0" size={24} />
-                  <span className="text-lg md:text-2xl text-slate-400 font-normal truncate">Ask anything about your data...</span>
+                <div ref={searchFieldRef} className="flex items-center w-full px-3 sm:px-4 md:px-5 lg:px-6 opacity-0">
+                  <Search className="text-slate-500 mr-2 sm:mr-3 md:mr-4 shrink-0 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" size={24} />
+                  <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-slate-400 font-normal truncate">Ask anything about your data...</span>
                 </div>
             </div>
 
@@ -357,16 +357,16 @@ export default function DeepJudgeAnimation({ theme }) {
                     className={`feature-card absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${cardBg} shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden backdrop-blur-sm z-20 transition-colors duration-500`}
                     style={{ width: '0px', height: '0px', opacity: 0, borderRadius: '50%' }}
                 >
-                    <div className="card-content opacity-0 p-6 flex flex-col h-full relative">
+                    <div className="card-content opacity-0 p-3 sm:p-4 md:p-5 lg:p-6 flex flex-col h-full relative">
                         {/* Number Badge */}
-                        <div className={`w-10 h-10 ${badgeBg} rounded-xl flex items-center justify-center font-bold mb-4 shrink-0`}>
+                        <div className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 ${badgeBg} rounded-lg sm:rounded-xl flex items-center justify-center font-bold mb-2 sm:mb-3 md:mb-4 shrink-0 text-sm sm:text-base md:text-lg`}>
                             {i+1}
                         </div>
-                        <h3 className={`text-xl font-bold ${cardTitle} mb-2`}>{card.title}</h3>
-                        <p className={`${cardDesc} text-sm leading-relaxed`}>{card.desc}</p>
+                        <h3 className={`text-base sm:text-lg md:text-xl font-bold ${cardTitle} mb-1 sm:mb-2`}>{card.title}</h3>
+                        <p className={`${cardDesc} text-xs sm:text-sm leading-relaxed`}>{card.desc}</p>
                         
-                        <div className={`mt-auto pt-4 flex items-center ${isDark ? 'text-white' : 'text-black'} font-semibold text-sm`}>
-                            Learn more <ArrowRight size={14} className="ml-1" />
+                        <div className={`mt-auto pt-2 sm:pt-3 md:pt-4 flex items-center ${isDark ? 'text-white' : 'text-black'} font-semibold text-xs sm:text-sm`}>
+                            Learn more <ArrowRight size={12} className="sm:w-3.5 sm:h-3.5 md:w-[14px] md:h-[14px] ml-0.5 sm:ml-1" />
                         </div>
                     </div>
                 </div>

@@ -8,9 +8,10 @@ import BlogTalkToExpert from '../../../components/blog/BlogTalkToExpert';
 import Footer from '../../../components/dark/Footer';
 import '../../../components/dark/MainPage.css';
 import TalkToExpertSection from '../../../components/dark/TalkToExpertSection';
+import { fetchWordPressPosts } from '../../../utils/wordpress';
 
-// Blog posts data
-const blogPosts = [
+// Demo blog posts data (backup/fallback)
+const DEMO_BLOG_POSTS = [
   {
     id: 1,
     title: "What Is Demand Generation? A Simple Guide for B2B Marketers",
@@ -105,6 +106,8 @@ const blogPosts = [
 
 export default function BlogPage() {
   const [theme, setTheme] = useState('light');
+  const [blogPosts, setBlogPosts] = useState(DEMO_BLOG_POSTS);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -117,6 +120,33 @@ export default function BlogPage() {
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
+  }, []);
+
+  useEffect(() => {
+    // Fetch WordPress posts
+    const loadPosts = async () => {
+      setLoading(true);
+      try {
+        const wpPosts = await fetchWordPressPosts();
+        
+        if (wpPosts && wpPosts.length > 0) {
+          // Use WordPress posts if available
+          setBlogPosts(wpPosts);
+        } else {
+          // Fallback to demo content if WordPress API fails
+          console.log('Using demo blog posts as fallback');
+          setBlogPosts(DEMO_BLOG_POSTS);
+        }
+      } catch (error) {
+        console.error('Error loading blog posts:', error);
+        // Fallback to demo content on error
+        setBlogPosts(DEMO_BLOG_POSTS);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPosts();
   }, []);
 
   const toggleTheme = () => {
@@ -178,7 +208,16 @@ export default function BlogPage() {
       </button>
 
       <Header theme={theme} />
-      <BlogSection theme={theme} blogPosts={blogPosts} />
+      {loading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#74F5A1]"></div>
+            <p className="mt-4 text-lg">Loading blog posts...</p>
+          </div>
+        </div>
+      ) : (
+        <BlogSection theme={theme} blogPosts={blogPosts} />
+      )}
 
       <BlogNewsletter theme={theme} />
       

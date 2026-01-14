@@ -5,13 +5,68 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function BlogPostContent({ theme = 'light' }) {
+export default function BlogPostContent({ theme = 'light', post }) {
   const isDark = theme === 'dark';
   const contentRef = useRef(null);
   const [activeSection, setActiveSection] = useState(0);
 
-  // Content data - array of sections with more content
-  const content = [
+  // Parse WordPress HTML content into structured format
+  const parseWordPressContent = (htmlContent) => {
+    if (!htmlContent || typeof window === 'undefined') return [];
+    
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+      const elements = Array.from(doc.body.children);
+      
+      return elements.map((el) => {
+        const tagName = el.tagName.toLowerCase();
+        
+        if (tagName === 'h1' || tagName === 'h2' || tagName === 'h3' || tagName === 'h4') {
+          return {
+            type: 'heading',
+            text: el.textContent || ''
+          };
+        } else if (tagName === 'p') {
+          return {
+            type: 'paragraph',
+            text: el.textContent || ''
+          };
+        } else if (tagName === 'ul' || tagName === 'ol') {
+          const items = Array.from(el.querySelectorAll('li')).map(li => li.textContent || '');
+          return {
+            type: 'list',
+            items: items
+          };
+        } else if (tagName === 'blockquote') {
+          return {
+            type: 'paragraph',
+            text: el.textContent || '',
+            isQuote: true
+          };
+        } else if (tagName === 'div' && el.querySelector('img')) {
+          // Handle images
+          const img = el.querySelector('img');
+          return {
+            type: 'image',
+            src: img?.src || '',
+            alt: img?.alt || ''
+          };
+        }
+        
+        return {
+          type: 'paragraph',
+          text: el.textContent || ''
+        };
+      }).filter(item => item.text || item.items || item.src);
+    } catch (error) {
+      console.error('Error parsing WordPress content:', error);
+      return [];
+    }
+  };
+
+  // Default demo content
+  const defaultContent = [
     {
       type: 'heading',
       text: 'Why does brand get ignored in B2B?'
@@ -163,6 +218,11 @@ export default function BlogPostContent({ theme = 'light' }) {
     }
   ];
 
+  // Use WordPress content if available, otherwise use default
+  const content = post?.content 
+    ? parseWordPressContent(post.content)
+    : defaultContent;
+
   // Extract headings for TOC with proper indexing
   const sections = content
     .map((item, index) => ({ ...item, originalIndex: index }))
@@ -287,11 +347,25 @@ export default function BlogPostContent({ theme = 'light' }) {
                   <p 
                     key={index}
                     className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-xl md:text-2xl leading-relaxed mb-8 ${
-                      isDark ? 'text-white/90' : 'text-[#1a1a1a]'
+                      section.isQuote 
+                        ? `pl-6 border-l-4 ${isDark ? 'border-[#74F5A1] text-white/80' : 'border-[#74F5A1] text-[#666666]'} italic`
+                        : isDark ? 'text-white/90' : 'text-[#1a1a1a]'
                     }`}
                   >
                     {section.text}
                   </p>
+                );
+              }
+
+              if (section.type === 'image') {
+                return (
+                  <div key={index} className="my-10">
+                    <img 
+                      src={section.src} 
+                      alt={section.alt}
+                      className="w-full rounded-2xl"
+                    />
+                  </div>
                 );
               }
               

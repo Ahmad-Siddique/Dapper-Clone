@@ -31,6 +31,7 @@ export default function HeroSection({ theme = "light" }) {
   // --- Refs & State for Features (Video Stack / Cards) ---
   const [videoStack, setVideoStack] = useState([0, 1, 2, 3]); // Stack order: top to bottom
   const [playingVideo, setPlayingVideo] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const videoRefs = useRef([]);
   const heroCardsRef = useRef([]); // To target cards for GSAP transition
 
@@ -131,6 +132,16 @@ export default function HeroSection({ theme = "light" }) {
       setPlayingVideo(null);
     }
   };
+
+  // --- Logic: Responsive Detection ---
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // --- Logic: Video Playback ---
   useEffect(() => {
@@ -457,7 +468,7 @@ export default function HeroSection({ theme = "light" }) {
           sectionRef.current = node;
           heroSectionRef.current = node;
         }}
-        className="relative overflow-hidden pt-32 md:pt-40 pb-28 min-h-screen"
+        className="relative overflow-hidden pt-24 sm:pt-28 md:pt-32 lg:pt-40 pb-16 sm:pb-20 md:pb-24 lg:pb-28 min-h-screen"
         style={bgStyle}
       >
          {theme === "dark" && (
@@ -482,45 +493,45 @@ export default function HeroSection({ theme = "light" }) {
          <div className="relative z-10 mx-auto max-w-[1800px] px-4 md:px-6 lg:px-10">
             {/* Title Container */}
             <div className="max-w-[1400px]" ref={titleContainerRef}>
-               <div className="hero-badge mb-10 flex items-center gap-3">
-                 <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-                 <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase ${ theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]" }`}>
+               <div className="hero-badge mb-6 sm:mb-8 md:mb-10 flex items-center gap-2 sm:gap-3">
+                 <span className="inline-flex h-4 w-4 sm:h-5 sm:w-5 rounded-sm bg-[#74F5A1]" />
+                 <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] font-semibold tracking-[0.16em] uppercase ${ theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]" }`}>
                    B2B marketing agency
                  </span>
                </div>
-               <h1 className="mb-4 font-fellix leading-[0.92] tracking-[-0.03em] [font-variant-ligatures:no-common-ligatures]">
-                 <div className={`hero-title-line text-[46px] sm:text-[60px] md:text-[78px] lg:text-[92px] xl:text-[104px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
+               <h1 className="mb-3 sm:mb-4 font-fellix leading-[0.92] tracking-[-0.03em] [font-variant-ligatures:no-common-ligatures]">
+                 <div className={`hero-title-line text-[32px] xs:text-[38px] sm:text-[46px] md:text-[60px] lg:text-[78px] xl:text-[92px] 2xl:text-[104px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
                    <span className="font-bold">We build </span>
                    <span className="italic font-semibold tracking-[0.03em]">high‑performing</span>
                  </div>
-                 <div className={`hero-title-line mt-2 text-[46px] sm:text-[60px] md:text-[78px] lg:text-[92px] xl:text-[104px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
+                 <div className={`hero-title-line mt-1 sm:mt-2 text-[32px] xs:text-[38px] sm:text-[46px] md:text-[60px] lg:text-[78px] xl:text-[92px] 2xl:text-[104px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
                    marketing engines for
                  </div>
-                 <div className={`hero-title-line mt-2 text-[46px] sm:text-[60px] md:text-[78px] lg:text-[92px] xl:text-[104px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
+                 <div className={`hero-title-line mt-1 sm:mt-2 text-[32px] xs:text-[38px] sm:text-[46px] md:text-[60px] lg:text-[78px] xl:text-[92px] 2xl:text-[104px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
                    B2B brands
                  </div>
                </h1>
             </div>
 
             {/* Bottom Content Row */}
-            <div className="mt-10 flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-14">
+            <div className="mt-8 sm:mt-10 flex flex-col gap-8 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-14">
                {/* Left: Copy + CTA */}
-               <div className="hero-body lg:flex-1 max-w-[640px]">
-                 <p className={`mb-9 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[17px] md:text-[19px] font-semibold leading-relaxed ${ theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]" }`}>
+               <div className="hero-body lg:flex-1 max-w-full lg:max-w-[640px]">
+                 <p className={`mb-6 sm:mb-9 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] sm:text-[17px] md:text-[19px] font-semibold leading-relaxed ${ theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]" }`}>
                    We build, optimize and scale marketing engines that generate pipeline and improve marketing ROI.
                  </p>
-                 <Link href="#discover" className="inline-flex items-center gap-3 group">
-                    <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[16px] md:text-[17px] font-bold tracking-tight ${ theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]" }`}>
+                 <Link href="#discover" className="inline-flex items-center gap-2 sm:gap-3 group">
+                    <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[17px] font-bold tracking-tight ${ theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]" }`}>
                       Discover more
                     </span>
-                    <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
+                    <span className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
                       <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-y-3 group-hover:opacity-0">
-                         <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                         <svg width="12" height="12" className="sm:w-[14px] sm:h-[14px]" viewBox="0 0 14 14" aria-hidden="true">
                             <path d="M7 1V13M7 13L3 9M7 13L11 9" fill="none" stroke="#212121" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                          </svg>
                       </span>
                       <span className="absolute inset-0 flex items-center justify-center translate-y-[-12px] opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                         <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                         <svg width="12" height="12" className="sm:w-[14px] sm:h-[14px]" viewBox="0 0 14 14" aria-hidden="true">
                            <path d="M7 1V13M7 13L3 9M7 13L11 9" fill="none" stroke="#74F5A1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                          </svg>
                       </span>
@@ -529,59 +540,64 @@ export default function HeroSection({ theme = "light" }) {
                </div>
 
                {/* Right: Card Stack (The items that will fly) */}
-               <div className="hero-body lg:flex-shrink-0 lg:ml-auto w-full lg:w-[28%] xl:w-[32%] relative z-20">
+               <div className="hero-body lg:flex-shrink-0 lg:ml-auto w-full sm:max-w-md mx-auto lg:max-w-none lg:w-[28%] xl:w-[32%] relative z-20">
                  <div className="w-full max-w-2xl lg:max-w-none">
-                   <div className="relative w-full aspect-[4/5] rounded-2xl" style={{ perspective: '1000px' }}>
-                     {videoStack.map((mediaIndex, stackPosition) => (
-                       <div
-                         key={mediaIndex}
-                         ref={(el) => { if(el) heroCardsRef.current[mediaIndex] = el; }}
-                         className={`hero-card absolute w-full h-full transition-all duration-500 ease-out cursor-pointer ${
-                           stackPosition === 0 ? 'opacity-100 shadow-2xl scale-100 z-40' : 'opacity-80 shadow-lg'
-                         }`}
-                         style={{
-                           transform: `translateX(${stackPosition * 75}px) translateY(${stackPosition * 75}px) translateZ(-${stackPosition * 50}px) scale(${1 - stackPosition * 0.05})`,
-                           zIndex: 40 - stackPosition
-                         }}
-                         onClick={() => handleMediaClick(mediaIndex)}
-                       >
-                         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black border border-white/10">
-                           {mediaAssets[mediaIndex].type === 'image' ? (
-                             <Image
-                               src={mediaAssets[mediaIndex].src}
-                               alt={mediaAssets[mediaIndex].alt}
-                               fill
-                               className="object-cover"
-                               priority={mediaIndex === videoStack[0]}
-                             />
-                           ) : (
-                             <video
-                               ref={(el) => (videoRefs.current[mediaIndex] = el)}
-                               src={mediaAssets[mediaIndex].src}
-                               muted loop playsInline
-                               className="w-full h-full object-cover"
-                             />
-                           )}
-                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none">
-                             <div className="absolute bottom-6 left-6 right-6">
-                               <h3 className="text-white text-xl sm:text-2xl font-bold font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] mb-1">
-                                 {mediaAssets[mediaIndex].title}
-                               </h3>
-                               <p className="text-white/80 text-sm font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
-                                 {mediaAssets[mediaIndex].subtitle}
-                               </p>
+                   <div className="relative w-full aspect-[4/5] sm:aspect-[4/5] rounded-xl sm:rounded-2xl" style={{ perspective: '1000px' }}>
+                     {videoStack.map((mediaIndex, stackPosition) => {
+                       // Use smaller offset on mobile for better visibility
+                       const offset = isMobile ? stackPosition * 20 : stackPosition * 75;
+                       
+                       return (
+                         <div
+                           key={mediaIndex}
+                           ref={(el) => { if(el) heroCardsRef.current[mediaIndex] = el; }}
+                           className={`hero-card absolute w-full h-full transition-all duration-500 ease-out cursor-pointer ${
+                             stackPosition === 0 ? 'opacity-100 shadow-2xl scale-100 z-40' : 'opacity-80 shadow-lg'
+                           }`}
+                           style={{
+                             transform: `translateX(${offset}px) translateY(${offset}px) translateZ(-${stackPosition * 50}px) scale(${1 - stackPosition * 0.05})`,
+                             zIndex: 40 - stackPosition
+                           }}
+                           onClick={() => handleMediaClick(mediaIndex)}
+                         >
+                           <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-black border border-white/10">
+                             {mediaAssets[mediaIndex].type === 'image' ? (
+                               <Image
+                                 src={mediaAssets[mediaIndex].src}
+                                 alt={mediaAssets[mediaIndex].alt}
+                                 fill
+                                 className="object-cover"
+                                 priority={mediaIndex === videoStack[0]}
+                               />
+                             ) : (
+                               <video
+                                 ref={(el) => (videoRefs.current[mediaIndex] = el)}
+                                 src={mediaAssets[mediaIndex].src}
+                                 muted loop playsInline
+                                 className="w-full h-full object-cover"
+                               />
+                             )}
+                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none">
+                               <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6">
+                                 <h3 className="text-white text-lg sm:text-xl md:text-2xl font-bold font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] mb-1">
+                                   {mediaAssets[mediaIndex].title}
+                                 </h3>
+                                 <p className="text-white/80 text-xs sm:text-sm font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
+                                   {mediaAssets[mediaIndex].subtitle}
+                                 </p>
+                               </div>
                              </div>
                            </div>
                          </div>
-                       </div>
-                     ))}
+                       );
+                     })}
                    </div>
-                   <div className="flex justify-center mt-6 space-x-2">
+                   <div className="flex justify-center mt-4 sm:mt-6 space-x-2">
                      {mediaAssets.map((_, index) => (
                        <button
                          key={index}
                          onClick={() => handleMediaClick(index)}
-                         className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                         className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
                            index === videoStack[0] ? 'bg-[#74F5A1] scale-110' : 'bg-white/30 hover:bg-white/50'
                          }`}
                          aria-label={`View ${mediaAssets[index].title}`}
@@ -592,7 +608,7 @@ export default function HeroSection({ theme = "light" }) {
                </div>
             </div>
 
-            <div className={`mt-20 h-px w-full ${ theme === "dark" ? "border-b border-white/10" : "border-b border-black/10" }`} />
+            <div className={`mt-12 sm:mt-16 md:mt-20 h-px w-full ${ theme === "dark" ? "border-b border-white/10" : "border-b border-black/10" }`} />
          </div>
       </section>
 
@@ -603,13 +619,13 @@ export default function HeroSection({ theme = "light" }) {
         style={bgStyle}
       >
          <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 portfolio-content">
-           <div className="text-center mb-20">
-             <h2 className={`${theme === "dark" ? "text-white" : "text-[#111111]"} text-4xl sm:text-6xl lg:text-8xl font-bold font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] tracking-tight`}>
+           <div className="text-center mb-12 sm:mb-16 md:mb-20">
+             <h2 className={`${theme === "dark" ? "text-white" : "text-[#111111]"} text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] tracking-tight`}>
                Services we offer
              </h2>
            </div>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
              {portfolioItems.map((item, index) => (
                <div
                  key={index}
@@ -623,8 +639,8 @@ export default function HeroSection({ theme = "light" }) {
          </div>
          
          {/* Replaced AnimatedCTAButton with a standard simple button/link */}
-         <div className="mt-16 flex justify-center">
-            <Link href="/work" className="inline-block px-8 py-4 bg-black text-white font-bold rounded-full hover:scale-105 transition-transform">
+         <div className="mt-12 sm:mt-14 md:mt-16 flex justify-center">
+            <Link href="/work" className="inline-block px-6 py-3 sm:px-8 sm:py-4 bg-black text-white text-sm sm:text-base font-bold rounded-full hover:scale-105 transition-transform">
                View All Work
             </Link>
          </div>
@@ -637,9 +653,9 @@ export default function HeroSection({ theme = "light" }) {
 function PortfolioCard({ item, theme }) {
   const isDark = theme === "dark";
   return (
-    <div className={`group relative rounded-2xl overflow-hidden transition-all duration-300 ${isDark ? "bg-black/20 border border-white/10 hover:border-white/30 hover:bg-black/40" : "bg-white border border-black/10 hover:border-black/20 hover:bg-black/5"}`}>
+      <div className={`group relative rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-300 ${isDark ? "bg-black/20 border border-white/10 hover:border-white/30 hover:bg-black/40" : "bg-white border border-black/10 hover:border-black/20 hover:bg-black/5"}`}>
       <Link href={item.link || "#"} tabIndex={0} className="block focus:outline-none">
-        <div className="relative w-full h-[500px]">
+        <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px]">
           {item.type === "image" ? (
             <Image src={item.src} alt={item.alt} fill className="object-cover transition-transform duration-700 group-hover:scale-105" priority />
           ) : (
@@ -647,13 +663,13 @@ function PortfolioCard({ item, theme }) {
           )}
         </div>
       </Link>
-      <div className="p-6 sm:p-8 min-h-[120px] flex flex-col justify-between">
-        <h3 className={`${isDark ? "text-white group-hover:text-[#74F5A1]" : "text-[#111111] group-hover:text-[#3BC972]"} font-bold font-['Figtree'] uppercase text-lg sm:text-xl mb-2 line-clamp-2 transition-colors`}>
+      <div className="p-4 sm:p-6 md:p-8 min-h-[100px] sm:min-h-[120px] flex flex-col justify-between">
+        <h3 className={`${isDark ? "text-white group-hover:text-[#74F5A1]" : "text-[#111111] group-hover:text-[#3BC972]"} font-bold font-['Figtree'] uppercase text-base sm:text-lg md:text-xl mb-2 line-clamp-2 transition-colors`}>
           {item.title}
         </h3>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
           {item.buttons.map((button, btnIndex) => (
-            <button key={btnIndex} className={`bg-transparent border rounded-full px-4 py-1 font-normal font-['Figtree'] leading-relaxed transition-all ${isDark ? "border-white/30 text-white/80 hover:bg-white/10 hover:border-white/50" : "border-black/20 text-black/80 hover:bg-black/5 hover:border-black/40"}`} style={{ fontSize: "14px" }}>
+            <button key={btnIndex} className={`bg-transparent border rounded-full px-3 py-0.5 sm:px-4 sm:py-1 font-normal font-['Figtree'] leading-relaxed transition-all text-xs sm:text-sm ${isDark ? "border-white/30 text-white/80 hover:bg-white/10 hover:border-white/50" : "border-black/20 text-black/80 hover:bg-black/5 hover:border-black/40"}`}>
               {button}
             </button>
           ))}
