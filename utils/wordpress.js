@@ -334,3 +334,255 @@ export async function fetchFeaturedMedia(mediaId) {
     return null;
   }
 }
+
+/**
+ * Transform WordPress page data to our app's format
+ */
+export function transformWordPressPage(wpPage, featuredMedia = null) {
+  // Get featured image URL
+  let imageUrl = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80"; // Default fallback
+  if (featuredMedia && featuredMedia.source_url) {
+    imageUrl = featuredMedia.source_url;
+  } else if (wpPage._embedded && wpPage._embedded['wp:featuredmedia'] && wpPage._embedded['wp:featuredmedia'][0]) {
+    imageUrl = wpPage._embedded['wp:featuredmedia'][0].source_url;
+  }
+
+  // Format date
+  const date = new Date(wpPage.date);
+  const formattedDate = date.toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+
+  return {
+    id: wpPage.id,
+    title: wpPage.title?.rendered || wpPage.title || '',
+    author: wpPage._embedded?.author?.[0]?.name || 'Admin',
+    date: formattedDate,
+    slug: wpPage.slug,
+    image: imageUrl,
+    content: wpPage.content?.rendered || wpPage.content || '',
+    excerpt: wpPage.excerpt?.rendered || wpPage.excerpt || '',
+    link: wpPage.link || '',
+  };
+}
+
+/**
+ * Fetch all pages from WordPress using GraphQL
+ */
+async function fetchWordPressPagesGraphQL() {
+  try {
+    const query = `
+      query GetPages {
+        pages(first: 100, where: { orderby: { field: DATE, order: DESC } }) {
+          nodes {
+            id
+            title
+            slug
+            date
+            content
+            author {
+              node {
+                name
+              }
+            }
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const response = await fetch(WORDPRESS_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`GraphQL error: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.errors) {
+      throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
+    }
+
+    return result.data.pages.nodes.map(page => ({
+      id: page.id,
+      title: page.title || '',
+      author: page.author?.node?.name || 'Admin',
+      readTime: calculateReadTime(page.content || ''),
+      date: formatDate(page.date),
+      slug: page.slug,
+      image: page.featuredImage?.node?.sourceUrl || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+      content: page.content || '',
+      excerpt: '', // Pages don't have excerpt in GraphQL
+      link: `https://app.thetecheyrie.com/${page.slug}/`,
+    }));
+  } catch (error) {
+    console.error('Error fetching WordPress pages via GraphQL:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch all pages from WordPress API (REST fallback)
+ */
+async function fetchWordPressPagesREST() {
+  try {
+    // Fetch pages with embedded featured media and author
+    const response = await fetch(
+      `${WORDPRESS_API_URL}/pages?_embed&per_page=100&orderby=date&order=desc`
+    );
+    
+    if (!response.ok) {
+      throw new Error(`WordPress API error: ${response.status}`);
+    }
+
+    const pages = await response.json();
+    
+    // Transform each page
+    return pages.map(page => transformWordPressPage(page));
+  } catch (error) {
+    console.error('Error fetching WordPress pages:', error);
+    return null; // Return null on error to trigger fallback
+  }
+}
+
+/**
+ * Fetch all pages from WordPress API (tries GraphQL first, falls back to REST)
+ */
+export async function fetchWordPressPages() {
+  if (USE_GRAPHQL) {
+    const graphqlPages = await fetchWordPressPagesGraphQL();
+    if (graphqlPages) {
+      return graphqlPages;
+    }
+    // Fallback to REST if GraphQL fails
+    console.log('GraphQL failed, falling back to REST API');
+  }
+  return await fetchWordPressPagesREST();
+}
+
+/**
+ * Fetch a single page by slug from WordPress using GraphQL
+ */
+async function fetchWordPressPageBySlugGraphQL(slug) {
+  try {
+    const query = `
+      query GetPage($slug: String!) {
+        pageBy(slug: $slug) {
+          id
+          title
+          slug
+          date
+          content
+          author {
+            node {
+              name
+            }
+          }
+          featuredImage {
+            node {
+              sourceUrl
+              altText
+            }
+          }
+        }
+      }
+    `;
+
+    const response = await fetch(WORDPRESS_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        query,
+        variables: { slug }
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`GraphQL error: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.errors) {
+      throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
+    }
+
+    if (!result.data.pageBy) {
+      return null;
+    }
+
+    const page = result.data.pageBy;
+
+    return {
+      id: page.id,
+      title: page.title || '',
+      author: page.author?.node?.name || 'Admin',
+      readTime: calculateReadTime(page.content || ''),
+      date: formatDate(page.date),
+      slug: page.slug,
+      image: page.featuredImage?.node?.sourceUrl || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+      content: page.content || '',
+      excerpt: '', // Pages don't have excerpt in GraphQL
+      link: `https://app.thetecheyrie.com/${page.slug}/`,
+    };
+  } catch (error) {
+    console.error('Error fetching WordPress page via GraphQL:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch a single page by slug from WordPress API (REST fallback)
+ */
+async function fetchWordPressPageBySlugREST(slug) {
+  try {
+    const response = await fetch(
+      `${WORDPRESS_API_URL}/pages?slug=${slug}&_embed`
+    );
+    
+    if (!response.ok) {
+      throw new Error(`WordPress API error: ${response.status}`);
+    }
+
+    const pages = await response.json();
+    
+    if (pages.length === 0) {
+      return null;
+    }
+
+    return transformWordPressPage(pages[0]);
+  } catch (error) {
+    console.error('Error fetching WordPress page:', error);
+    return null; // Return null on error to trigger fallback
+  }
+}
+
+/**
+ * Fetch a single page by slug from WordPress API (tries GraphQL first, falls back to REST)
+ */
+export async function fetchWordPressPageBySlug(slug) {
+  if (USE_GRAPHQL) {
+    const graphqlPage = await fetchWordPressPageBySlugGraphQL(slug);
+    if (graphqlPage) {
+      return graphqlPage;
+    }
+    // Fallback to REST if GraphQL fails
+    console.log('GraphQL failed, falling back to REST API');
+  }
+  return await fetchWordPressPageBySlugREST(slug);
+}
