@@ -65,12 +65,36 @@ export default function ContactSection({ theme = 'light' }) {
     console.log('Form submitted:', formData);
   };
 
+  const bgStyle = isDark
+    ? {
+        backgroundColor: "#2b2b2b",
+        backgroundImage: `
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"),
+          radial-gradient(ellipse at top left, rgba(60, 60, 60, 0.3), transparent 50%),
+          radial-gradient(ellipse at bottom right, rgba(50, 50, 50, 0.2), transparent 50%)
+        `,
+        backgroundBlendMode: "overlay, normal, normal",
+      }
+    : { backgroundColor: "#EFEFEF" };
+
+  const noiseOverlayStyle = {
+    backgroundImage: `
+      repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0, 0, 0, 0.03) 1px, rgba(0, 0, 0, 0.03) 2px),
+      repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(0, 0, 0, 0.03) 1px, rgba(0, 0, 0, 0.03) 2px),
+      repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0, 0, 0, 0.015) 2px, rgba(0, 0, 0, 0.015) 4px)
+    `,
+  };
+
   return (
     <section 
       ref={sectionRef}
-      className={`min-h-screen ${isDark ? 'bg-[#2b2b2b]' : 'bg-[#E8E4E0]'} flex items-center justify-center px-6 py-20 lg:py-32 pt-32 lg:pt-40`}
+      className="min-h-screen flex items-center justify-center px-6 py-20 lg:py-32 pt-32 lg:pt-40 relative"
+      style={bgStyle}
     >
-      <div className="container max-w-[1800px] w-full mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20 xl:gap-32">
+      {isDark && (
+        <div className="absolute inset-0 pointer-events-none z-[1]" style={noiseOverlayStyle} />
+      )}
+      <div className="container max-w-[1800px] w-full mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20 xl:gap-32 relative z-10">
         {/* Left Content */}
         <div ref={leftContentRef} className="flex flex-col justify-between">
           {/* Top Section */}

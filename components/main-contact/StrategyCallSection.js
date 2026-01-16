@@ -196,12 +196,36 @@ export default function StrategyCallSection({ theme = 'light' }) {
     }
   };
 
+  const bgStyle = isDark
+    ? {
+        backgroundColor: "#2b2b2b",
+        backgroundImage: `
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"),
+          radial-gradient(ellipse at top left, rgba(60, 60, 60, 0.3), transparent 50%),
+          radial-gradient(ellipse at bottom right, rgba(50, 50, 50, 0.2), transparent 50%)
+        `,
+        backgroundBlendMode: "overlay, normal, normal",
+      }
+    : { backgroundColor: "#EFEFEF" };
+
+  const noiseOverlayStyle = {
+    backgroundImage: `
+      repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0, 0, 0, 0.03) 1px, rgba(0, 0, 0, 0.03) 2px),
+      repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(0, 0, 0, 0.03) 1px, rgba(0, 0, 0, 0.03) 2px),
+      repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0, 0, 0, 0.015) 2px, rgba(0, 0, 0, 0.015) 4px)
+    `,
+  };
+
   return (
     <section 
       ref={sectionRef}
-      className={`${isDark ? 'bg-[#2b2b2b]' : 'bg-[#E8E4E0]'} py-20 lg:py-32`}
+      className="py-20 lg:py-32 relative"
+      style={bgStyle}
     >
-      <div className="container max-w-[1800px] mx-auto px-6">
+      {isDark && (
+        <div className="absolute inset-0 pointer-events-none z-[1]" style={noiseOverlayStyle} />
+      )}
+      <div className="container max-w-[1800px] mx-auto px-6 relative z-10">
         <div className="flex items-start justify-between mb-16 lg:mb-20">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-8">
