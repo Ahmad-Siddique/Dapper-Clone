@@ -6,42 +6,222 @@ import {
   useState,
   useEffect,
   useCallback,
+  memo,
+  forwardRef,
+  useImperativeHandle,
 } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
 
-
 // Register ScrollTrigger
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+// Memoized Card Component
+const HeroCard = memo(({ 
+  mediaAsset, 
+  mediaIndex, 
+  stackPosition, 
+  offset, 
+  isMobile, 
+  isActive,
+  onClick,
+  cardRef
+}) => {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current && mediaAsset.type === 'video') {
+      if (isActive && stackPosition === 0) {
+        videoRef.current.play().catch(() => {});
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isActive, stackPosition, mediaAsset.type]);
+
+  return (
+    <div
+  ref={cardRef}
+  className={`hero-card absolute w-full h-full transition-all duration-500 ease-out cursor-pointer shadow-lg ${
+    stackPosition === 0 ? '!opacity-100 shadow-2xl scale-100 z-40' : 'opacity-80'
+  }`}
+  style={{
+    transform: `translateX(${offset}px) translateY(${offset}px) translateZ(-${stackPosition * 50}px) scale(${1 - stackPosition * 0.05})`,
+    zIndex: 40 - stackPosition,
+    opacity: stackPosition === 0 ? 1 : 0.8  // Force inline style for immediate effect
+  }}
+  onClick={onClick}
+>
+
+      <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-black border border-white/10">
+        {mediaAsset.type === 'image' ? (
+          <Image
+            src={mediaAsset.src}
+            alt={mediaAsset.alt}
+            fill
+            className="object-cover"
+            priority={stackPosition === 0}
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            src={mediaAsset.src}
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none">
+          <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6">
+            <h3 className="text-white text-lg sm:text-xl md:text-2xl font-bold font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] mb-1">
+              {mediaAsset.title}
+            </h3>
+            <p className="text-white/80 text-xs sm:text-sm font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
+              {mediaAsset.subtitle}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}, (prevProps, nextProps) => {
+  return (
+    prevProps.stackPosition === nextProps.stackPosition &&
+    prevProps.offset === nextProps.offset &&
+    prevProps.isActive === nextProps.isActive &&
+    prevProps.mediaIndex === nextProps.mediaIndex
+  );
+});
+
+HeroCard.displayName = 'HeroCard';
+
+// Card Stack Component with forwardRef to expose refs
+const CardStackSection = forwardRef(({ mediaAssets, isMobile }, ref) => {
+  const [videoStack, setVideoStack] = useState([0, 1, 2, 3]);
+  const [playingVideo, setPlayingVideo] = useState(null);
+  const heroCardsRef = useRef([]);
+
+  // Expose heroCardsRef to parent component
+  useImperativeHandle(ref, () => ({
+    getCardRefs: () => heroCardsRef.current,
+    getVideoStack: () => videoStack,
+  }));
+
+  const handleMediaClick = useCallback((clickedIndex) => {
+    if (clickedIndex === undefined || clickedIndex < 0 || clickedIndex >= mediaAssets.length) {
+      return;
+    }
+
+    setVideoStack(prevStack => {
+      if (prevStack[0] === clickedIndex) return prevStack;
+      return [clickedIndex, ...prevStack.filter(idx => idx !== clickedIndex)];
+    });
+    
+    const clickedAsset = mediaAssets[clickedIndex];
+    if (clickedAsset && clickedAsset.type === 'video') {
+      setPlayingVideo(clickedIndex);
+    } else {
+      setPlayingVideo(null);
+    }
+  }, [mediaAssets]);
+
+  // Float animation
+  useEffect(() => {
+    const cardInners = heroCardsRef.current
+      .map((card) => card?.querySelector('.hero-card > div'))
+      .filter(Boolean);
+    
+    gsap.killTweensOf(cardInners);
+
+    if (cardInners.length > 0) {
+      gsap.to(cardInners, {
+        y: "-=15",
+        duration: 2.5,
+        ease: "sine.inOut",
+        stagger: {
+          each: 0.2,
+          from: "start", 
+          yoyo: true,
+          repeat: -1
+        },
+        yoyo: true,
+        repeat: -1
+      });
+    }
+
+    return () => {
+      gsap.killTweensOf(cardInners);
+    };
+  }, []);
+
+  return (
+    <div className="hero-body lg:flex-shrink-0 w-full relative z-30 lg:-mt-8 xl:-mt-12">
+      {/* SMALLER CARDS: max-w-[280px] on mobile, max-w-[320px] on desktop */}
+      <div className="w-full max-w-[280px] sm:max-w-[300px] lg:max-w-[320px] xl:max-w-[540px] mx-auto lg:mx-0">
+        {/* REDUCED HEIGHT: aspect-[3/4] */}
+        <div className="relative w-full aspect-[3/4] rounded-xl sm:rounded-2xl" style={{ perspective: '1000px' }}>
+          {videoStack.map((mediaIndex, stackPosition) => {
+            const offset = isMobile ? stackPosition * 15 : stackPosition * 50;
+            
+            return (
+              <HeroCard
+                key={mediaIndex}
+                mediaAsset={mediaAssets[mediaIndex]}
+                mediaIndex={mediaIndex}
+                stackPosition={stackPosition}
+                offset={offset}
+                isMobile={isMobile}
+                isActive={playingVideo === mediaIndex}
+                onClick={() => handleMediaClick(mediaIndex)}
+                cardRef={(el) => { if(el) heroCardsRef.current[mediaIndex] = el; }}
+              />
+            );
+          })}
+        </div>
+        
+        {/* Pagination Dots */}
+        <div className="flex justify-center mt-6 sm:mt-7 md:mt-12 space-x-2">
+          {mediaAssets.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handleMediaClick(index)}
+              className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-300 ${
+                index === videoStack[0] ? 'bg-[#74F5A1] scale-110' : 'bg-white/30 hover:bg-white/50'
+              }`}
+              aria-label={`View ${mediaAssets[index].title}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+});
+
+CardStackSection.displayName = 'CardStackSection';
+
 export default function HeroSection({ theme = "light" }) {
   // --- Refs & State for Hero ---
-  const sectionRef = useRef(null); // Used for mouse move effect
-  const heroSectionRef = useRef(null); // Used for ScrollTrigger
+  const sectionRef = useRef(null);
+  const heroSectionRef = useRef(null);
   const titleContainerRef = useRef(null);
   const [triangles, setTriangles] = useState([]);
   const triangleIdRef = useRef(0);
   const hasAnimatedRef = useRef(false);
   const animationIntervalRef = useRef(null);
+  const scrollTriggerInstancesRef = useRef([]);
   
-  // --- Refs & State for Features (Video Stack / Cards) ---
-  const [videoStack, setVideoStack] = useState([0, 1, 2, 3]); // Stack order: top to bottom
-  const [playingVideo, setPlayingVideo] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-  const videoRefs = useRef([]);
-  const heroCardsRef = useRef([]); // To target cards for GSAP transition
+  const cardStackRef = useRef(null);
 
   // --- Refs & State for Portfolio Section ---
-  const containerRef = useRef(null); // Main wrapper for Lenis/GSAP context
+  const containerRef = useRef(null);
   const portfolioSectionRef = useRef(null);
   const portfolioCardsRef = useRef([]);
-  const lenisRef = useRef(null);
-  const [currentLogoIndex, setCurrentLogoIndex] = useState(0);
-  const timeoutRef = useRef(null);
 
   // --- Data ---
   const mediaAssets = [
@@ -73,13 +253,6 @@ export default function HeroSection({ theme = "light" }) {
       title: 'Coca-Cola',
       subtitle: 'Global Campaigns'
     }
-  ];
-
-  const brandLogos = [
-    { src: "/stance_logo-bg.png", alt: "Cotopaxi" },
-    { src: "/stance_logo-bg.png", alt: "MUD\\WTR" },
-    { src: "/stance_logo-bg.png", alt: "OREO" },
-    { src: "/stance_logo-bg.png", alt: "Coca-Cola" },
   ];
 
   const portfolioItems = [
@@ -117,22 +290,6 @@ export default function HeroSection({ theme = "light" }) {
     },
   ];
 
-  const LOGO_HEIGHT = 112;
-
-  // --- Logic: Media Click Handling ---
-  const handleMediaClick = (clickedIndex) => {
-    // Reorder stack to bring clicked item to top (index 0)
-    const newStack = [clickedIndex, ...videoStack.filter(idx => idx !== clickedIndex)];
-    setVideoStack(newStack);
-    
-    // If it's a video, set it as playing
-    if (mediaAssets[clickedIndex].type === 'video') {
-      setPlayingVideo(clickedIndex);
-    } else {
-      setPlayingVideo(null);
-    }
-  };
-
   // --- Logic: Responsive Detection ---
   useEffect(() => {
     const checkMobile = () => {
@@ -143,29 +300,110 @@ export default function HeroSection({ theme = "light" }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // --- Logic: Video Playback ---
-  useEffect(() => {
-    videoRefs.current.forEach((video, index) => {
-      if (video && mediaAssets[index].type === 'video') {
-        if (index === playingVideo && index === videoStack[0]) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
+  // --- Logic: Electrical Effects ---
+// --- Logic: Electrical Effects ---
+const originalHTMLRef = useRef({});
+
+
+
+
+// --- Logic: Electrical Effects ---
+// --- Logic: Electrical Effects ---
+const triggerElectricalAnimation = useCallback(() => {
+  const titleLines = document.querySelectorAll(".hero-main-title"); // Changed from .hero-title-line
+  const originalColor = theme === "dark" ? "#f3f3f3" : "#111111";
+  const electricColor = theme === "dark" ? "#74F5A1" : "#3BC972";
+  const brightElectricColor = theme === "dark" ? "#FFFFFF" : "#FFFFFF";
+
+  // Define the EXACT original structure for hero section
+  const originalStructures = [
+    `<span class="font-bold">We build </span><span class="italic font-regular tracking-[0.03em]">high‑performing</span>`,
+    `<span class="font-bold">marketing engines for </span><span class="font-bold">B2B brands</span>`
+  ];
+  
+
+  titleLines.forEach((line, lineIndex) => {
+    // FORCE restore to original structure
+    if (originalStructures[lineIndex]) {
+      line.innerHTML = originalStructures[lineIndex];
+    }
+    
+    // Now animate the spans
+    const spans = line.querySelectorAll("span");
+    
+    if (spans.length > 0) {
+      spans.forEach((span, spanIndex) => {
+        const baseDelay = lineIndex * 0.3 + spanIndex * 0.15;
+        
+        gsap.to(span, {
+          color: brightElectricColor,
+          duration: 0.15,
+          delay: baseDelay,
+          ease: "power2.out",
+          onComplete: () => {
+            gsap.to(span, {
+              color: electricColor,
+              duration: 0.2,
+              ease: "sine.inOut",
+              onComplete: () => {
+                gsap.to(span, {
+                  color: originalColor,
+                  duration: 0.35,
+                  ease: "power2.in"
+                });
+              }
+            });
+          }
+        });
+      });
+    } else {
+      const baseDelay = lineIndex * 0.3;
+      gsap.to(line, {
+        color: brightElectricColor,
+        duration: 0.15,
+        delay: baseDelay,
+        ease: "power2.out",
+        onComplete: () => {
+          gsap.to(line, {
+            color: electricColor,
+            duration: 0.2,
+            ease: "sine.inOut",
+            onComplete: () => {
+              gsap.to(line, {
+                color: originalColor,
+                duration: 0.35,
+                ease: "power2.in"
+              });
+            }
+          });
         }
-      }
-    });
-  }, [playingVideo, videoStack, mediaAssets]);
+      });
+    }
+  });
+}, [theme]);
+
+const startElectricalAnimation = useCallback(() => {
+  if (animationIntervalRef.current) clearInterval(animationIntervalRef.current);
+  setTimeout(() => { triggerElectricalAnimation(); }, 800);
+  animationIntervalRef.current = setInterval(() => { triggerElectricalAnimation(); }, 10000);
+}, [triggerElectricalAnimation]);
 
 
 
-  // --- Logic: GSAP Animations (Hero Electrical + Transition) ---
+
+
+
+
+  // --- Logic: GSAP Animations with ScrollTrigger ---
   useLayoutEffect(() => {
-    if (!containerRef.current || !heroSectionRef.current) return;
+    if (!containerRef.current || !heroSectionRef.current || !cardStackRef.current) return;
     
     const ctx = gsap.context(() => {
-      // 1. HERO TITLE ANIMATION (Existing)
-      gsap.killTweensOf(".hero-title-line");
-      gsap.set(".hero-title-line", { opacity: 1, y: 0 });
+      scrollTriggerInstancesRef.current.forEach(st => st.kill());
+      scrollTriggerInstancesRef.current = [];
+
+      gsap.killTweensOf(".hero-main-title");
+      gsap.set(".hero-main-title", { opacity: 1, y: 0 });
 
       const revealTl = gsap.timeline({
         scrollTrigger: {
@@ -184,45 +422,35 @@ export default function HeroSection({ theme = "light" }) {
       });
 
       revealTl.fromTo(
-        ".hero-title-line",
+        ".hero-main-title",
         { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", stagger: 0.15 }
       );
 
-      // Hero content entrance
       const entranceTl = gsap.timeline({ defaults: { duration: 0.8, ease: "power3.out" } });
       entranceTl
         .from(".hero-badge", { y: 24, opacity: 0 })
         .from(".hero-body", { y: 32, opacity: 0, stagger: 0.08 }, "-=0.2");
 
-      // 2. HERO TO PORTFOLIO TRANSITION
+      // Portfolio transition with card animation
       const initTransitionAnimations = () => {
-        // Initial states
-        gsap.set(portfolioCardsRef.current, { opacity: 0, scale: 0.8 });
+        const heroCardsRef = cardStackRef.current?.getCardRefs();
+        const videoStack = cardStackRef.current?.getVideoStack();
+
+        if (!heroCardsRef || !videoStack) return;
+
         gsap.set(portfolioCardsRef.current, { opacity: 0, scale: 0.8 });
 
         const portfolioContent = portfolioSectionRef.current?.querySelectorAll(".portfolio-content > *");
         if (portfolioContent) {
-           gsap.set(portfolioContent, { y: 30, opacity: 0 });
+          gsap.set(portfolioContent, { y: 30, opacity: 0 });
         }
 
-        // Calculate transition positions
         const cardPositions = [];
-        heroCardsRef.current.forEach((heroCard, index) => {
+        heroCardsRef.forEach((heroCard, index) => {
           if (heroCard && portfolioCardsRef.current[index]) {
             const portfolioCard = portfolioCardsRef.current[index];
             const heroRect = heroCard.getBoundingClientRect();
-            // We need relative positions, usually easiest if we assume start at 0
-            // Here we just want the delta to the portfolio card's position
-            // But since we are scrubbing, we might need absolute calculations or 
-            // fixed positioning approach if the layout is stable.
-            // Using getBoundingClientRect works if we do it before scroll moves things too much
-            // or use standard FLIP layout techniques. 
-            // For now, using the logic from TestHome.js directly.
-            
-            // Note: calculating positions relative to viewport or parent might be tricky if
-            // elements are far apart.
-            // TestHome.js logic:
             const portfolioRect = portfolioCard.getBoundingClientRect();
             cardPositions[index] = {
               xDistance: portfolioRect.left - heroRect.left,
@@ -237,52 +465,47 @@ export default function HeroSection({ theme = "light" }) {
             start: "30% top",
             endTrigger: portfolioSectionRef.current,
             end: "center center",
-            scrub: true,
+            scrub: 1,
             markers: false,
             invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              heroCardsRef.forEach((heroCard, index) => {
+                if (heroCard && cardPositions[index]) {
+                  const stackPosition = videoStack.indexOf(index);
+                  const startX = stackPosition * (isMobile ? 15 : 50);
+                  const startY = stackPosition * (isMobile ? 15 : 50);
+                  
+                  const progress = self.progress;
+                  const newX = startX + (cardPositions[index].xDistance * progress);
+                  const newY = startY + (cardPositions[index].yDistance * progress);
+                  const newScale = 1 - stackPosition * 0.05 - (0.25 * progress);
+                  const newOpacity = stackPosition === 0 ? 1 - progress : 0.8 - progress;
+                  
+                  gsap.set(heroCard, {
+                    x: newX,
+                    y: newY,
+                    scale: newScale,
+                    opacity: newOpacity,
+                  });
+                }
+              });
+            }
           },
         });
 
-        // Animate hero cards to portfolio positions
-        heroCardsRef.current.forEach((heroCard, index) => {
-            if (heroCard && cardPositions[index]) {
-              const stackPosition = videoStack.indexOf(index); // Get visual position
-              const startX = stackPosition * 75;
-              const startY = stackPosition * 75;
-              
-              tl.fromTo(heroCard, {
-                  x: startX,
-                  y: startY,
-                  scale: 1 - stackPosition * 0.05,
-                  opacity: stackPosition === 0 ? 1 : 0.8,
-                  zIndex: 40 - stackPosition
-                }, {
-                  x: startX + cardPositions[index].xDistance, // Add distance to start pos
-                  y: startY + cardPositions[index].yDistance,
-                  scale: 0.75,
-                  opacity: 0,
-                  ease: "none",
-                  duration: 1,
-                }, index * 0.05);
-            }
-        });
+        scrollTriggerInstancesRef.current.push(tl.scrollTrigger);
 
-        // Animate portfolio cards appearing
         tl.to(portfolioCardsRef.current, {
-            opacity: 1, scale: 1, y: 0, stagger: 0.1, ease: "none", duration: 0.8,
+          opacity: 1, scale: 1, y: 0, stagger: 0.1, ease: "none", duration: 0.8,
         }, 0.3);
 
-
-
-        // Portfolio content reveal
         if (portfolioContent) {
-            tl.to(portfolioContent, {
-                y: 0, opacity: 1, stagger: 0.1, ease: "none", duration: 0.8,
-            }, 0.5);
+          tl.to(portfolioContent, {
+            y: 0, opacity: 1, stagger: 0.1, ease: "none", duration: 0.8,
+          }, 0.5);
         }
       };
 
-      // Run calculation after a moment to ensure layout is settled
       setTimeout(() => {
         initTransitionAnimations();
         ScrollTrigger.refresh();
@@ -291,64 +514,18 @@ export default function HeroSection({ theme = "light" }) {
     }, containerRef.current);
 
     return () => ctx.revert();
-  }, [theme, videoStack]); // Re-calculate when theme or stack changes
+  }, [theme, isMobile, startElectricalAnimation]);
 
-  // --- Logic: Brand Logo Animation Loop ---
-  useEffect(() => {
-    timeoutRef.current = setTimeout(() => {
-      setCurrentLogoIndex((prev) => (prev + 1) % brandLogos.length);
-    }, 2500);
-    return () => clearTimeout(timeoutRef.current);
-  }, [currentLogoIndex]);
-
-
-  // --- Logic: Electrical Effects (Keep existing helpers) ---
-  const triggerElectricalAnimation = useCallback(() => {
-    const titleLines = document.querySelectorAll(".hero-title-line");
-    const originalColor = theme === "dark" ? "#f3f3f3" : "#111111";
-    const electricColor = theme === "dark" ? "#74F5A1" : "#3BC972";
-    const brightElectricColor = theme === "dark" ? "#FFFFFF" : "#FFFFFF";
-
-    const tl = gsap.timeline({ defaults: { ease: "sine.inOut" } });
-
-    titleLines.forEach((line, lineIndex) => {
-      const text = line.textContent;
-      if (!line.querySelector(".char")) {
-        const chars = text.split("").map((char, i) =>
-              `<span class="char" style="color: ${originalColor}; display: inline-block; position: relative;" data-index="${i}">${
-                char === " " ? "&nbsp;" : char
-              }</span>`
-          ).join("");
-        line.innerHTML = chars;
-      }
-
-      const chars = line.querySelectorAll(".char");
-      chars.forEach((char, charIndex) => {
-        const baseDelay = lineIndex * 0.5 + charIndex * 0.06;
-        const randomDelay = Math.random() * 0.1;
-        const totalDelay = baseDelay + randomDelay;
-        tl.to(char, { duration: 0.12, color: brightElectricColor, scale: 1.05, delay: totalDelay, ease: "power2.out" }, 0)
-          .to(char, { duration: 0.18, color: electricColor, scale: 1.02, delay: totalDelay + 0.12, ease: "sine.inOut" }, 0)
-          .to(char, { duration: 0.3, color: originalColor, scale: 1, delay: totalDelay + 0.3, ease: "power2.in" }, 0);
-      });
-    });
-  }, [theme]);
-
-  const startElectricalAnimation = useCallback(() => {
-    if (animationIntervalRef.current) clearInterval(animationIntervalRef.current);
-    setTimeout(() => { triggerElectricalAnimation(); }, 800);
-    animationIntervalRef.current = setInterval(() => { triggerElectricalAnimation(); }, 10000);
-  }, [triggerElectricalAnimation]);
-
-  // Clean up electrical
-  useEffect(() => {
-     const timer = setTimeout(() => { startElectricalAnimation(); }, 1500);
-     return () => {
-       clearTimeout(timer);
-       if (animationIntervalRef.current) clearInterval(animationIntervalRef.current);
-     };
-  }, [startElectricalAnimation]);
-
+  // useEffect(() => {
+  //   const timer = setTimeout(() => { 
+  //     startElectricalAnimation(); 
+  //   }, 1500);
+    
+  //   return () => {
+  //     clearTimeout(timer);
+  //     if (animationIntervalRef.current) clearInterval(animationIntervalRef.current);
+  //   };
+  // }, [startElectricalAnimation]);
 
   // --- Logic: Triangles (Mouse Trail) ---
   const createTriangle = useCallback((x, y) => {
@@ -380,77 +557,51 @@ export default function HeroSection({ theme = "light" }) {
     return () => { section.removeEventListener("mousemove", handleMouseMove); };
   }, [createTriangle]);
 
-  // --- Logic: Idle "Float" Animation (NewEngen Style) ---
-  useEffect(() => {
-    // Target the INNER content of the cards to avoid conflict with ScrollTrigger
-    // ScrollTrigger animates the card (outer wrapper), this animates the content (inner wrapper)
-    const cardInners = heroCardsRef.current
-      .map((card) => card?.firstElementChild)
-      .filter(Boolean);
-    
-    // Kill any existing tweens on inner elements
-    gsap.killTweensOf(cardInners);
-
-    if (cardInners.length > 0) {
-      // Create a floating effect on the inner content
-      gsap.to(cardInners, {
-        y: "-=15", // Move up 15px
-        duration: 2.5,
-        ease: "sine.inOut",
-        stagger: {
-          each: 0.2,
-          from: "start", 
-          yoyo: true,
-          repeat: -1
-        },
-        yoyo: true,
-        repeat: -1
-      });
-    }
-
-    return () => {
-      gsap.killTweensOf(cardInners);
-    };
-  }, [videoStack]); // Re-run if stack order changes
-
   // --- Styles ---
-  useEffect(() => {
-    const style = document.createElement("style");
-    style.innerHTML = `
-      @keyframes triangle-fade {
-        0% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
-        100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
-      }
-      @keyframes subtle-glitch {
-        0%, 100% { transform: translateX(0); }
-        95% { transform: translateX(1px); }
-        96% { transform: translateX(-1px); }
-        97% { transform: translateX(0); }
-      }
-      .animate-triangle-fade { animation: triangle-fade 1.05s ease-out forwards; }
-      .char { transition: color 0.15s ease, transform 0.15s ease; will-change: color, transform; animation: subtle-glitch 10s infinite; }
-      .char:nth-child(3n) { animation-delay: 0.5s; }
-      .char:nth-child(3n+1) { animation-delay: 1s; }
-      .char:nth-child(3n+2) { animation-delay: 1.5s; }
-      .font-fellix { font-family: 'Fellix', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-      .hero-title-line { transition: color 0.4s ease; }
-    `;
-    document.head.appendChild(style);
-    return () => { document.head.removeChild(style); };
-  }, []);
+  // --- Styles ---
+useEffect(() => {
+  const style = document.createElement("style");
+  style.innerHTML = `
+    @keyframes triangle-fade {
+      0% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+    }
+    @keyframes subtle-glitch {
+      0%, 100% { transform: translateX(0); }
+      95% { transform: translateX(1px); }
+      96% { transform: translateX(-1px); }
+      97% { transform: translateX(0); }
+    }
+    .animate-triangle-fade { animation: triangle-fade 1.05s ease-out forwards; }
+    .hero-char { 
+      transition: color 0.15s ease, transform 0.15s ease; 
+      will-change: color, transform; 
+      animation: subtle-glitch 10s infinite; 
+    }
+    .hero-char:nth-child(3n) { animation-delay: 0.5s; }
+    .hero-char:nth-child(3n+1) { animation-delay: 1s; }
+    .hero-char:nth-child(3n+2) { animation-delay: 1.5s; }
+    .font-fellix { font-family: 'Fellix', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    .font-cinzel { font-family: 'Cinzel Decorative', serif; }
+    .font-italiana { font-family: 'Italiana', serif; }
+    .hero-title-line { transition: color 0.4s ease; }
+  `;
+  document.head.appendChild(style);
+  return () => { document.head.removeChild(style); };
+}, []);
 
-  // Background styles
+
   const bgStyle = theme === "dark"
-      ? {
-          backgroundColor: "#2b2b2b",
-          backgroundImage: `
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"),
+    ? {
+        backgroundColor: "#2b2b2b",
+        backgroundImage: `
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"),
           radial-gradient(ellipse at top left, rgba(60, 60, 60, 0.3), transparent 50%),
           radial-gradient(ellipse at bottom right, rgba(50, 50, 50, 0.2), transparent 50%)
         `,
-          backgroundBlendMode: "overlay, normal, normal",
-        }
-      : { backgroundColor: "#EFEFEF" };
+        backgroundBlendMode: "overlay, normal, normal",
+      }
+    : { backgroundColor: "#EFEFEF" };
 
   const noiseOverlayStyle = {
     backgroundImage: `
@@ -462,7 +613,6 @@ export default function HeroSection({ theme = "light" }) {
 
   return (
     <div ref={containerRef} className="w-full">
-      {/* --- HERO SECTION --- */}
       <section
         ref={(node) => {
           sectionRef.current = node;
@@ -471,145 +621,85 @@ export default function HeroSection({ theme = "light" }) {
         className="relative overflow-hidden pt-24 sm:pt-28 md:pt-32 lg:pt-40 pb-16 sm:pb-20 md:pb-24 lg:pb-28 min-h-screen"
         style={bgStyle}
       >
-         {theme === "dark" && (
-            <div className="absolute inset-0 pointer-events-none z-[1]" style={noiseOverlayStyle} />
-         )}
+        {theme === "dark" && (
+          <div className="absolute inset-0 pointer-events-none z-[1]" style={noiseOverlayStyle} />
+        )}
 
-         {triangles.map((triangle) => (
-            <div
-              key={triangle.id}
-              className="pointer-events-none absolute z-[5] animate-triangle-fade"
-              style={{
-                left: `${triangle.x}px`, top: `${triangle.y}px`, width: "0", height: "0",
-                borderLeft: `${triangle.size / 2}px solid transparent`,
-                 borderRight: `${triangle.size / 2}px solid transparent`,
-                 borderBottom: `${triangle.size}px solid ${triangle.color}`,
-                 transform: `translate(-50%, -50%) rotate(${triangle.rotation}deg)`,
-                 opacity: 0.7,
-              }}
-            />
-         ))}
+        {triangles.map((triangle) => (
+          <div
+            key={triangle.id}
+            className="pointer-events-none absolute z-[5] animate-triangle-fade"
+            style={{
+              left: `${triangle.x}px`, 
+              top: `${triangle.y}px`, 
+              width: "0", 
+              height: "0",
+              borderLeft: `${triangle.size / 2}px solid transparent`,
+              borderRight: `${triangle.size / 2}px solid transparent`,
+              borderBottom: `${triangle.size}px solid ${triangle.color}`,
+              transform: `translate(-50%, -50%) rotate(${triangle.rotation}deg)`,
+              opacity: 0.7,
+            }}
+          />
+        ))}
 
-         <div className="relative z-10 mx-auto max-w-[1800px] px-4 md:px-6 lg:px-10">
-            {/* Title Container */}
-            <div className="max-w-[1400px]" ref={titleContainerRef}>
-               <div className="hero-badge mb-6 sm:mb-8 md:mb-10 flex items-center gap-2 sm:gap-3">
-                 <span className="inline-flex h-4 w-4 sm:h-5 sm:w-5 rounded-sm bg-[#74F5A1]" />
-                 <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] font-semibold tracking-[0.16em] uppercase ${ theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]" }`}>
-                   B2B marketing agency
-                 </span>
-               </div>
-               <h1 className="mb-3 sm:mb-4 font-fellix leading-[0.92] tracking-[-0.03em] [font-variant-ligatures:no-common-ligatures]">
-                 <div className={`hero-title-line text-[32px] xs:text-[38px] sm:text-[46px] md:text-[60px] lg:text-[78px] xl:text-[92px] 2xl:text-[104px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
-                   <span className="font-bold">We build </span>
-                   <span className="italic font-semibold tracking-[0.03em]">high‑performing</span>
-                 </div>
-                 <div className={`hero-title-line mt-1 sm:mt-2 text-[32px] xs:text-[38px] sm:text-[46px] md:text-[60px] lg:text-[78px] xl:text-[92px] 2xl:text-[104px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
-                   marketing engines for
-                 </div>
-                 <div className={`hero-title-line mt-1 sm:mt-2 text-[32px] xs:text-[38px] sm:text-[46px] md:text-[60px] lg:text-[78px] xl:text-[92px] 2xl:text-[104px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
-                   B2B brands
-                 </div>
-               </h1>
+        <div className="relative z-10 mx-auto max-w-[1800px] px-4 md:px-6 lg:px-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-8 lg:gap-12 xl:gap-16 items-start">
+            
+            {/* LEFT COLUMN */}
+            <div className="flex flex-col">
+              <div className="max-w-[1400px]" ref={titleContainerRef}>
+                <div className="hero-badge mb-6 sm:mb-7 md:mb-8 flex items-center gap-2 sm:gap-3">
+                  <span className="inline-flex h-4 w-4 sm:h-5 sm:w-5 rounded-sm bg-[#74F5A1]" />
+                  <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] font-semibold tracking-[0.16em] uppercase ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"}`}>
+                    B2B marketing agency
+                  </span>
+                </div>
+                
+                <h1 className="mb-4 sm:mb-5 font-italiana leading-[0.92] tracking-[-0.03em] [font-variant-ligatures:no-common-ligatures]">
+                  <div className={`hero-main-title text-[32px] xs:text-[38px] sm:text-[46px] md:text-[56px] lg:text-[64px] xl:text-[72px] 2xl:text-[80px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
+                    <span className="font-bold">We build </span>
+                    <span className="italic font-semibold tracking-[0.03em]">high‑performing</span>
+                  </div>
+                  <div className={`hero-main-title mt-1 sm:mt-2 text-[32px] xs:text-[38px] sm:text-[46px] md:text-[56px] lg:text-[64px] xl:text-[72px] 2xl:text-[80px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
+                    <span className="font-bold">marketing engines for </span>
+                    <span className="font-bold">B2B brands</span>
+                  </div>
+                </h1>
+
+              </div>
+
+              <div className="hero-body max-w-full lg:max-w-[640px]">
+              <p className={`mt-10 sm:mt-8 md:mt-20 mb-6 sm:mb-7 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] sm:text-[17px] md:text-[19px] font-semibold leading-relaxed ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"}`}>
+
+                  We build, optimize and scale marketing engines that generate pipeline and improve marketing ROI.
+                </p>
+                <Link href="#discover" className="inline-flex items-center gap-2 sm:gap-3 group">
+                  <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[17px] font-bold tracking-tight ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
+                    Discover more
+                  </span>
+                  <span className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
+                    <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-y-3 group-hover:opacity-0">
+                      <svg width="12" height="12" className="sm:w-[14px] sm:h-[14px]" viewBox="0 0 14 14" aria-hidden="true">
+                        <path d="M7 1V13M7 13L3 9M7 13L11 9" fill="none" stroke="#212121" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                    <span className="absolute inset-0 flex items-center justify-center translate-y-[-12px] opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+                      <svg width="12" height="12" className="sm:w-[14px] sm:h-[14px]" viewBox="0 0 14 14" aria-hidden="true">
+                        <path d="M7 1V13M7 13L3 9M7 13L11 9" fill="none" stroke="#74F5A1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  </span>
+                </Link>
+              </div>
             </div>
 
-            {/* Bottom Content Row */}
-            <div className="mt-8 sm:mt-10 flex flex-col gap-8 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-14">
-               {/* Left: Copy + CTA */}
-               <div className="hero-body lg:flex-1 max-w-full lg:max-w-[640px]">
-                 <p className={`mb-6 sm:mb-9 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[15px] sm:text-[17px] md:text-[19px] font-semibold leading-relaxed ${ theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]" }`}>
-                   We build, optimize and scale marketing engines that generate pipeline and improve marketing ROI.
-                 </p>
-                 <Link href="#discover" className="inline-flex items-center gap-2 sm:gap-3 group">
-                    <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[17px] font-bold tracking-tight ${ theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]" }`}>
-                      Discover more
-                    </span>
-                    <span className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
-                      <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-y-3 group-hover:opacity-0">
-                         <svg width="12" height="12" className="sm:w-[14px] sm:h-[14px]" viewBox="0 0 14 14" aria-hidden="true">
-                            <path d="M7 1V13M7 13L3 9M7 13L11 9" fill="none" stroke="#212121" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                         </svg>
-                      </span>
-                      <span className="absolute inset-0 flex items-center justify-center translate-y-[-12px] opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                         <svg width="12" height="12" className="sm:w-[14px] sm:h-[14px]" viewBox="0 0 14 14" aria-hidden="true">
-                           <path d="M7 1V13M7 13L3 9M7 13L11 9" fill="none" stroke="#74F5A1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                         </svg>
-                      </span>
-                    </span>
-                 </Link>
-               </div>
+            {/* RIGHT COLUMN - SMALLER CARDS */}
+            <CardStackSection ref={cardStackRef} mediaAssets={mediaAssets} isMobile={isMobile} />
+          </div>
 
-               {/* Right: Card Stack (The items that will fly) */}
-               <div className="hero-body lg:flex-shrink-0 lg:ml-auto w-full sm:max-w-md mx-auto lg:max-w-none lg:w-[28%] xl:w-[32%] relative z-20">
-                 <div className="w-full max-w-2xl lg:max-w-none">
-                   <div className="relative w-full aspect-[4/5] sm:aspect-[4/5] rounded-xl sm:rounded-2xl" style={{ perspective: '1000px' }}>
-                     {videoStack.map((mediaIndex, stackPosition) => {
-                       // Use smaller offset on mobile for better visibility
-                       const offset = isMobile ? stackPosition * 20 : stackPosition * 75;
-                       
-                       return (
-                         <div
-                           key={mediaIndex}
-                           ref={(el) => { if(el) heroCardsRef.current[mediaIndex] = el; }}
-                           className={`hero-card absolute w-full h-full transition-all duration-500 ease-out cursor-pointer ${
-                             stackPosition === 0 ? 'opacity-100 shadow-2xl scale-100 z-40' : 'opacity-80 shadow-lg'
-                           }`}
-                           style={{
-                             transform: `translateX(${offset}px) translateY(${offset}px) translateZ(-${stackPosition * 50}px) scale(${1 - stackPosition * 0.05})`,
-                             zIndex: 40 - stackPosition
-                           }}
-                           onClick={() => handleMediaClick(mediaIndex)}
-                         >
-                           <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-black border border-white/10">
-                             {mediaAssets[mediaIndex].type === 'image' ? (
-                               <Image
-                                 src={mediaAssets[mediaIndex].src}
-                                 alt={mediaAssets[mediaIndex].alt}
-                                 fill
-                                 className="object-cover"
-                                 priority={mediaIndex === videoStack[0]}
-                               />
-                             ) : (
-                               <video
-                                 ref={(el) => (videoRefs.current[mediaIndex] = el)}
-                                 src={mediaAssets[mediaIndex].src}
-                                 muted loop playsInline
-                                 className="w-full h-full object-cover"
-                               />
-                             )}
-                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none">
-                               <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6">
-                                 <h3 className="text-white text-lg sm:text-xl md:text-2xl font-bold font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] mb-1">
-                                   {mediaAssets[mediaIndex].title}
-                                 </h3>
-                                 <p className="text-white/80 text-xs sm:text-sm font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif]">
-                                   {mediaAssets[mediaIndex].subtitle}
-                                 </p>
-                               </div>
-                             </div>
-                           </div>
-                         </div>
-                       );
-                     })}
-                   </div>
-                   <div className="flex justify-center mt-4 sm:mt-6 space-x-2">
-                     {mediaAssets.map((_, index) => (
-                       <button
-                         key={index}
-                         onClick={() => handleMediaClick(index)}
-                         className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                           index === videoStack[0] ? 'bg-[#74F5A1] scale-110' : 'bg-white/30 hover:bg-white/50'
-                         }`}
-                         aria-label={`View ${mediaAssets[index].title}`}
-                       />
-                     ))}
-                   </div>
-                 </div>
-               </div>
-            </div>
-
-            <div className={`mt-12 sm:mt-16 md:mt-20 h-px w-full ${ theme === "dark" ? "border-b border-white/10" : "border-b border-black/10" }`} />
-         </div>
+          <div className={`mt-12 sm:mt-16 md:mt-20 h-px w-full ${theme === "dark" ? "border-b border-white/10" : "border-b border-black/10"}`} />
+        </div>
       </section>
 
       {/* --- PORTFOLIO SECTION --- */}
@@ -618,42 +708,41 @@ export default function HeroSection({ theme = "light" }) {
         className="w-full min-h-screen py-16 sm:py-20 lg:py-24 relative z-10"
         style={bgStyle}
       >
-         <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 portfolio-content">
-           <div className="text-center mb-12 sm:mb-16 md:mb-20">
-             <h2 className={`${theme === "dark" ? "text-white" : "text-[#111111]"} text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] tracking-tight`}>
-               Services we offer
-             </h2>
-           </div>
+        <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 portfolio-content">
+          <div className="text-center mb-12 sm:mb-16 md:mb-20">
+            <h2 className={`${theme === "dark" ? "text-white" : "text-[#111111]"} text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] tracking-tight`}>
+              Services we offer
+            </h2>
+          </div>
 
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-             {portfolioItems.map((item, index) => (
-               <div
-                 key={index}
-                 ref={(el) => { if (el) portfolioCardsRef.current[index] = el; }}
-                 className="portfolio-card"
-               >
-                  <PortfolioCard item={item} theme={theme} />
-               </div>
-             ))}
-           </div>
-         </div>
-         
-         {/* Replaced AnimatedCTAButton with a standard simple button/link */}
-         <div className="mt-12 sm:mt-14 md:mt-16 flex justify-center">
-            <Link href="/work" className="inline-block px-6 py-3 sm:px-8 sm:py-4 bg-black text-white text-sm sm:text-base font-bold rounded-full hover:scale-105 transition-transform">
-               View All Work
-            </Link>
-         </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+            {portfolioItems.map((item, index) => (
+              <div
+                key={index}
+                ref={(el) => { if (el) portfolioCardsRef.current[index] = el; }}
+                className="portfolio-card"
+              >
+                <PortfolioCard item={item} theme={theme} />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div className="mt-12 sm:mt-14 md:mt-16 flex justify-center">
+          <Link href="/work" className="inline-block px-6 py-3 sm:px-8 sm:py-4 bg-black text-white text-sm sm:text-base font-bold rounded-full hover:scale-105 transition-transform">
+            View All Work
+          </Link>
+        </div>
       </section>
     </div>
   );
 }
 
-// Subcomponents
-function PortfolioCard({ item, theme }) {
+// Memoized Portfolio Card Component
+const PortfolioCard = memo(({ item, theme }) => {
   const isDark = theme === "dark";
   return (
-      <div className={`group relative rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-300 ${isDark ? "bg-black/20 border border-white/10 hover:border-white/30 hover:bg-black/40" : "bg-white border border-black/10 hover:border-black/20 hover:bg-black/5"}`}>
+    <div className={`group relative rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-300 ${isDark ? "bg-black/20 border border-white/10 hover:border-white/30 hover:bg-black/40" : "bg-white border border-black/10 hover:border-black/20 hover:bg-black/5"}`}>
       <Link href={item.link || "#"} tabIndex={0} className="block focus:outline-none">
         <div className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px]">
           {item.type === "image" ? (
@@ -677,4 +766,6 @@ function PortfolioCard({ item, theme }) {
       </div>
     </div>
   );
-}
+});
+
+PortfolioCard.displayName = 'PortfolioCard';

@@ -211,6 +211,51 @@
   font-family: 'Space Grotesk', Arial, sans-serif;
 }
 
+/* === CINZEL DECORATIVE FONT === */
+@font-face {
+  font-family: 'Cinzel Decorative';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/CinzelDecorative-Regular.otf') format('opentype'),
+       url('/fonts/CinzelDecorative-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cinzel Decorative';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/CinzelDecorative-Bold.otf') format('opentype'),
+       url('/fonts/CinzelDecorative-Bold.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cinzel Decorative';
+  font-style: normal;
+  font-weight: 900;
+  src: url('/fonts/CinzelDecorative-Black.otf') format('opentype'),
+       url('/fonts/CinzelDecorative-Black.ttf') format('truetype');
+  font-display: swap;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel Decorative', serif;
+}
+
+/* === ITALIANA FONT === */
+@font-face {
+  font-family: 'Italiana';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/Italiana-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+.font-italiana {
+  font-family: 'Italiana', serif;
+}
+
 
 /* Force maximum text crispness */
 * {
