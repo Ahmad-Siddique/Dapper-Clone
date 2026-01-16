@@ -443,6 +443,8 @@ const CASE_STUDIES = {
   },
 };
 
+export { CASE_STUDIES };
+
 function getCaseStudy(slug) {
   return CASE_STUDIES[slug] ?? CASE_STUDIES["vitacare"];
 }

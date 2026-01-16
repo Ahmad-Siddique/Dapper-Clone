@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import SiteDrawer from "../showcase/SiteDrawar"
+import SiteDrawer from "../showcase/SiteDrawar";
+import { fetchWordPressCaseStudyBySlug } from "../../utils/wordpress";
 
 const CATEGORIES = [
   { id: "all", label: "ALL PROJECTS" },
@@ -359,9 +360,9 @@ export default function CaseStudiesPage({ projects = PROJECTS, theme = "light" }
   }, [activeCategory]);
 
   // Handle image click to open drawer
-  const handleImageClick = (project) => {
-    // Convert project data to drawer format
-    const drawerItem = {
+  const handleImageClick = async (project) => {
+    // First, set basic drawer item to show drawer immediately
+    const basicDrawerItem = {
       id: project.id,
       title: project.title,
       image: project.image,
@@ -375,12 +376,151 @@ export default function CaseStudiesPage({ projects = PROJECTS, theme = "light" }
       technology: project.techStack?.split(',')[0] || 'React',
       country: project.badges?.find(b => b.flag)?.label?.split(',')[0] || 'USA',
       rating: '8.5', // Default rating
+      date: 'Site of the Day',
+      description: project.title,
       creators: [
         { name: project.badges?.[0]?.label || 'Client', type: 'PRO', avatar: project.badges?.[0]?.label?.[0] || 'C' },
       ],
     };
-    setSelectedItem(drawerItem);
+    setSelectedItem(basicDrawerItem);
     setIsDrawerOpen(true);
+
+    // Fetch full WordPress case study data
+    try {
+      // Extract slug from buttonLink (e.g., "/case-studies/slug" -> "slug") or use project.slug
+      let slug = project.slug;
+      if (!slug && project.buttonLink) {
+        slug = project.buttonLink.replace('/case-studies/', '').replace(/^\//, '');
+      }
+      
+      if (slug) {
+        const wpCaseStudy = await fetchWordPressCaseStudyBySlug(slug);
+        
+        if (wpCaseStudy) {
+          // Debug: Log full WordPress fetched data
+          console.log('=== WORDPRESS CASE STUDY DATA ===');
+          console.log('Full WordPress Case Study:', JSON.stringify(wpCaseStudy, null, 2));
+          console.log('WordPress highlights:', wpCaseStudy.highlights);
+          console.log('=== END WORDPRESS DATA ===');
+          
+          // WordPress data is already transformed by transformWordPressCaseStudy
+          // Extract detail page fields
+          const highlights = (wpCaseStudy.highlights || []).map((h, idx) => ({
+            id: idx + 1,
+            title: h.title || '',
+            subtitle: h.subtitle || '',
+            icon: h.icon || '⚡',
+            // Use highlight's own image if available, otherwise fallback to project image
+            image: h.image || project.image,
+          }));
+
+          // Transform color palette
+          const colorPalette = (wpCaseStudy.colorPalette || []).map(c => ({
+            hex: c.hex || '#000000',
+            name: c.name || 'Color',
+            rgb: c.rgb || '0, 0, 0',
+          }));
+
+          // Transform technologies
+          const technologies = wpCaseStudy.technologies || [];
+
+          // Transform inside look images
+          // WordPress already sends: [{ image: "url", title: "title" }, ...]
+          // Just add id, preserve the image URL
+          const insideLookImages = (wpCaseStudy.insideLookImages || []).map((img, idx) => {
+            // img.image should already be a string URL from WordPress transformation
+            const imageUrl = img?.image || project.image;
+            
+            return {
+              id: idx + 1,
+              title: img?.title || `Screenshot ${idx + 1}`,
+              image: imageUrl,
+            };
+          });
+
+          // Transform evaluation metrics
+          const evaluationMetrics = (wpCaseStudy.evaluationMetrics || []).map((m, idx) => {
+            const weights = ['40%', '30%', '20%', '10%'];
+            return {
+              category: m.category || 'Category',
+              score: m.score?.toString() || '7.0',
+              weight: weights[idx % weights.length] || '10%',
+              maxScore: '10',
+            };
+          });
+
+          // Transform jury members
+          // WordPress sends: [{ name, country, role, avatar, vote, scores: { semantics, animations, ... } }, ...]
+          const juryMembers = (wpCaseStudy.juryMembers || []).map(j => {
+            // Extract scores from WordPress data, use defaults if not available
+            const scores = j.scores || {};
+            
+            // Handle avatar - could be string URL or object
+            let avatarUrl = '';
+            if (j.avatar) {
+              if (typeof j.avatar === 'string') {
+                avatarUrl = j.avatar;
+              } else if (typeof j.avatar === 'object') {
+                avatarUrl = j.avatar.url || j.avatar.source_url || j.avatar.sizes?.large?.url || '';
+              }
+            }
+            
+            return {
+              name: j.name || '',
+              country: j.country || 'Unknown',
+              role: j.role || '',
+              avatar: avatarUrl,
+              scores: {
+                semantics: scores.semantics?.toString() || '7',
+                animations: scores.animations?.toString() || '7',
+                accessibility: scores.accessibility?.toString() || '7',
+                wpo: scores.wpo?.toString() || '7',
+                responsiveDesign: scores.responsiveDesign?.toString() || '7',
+                markup: scores.markup?.toString() || '7',
+              },
+              overall: j.overall?.toString() || 
+                      scores.overall?.toString() || 
+                      (j.vote === 'up' ? '8.0' : (j.vote === 'down' ? '6.0' : '7.0')),
+            };
+          });
+          
+          // Debug: Log jury members transformation
+          console.log('=== JURY MEMBERS DEBUG ===');
+          console.log('Raw WordPress juryMembers:', wpCaseStudy.juryMembers);
+          console.log('Transformed juryMembers:', juryMembers);
+          console.log('=== END JURY MEMBERS DEBUG ===');
+
+          // Transform collections
+          const collections = (wpCaseStudy.collections || []).map(c => ({
+            title: c.title || '',
+            image: c.image || '',
+            type: c.type || 'Collection',
+            subtitle: c.subtitle || 'Inspiration',
+            showFollowedBy: false,
+          }));
+
+          // Update drawer item with WordPress data
+          const enrichedDrawerItem = {
+            ...basicDrawerItem,
+            rating: wpCaseStudy.rating || wpCaseStudy.overallScore || '8.5',
+            date: wpCaseStudy.launchDate || 'Site of the Day',
+            description: wpCaseStudy.shortDescription || wpCaseStudy.excerpt || project.title,
+            highlights: highlights.length > 0 ? highlights : undefined,
+            colorPalette: colorPalette.length > 0 ? colorPalette : undefined,
+            technologies: technologies.length > 0 ? technologies : undefined,
+            insideLookImages: insideLookImages && insideLookImages.length > 0 ? insideLookImages : undefined,
+            evaluationMetrics: evaluationMetrics.length > 0 ? evaluationMetrics : undefined,
+            juryMembers: juryMembers.length > 0 ? juryMembers : undefined,
+            collections: collections.length > 0 ? collections : undefined,
+          };
+
+          setSelectedItem(enrichedDrawerItem);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching WordPress case study for drawer:', error);
+      // Keep the basic drawer item if WordPress fetch fails
+    }
   };
 
   const closeDrawer = () => {
@@ -702,9 +842,9 @@ export default function CaseStudiesPage({ projects = PROJECTS, theme = "light" }
                 </div>
 
                 {/* Button */}
-                <Link
-                  href={project.buttonLink}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-[14px] sm:text-[15px] rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 mb-10"
+                <button
+                  onClick={() => handleImageClick(project)}
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold text-[14px] sm:text-[15px] rounded-lg transition-all duration-300 hover:scale-105 active:scale-95 mb-10 cursor-pointer"
                 >
                   {project.buttonText}
                   <svg
@@ -720,7 +860,7 @@ export default function CaseStudiesPage({ projects = PROJECTS, theme = "light" }
                     <line x1="5" y1="12" x2="19" y2="12" />
                     <polyline points="12 5 19 12 12 19" />
                   </svg>
-                </Link>
+                </button>
 
                 {/* Testimonial (if exists) */}
                 {project.testimonial && (

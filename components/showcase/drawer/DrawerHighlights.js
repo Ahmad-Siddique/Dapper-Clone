@@ -5,6 +5,17 @@ import Image from "next/image";
 
 const DrawerHighlights = forwardRef(function DrawerHighlights({ highlights = [], theme = 'light' }, ref) {
   const isDark = theme === 'dark';
+  
+  // Debug: Log highlights data
+  console.log('=== HIGHLIGHTS DEBUG ===');
+  console.log('Highlights prop received:', highlights);
+  console.log('Type of highlights:', typeof highlights);
+  console.log('Is array?', Array.isArray(highlights));
+  console.log('Length:', highlights?.length);
+  console.log('First highlight:', highlights?.[0]);
+  console.log('All highlights:', JSON.stringify(highlights, null, 2));
+  console.log('=== END HIGHLIGHTS DEBUG ===');
+  
   return (
     <div ref={ref} className={`px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12 ${isDark ? 'bg-[#1a1a1a]' : 'bg-[#E8E8E8]'}`}>
       <div className="mb-6 sm:mb-8">
@@ -26,7 +37,7 @@ const DrawerHighlights = forwardRef(function DrawerHighlights({ highlights = [],
               {/* Image Preview with Hover Overlay */}
               <div className="relative w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[530px] bg-white rounded-lg sm:rounded-xl overflow-hidden mb-3 sm:mb-4">
                 <Image
-                  src={highlight.image}
+                  src={highlight.icon}
                   alt={highlight.title}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"

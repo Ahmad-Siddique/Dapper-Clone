@@ -586,3 +586,322 @@ export async function fetchWordPressPageBySlug(slug) {
   }
   return await fetchWordPressPageBySlugREST(slug);
 }
+
+/**
+ * Helper function to extract image URL from ACF image field
+ * Handles both object format (with url/source_url) and string format
+ */
+function extractImageUrl(imageData) {
+  if (!imageData) return null;
+  
+  // If it's already a string URL, return it
+  if (typeof imageData === 'string') {
+    return imageData;
+  }
+  
+  // If it's an object, try to extract URL from common properties
+  if (typeof imageData === 'object') {
+    return imageData.url || 
+           imageData.source_url || 
+           imageData.sizes?.large?.url ||
+           imageData.sizes?.full?.url ||
+           imageData[0]?.url || // Array format
+           imageData[0]?.source_url || // Array format with source_url
+           null;
+  }
+  
+  return null;
+}
+
+/**
+ * Transform WordPress case study data to our app's format
+ * Handles custom post type 'case_study' with ACF Pro fields
+ */
+export function transformWordPressCaseStudy(wpCaseStudy, featuredMedia = null) {
+  // Get featured image URL
+  let imageUrl = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80"; // Default fallback
+  if (featuredMedia && featuredMedia.source_url) {
+    imageUrl = featuredMedia.source_url;
+  } else if (wpCaseStudy._embedded && wpCaseStudy._embedded['wp:featuredmedia'] && wpCaseStudy._embedded['wp:featuredmedia'][0]) {
+    imageUrl = wpCaseStudy._embedded['wp:featuredmedia'][0].source_url;
+  } else if (wpCaseStudy.featured_media_url) {
+    imageUrl = wpCaseStudy.featured_media_url;
+  }
+
+  // Extract ACF data from case_study_data object (exposed via REST API)
+  const caseData = wpCaseStudy.case_study_data || {};
+  
+  // Get first testimonial if available
+  const testimonials = caseData.testimonials || [];
+  const testimonial = testimonials.length > 0 ? testimonials[0] : null;
+
+  return {
+    id: wpCaseStudy.id,
+    slug: wpCaseStudy.slug || wpCaseStudy.post_name || '',
+    title: wpCaseStudy.title?.rendered || wpCaseStudy.title || '',
+    category: caseData.category || 'web-app',
+    image: caseData.image || imageUrl,
+    tags: caseData.tags || [],
+    badges: caseData.badges || [],
+    techStack: caseData.techStack || '',
+    timeline: caseData.timeline || '',
+    results: caseData.results || [],
+    testimonial: testimonial ? {
+      avatar: testimonial.avatar || '',
+      name: testimonial.name || '',
+      position: testimonial.position || '',
+      quote: testimonial.quote || '',
+    } : null,
+    buttonText: caseData.buttonText || 'VIEW PROJECT',
+    buttonLink: caseData.buttonLink || `/case-studies/${wpCaseStudy.slug || wpCaseStudy.post_name || ''}`,
+    content: wpCaseStudy.content?.rendered || wpCaseStudy.content || '',
+    excerpt: wpCaseStudy.excerpt?.rendered || wpCaseStudy.excerpt || '',
+    // Detail page fields
+    rating: caseData.rating || '',
+    launchDate: caseData.launchDate || '',
+    highlights: caseData.highlights || [],
+    colorPalette: caseData.colorPalette || [],
+    technologies: caseData.technologies || [],
+    shortDescription: caseData.shortDescription || '',
+    // Process insideLookImages - preserve structure, extract URLs if needed
+    insideLookImages: (caseData.insideLookImages || []).map((img) => {
+      // If image is already a string URL, use it directly
+      // If it's an object, extract the URL
+      const imageUrl = typeof img.image === 'string' 
+        ? img.image 
+        : extractImageUrl(img.image || img.url || img.screenshot);
+      
+      return {
+        title: img.title || '',
+        image: imageUrl || '', // Ensure we always return a string
+      };
+    }),
+    overallScore: caseData.overallScore || '',
+    evaluationMetrics: caseData.evaluationMetrics || [],
+    juryMembers: caseData.juryMembers || [],
+    collections: caseData.collections || [],
+  };
+}
+
+/**
+ * Fetch all case studies from WordPress using GraphQL
+ * Note: GraphQL may not support custom post types by default, so this may return null
+ */
+async function fetchWordPressCaseStudiesGraphQL() {
+  try {
+    const query = `
+      query GetCaseStudies {
+        caseStudies(first: 100, where: { orderby: { field: DATE, order: DESC } }) {
+          nodes {
+            id
+            title
+            slug
+            date
+            content
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const response = await fetch(WORDPRESS_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`GraphQL error: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.errors) {
+      // GraphQL might not have case_study post type registered, fall back to REST
+      console.log('GraphQL case studies not available, will use REST API');
+      return null;
+    }
+
+    // Transform GraphQL response (note: ACF fields may not be available in GraphQL)
+    if (result.data.caseStudies && result.data.caseStudies.nodes) {
+      return result.data.caseStudies.nodes.map(cs => ({
+        id: cs.id,
+        slug: cs.slug,
+        title: cs.title || '',
+        category: 'web-app',
+        image: cs.featuredImage?.node?.sourceUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
+        tags: [],
+        badges: [],
+        techStack: '',
+        timeline: '',
+        results: [],
+        testimonial: null,
+        buttonText: 'VIEW PROJECT',
+        buttonLink: `/case-studies/${cs.slug}`,
+        content: cs.content || '',
+      }));
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error fetching WordPress case studies via GraphQL:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch all case studies from WordPress API (REST)
+ * Uses custom post type 'case_study' with rest_base 'case-studies'
+ */
+async function fetchWordPressCaseStudiesREST() {
+  try {
+    // Fetch case studies from custom post type endpoint
+    const response = await fetch(
+      `${WORDPRESS_API_URL}/case-studies?_embed&per_page=100&orderby=date&order=desc`
+    );
+    
+    if (!response.ok) {
+      throw new Error(`WordPress API error: ${response.status}`);
+    }
+
+    const caseStudies = await response.json();
+    
+    // Transform each case study
+    return caseStudies.map(cs => transformWordPressCaseStudy(cs));
+  } catch (error) {
+    console.error('Error fetching WordPress case studies:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch all case studies from WordPress API (tries GraphQL first, falls back to REST)
+ */
+export async function fetchWordPressCaseStudies() {
+  if (USE_GRAPHQL) {
+    const graphqlCaseStudies = await fetchWordPressCaseStudiesGraphQL();
+    if (graphqlCaseStudies) {
+      return graphqlCaseStudies;
+    }
+    // Fallback to REST if GraphQL fails
+    console.log('GraphQL failed, falling back to REST API');
+  }
+  return await fetchWordPressCaseStudiesREST();
+}
+
+/**
+ * Fetch a single case study by slug from WordPress using GraphQL
+ * Note: GraphQL may not support custom post types by default
+ */
+async function fetchWordPressCaseStudyBySlugGraphQL(slug) {
+  try {
+    const query = `
+      query GetCaseStudy($slug: String!) {
+        caseStudyBy(slug: $slug) {
+          id
+          title
+          slug
+          date
+          content
+          featuredImage {
+            node {
+              sourceUrl
+              altText
+            }
+          }
+        }
+      }
+    `;
+
+    const response = await fetch(WORDPRESS_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        query,
+        variables: { slug }
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`GraphQL error: ${response.status}`);
+    }
+
+    const result = await response.json();
+
+    if (result.errors) {
+      // GraphQL might not have case_study post type registered
+      console.log('GraphQL case study not available, will use REST API');
+      return null;
+    }
+
+    if (!result.data.caseStudyBy) {
+      return null;
+    }
+
+    const cs = result.data.caseStudyBy;
+
+    // Note: ACF fields may not be available in GraphQL, so we return basic data
+    return {
+      id: cs.id,
+      slug: cs.slug,
+      title: cs.title || '',
+      category: 'web-app',
+      image: cs.featuredImage?.node?.sourceUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80',
+      content: cs.content || '',
+    };
+  } catch (error) {
+    console.error('Error fetching WordPress case study via GraphQL:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch a single case study by slug from WordPress API (REST)
+ * Uses custom post type 'case_study' with rest_base 'case-studies'
+ */
+async function fetchWordPressCaseStudyBySlugREST(slug) {
+  try {
+    const response = await fetch(
+      `${WORDPRESS_API_URL}/case-studies?slug=${slug}&_embed`
+    );
+    
+    if (!response.ok) {
+      throw new Error(`WordPress API error: ${response.status}`);
+    }
+
+    const caseStudies = await response.json();
+    
+    if (caseStudies.length === 0) {
+      return null;
+    }
+
+    return transformWordPressCaseStudy(caseStudies[0]);
+  } catch (error) {
+    console.error('Error fetching WordPress case study:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch a single case study by slug from WordPress API (tries GraphQL first, falls back to REST)
+ */
+export async function fetchWordPressCaseStudyBySlug(slug) {
+  if (USE_GRAPHQL) {
+    const graphqlCaseStudy = await fetchWordPressCaseStudyBySlugGraphQL(slug);
+    if (graphqlCaseStudy) {
+      return graphqlCaseStudy;
+    }
+    // Fallback to REST if GraphQL fails
+    console.log('GraphQL failed, falling back to REST API');
+  }
+  return await fetchWordPressCaseStudyBySlugREST(slug);
+}

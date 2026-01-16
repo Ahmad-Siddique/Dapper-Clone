@@ -19,9 +19,13 @@ import UIDesignSection from "../../../../components/real-case-studies/inner/UIDe
 import DesignSystemSection from "../../../../components/real-case-studies/inner/DesignSystemSection";
 import KeyProjectSection from "../../../../components/real-case-studies/inner/KeyProjectSection";
 import ProductDevelopmentSection from "../../../../components/real-case-studies/inner/ProductDevelopmentSection";
+import { fetchWordPressCaseStudyBySlug } from "../../../../utils/wordpress";
+import { CASE_STUDIES } from "../../../../components/case-studies/SingleCaseStudy";
 
 export default function CaseStudyDetailPage({ params }) {
   const [theme, setTheme] = useState('light');
+  const [caseStudy, setCaseStudy] = useState(null);
+  const [loading, setLoading] = useState(true);
   const resolvedParams = use(params);
   const slug = resolvedParams?.slug || resolvedParams;
 
@@ -44,6 +48,39 @@ export default function CaseStudyDetailPage({ params }) {
       }
     };
   }, []);
+
+  useEffect(() => {
+    // Fetch WordPress case study
+    const loadCaseStudy = async () => {
+      if (!slug) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        // Try to fetch from WordPress first
+        const wpCaseStudy = await fetchWordPressCaseStudyBySlug(slug);
+        
+        if (wpCaseStudy) {
+          setCaseStudy(wpCaseStudy);
+        } else {
+          // Fallback to demo data
+          const demoCaseStudy = CASE_STUDIES[slug] || CASE_STUDIES["vitacare"];
+          setCaseStudy(demoCaseStudy);
+        }
+      } catch (error) {
+        console.error('Error loading case study:', error);
+        // Fallback to demo data on error
+        const demoCaseStudy = CASE_STUDIES[slug] || CASE_STUDIES["vitacare"];
+        setCaseStudy(demoCaseStudy);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadCaseStudy();
+  }, [slug]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -108,21 +145,36 @@ export default function CaseStudyDetailPage({ params }) {
       </button>
 
       <Header theme={theme} />
-      <InnerHeroSection theme={theme} />
-      <OverviewSection theme={theme} />
-      <AwardsSection theme={theme} />
-      <BusinessNeeds theme={theme} />
-      <ChallengesSolutions theme={theme} />
-      <ResearchSection theme={theme} />
-      <DocumentationSection theme={theme} />
-      <UXAuditSection theme={theme} />
-      <InformationArchitectureSection theme={theme} />
-      <ProductDesignSection theme={theme} />
-      <DesignDirectionSection theme={theme} />
-      <UIDesignSection theme={theme} />
-      <DesignSystemSection theme={theme} />
-      <KeyProjectSection theme={theme} />
-      <ProductDevelopmentSection theme={theme} />
+      {loading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#74F5A1]"></div>
+            <p className={`mt-4 text-lg ${
+              theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
+            }`}>
+              Loading case study...
+            </p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <InnerHeroSection theme={theme} caseStudy={caseStudy} />
+          <OverviewSection theme={theme} caseStudy={caseStudy} />
+          <AwardsSection theme={theme} caseStudy={caseStudy} />
+          <BusinessNeeds theme={theme} caseStudy={caseStudy} />
+          <ChallengesSolutions theme={theme} caseStudy={caseStudy} />
+          <ResearchSection theme={theme} caseStudy={caseStudy} />
+          <DocumentationSection theme={theme} caseStudy={caseStudy} />
+          <UXAuditSection theme={theme} caseStudy={caseStudy} />
+          <InformationArchitectureSection theme={theme} caseStudy={caseStudy} />
+          <ProductDesignSection theme={theme} caseStudy={caseStudy} />
+          <DesignDirectionSection theme={theme} caseStudy={caseStudy} />
+          <UIDesignSection theme={theme} caseStudy={caseStudy} />
+          <DesignSystemSection theme={theme} caseStudy={caseStudy} />
+          <KeyProjectSection theme={theme} caseStudy={caseStudy} />
+          <ProductDevelopmentSection theme={theme} caseStudy={caseStudy} />
+        </>
+      )}
       <Footer theme={theme} />
     </div>
   );

@@ -5,8 +5,10 @@ import Header from '../../../../components/dark/Header';
 import Footer from '../../../../components/dark/Footer';
 import '../../../../components/dark/MainPage.css';
 import TalkToExpertSection from '../../../../components/dark/TalkToExpertSection';
+import BlogPostContent from '../../../../components/blog/post/ContentSection';
+import BlogNewsletter from '../../../../components/blog/BlogNewsletter';
+import WordPressPageHero from '../../../../components/wordpress/WordPressPageHero';
 import { fetchWordPressPageBySlug } from '../../../../utils/wordpress';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function WordPressPageDetail({ params }) {
@@ -143,72 +145,12 @@ export default function WordPressPageDetail({ params }) {
           </div>
         </div>
       ) : page ? (
-        <div className="min-h-screen pt-32 pb-20">
-          {/* Hero Section */}
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-            <Link 
-              href="/wordpress-pages"
-              className={`inline-flex items-center mb-8 text-sm hover:text-[#74F5A1] transition-colors ${
-                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-              }`}
-            >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back to WordPress Pages
-            </Link>
-            
-            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold mb-6 ${
-              theme === 'dark' ? 'text-white' : 'text-gray-900'
-            }`}>
-              {page.title}
-            </h1>
-            
-            <div className="flex items-center gap-4 text-sm mb-8">
-              <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
-                By {page.author}
-              </span>
-              <span className={theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}>
-                •
-              </span>
-              <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
-                {page.date}
-              </span>
-              {page.readTime && (
-                <>
-                  <span className={theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}>
-                    •
-                  </span>
-                  <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
-                    {page.readTime}
-                  </span>
-                </>
-              )}
-            </div>
-
-            {/* Featured Image */}
-            {page.image && (
-              <div className="relative w-full h-96 mb-12 rounded-lg overflow-hidden">
-                <Image
-                  src={page.image}
-                  alt={page.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 896px"
-                  priority
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Content Section */}
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div 
-              className="wordpress-content-wrapper text-xl leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: page.content }}
-            />
-          </div>
-        </div>
+        <>
+          <WordPressPageHero theme={theme} page={page} />
+          <BlogPostContent theme={theme} post={page} />
+          <BlogNewsletter theme={theme} />
+          <TalkToExpertSection theme={theme} />
+        </>
       ) : (
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
@@ -227,7 +169,6 @@ export default function WordPressPageDetail({ params }) {
         </div>
       )}
 
-      <TalkToExpertSection theme={theme} />
       <Footer theme={theme} />
     </div>
   );

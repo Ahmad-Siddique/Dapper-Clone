@@ -174,20 +174,25 @@ export default function SiteDrawer({ isOpen, selectedItem, onClose, theme = 'lig
     "Next.js",
   ];
 
-  const insideLookImages = selectedItem.insideLookImages || [
+  // Use the provided images if they exist and have items, otherwise use defaults
+  const defaultInsideLookImages = [
     {
       id: 1,
       title: "Mobile thumbnail",
       image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1600&q=80",
-      gradient: "from-[#F5E6D3] to-[#F5E942]",
     },
     {
       id: 2,
       title: "Desktop thumbnail",
       image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1600&q=80",
-      gradient: "from-[#1F1F1F] to-black",
     },
   ];
+  
+  const insideLookImages = (selectedItem.insideLookImages && 
+                           Array.isArray(selectedItem.insideLookImages) && 
+                           selectedItem.insideLookImages.length > 0) 
+    ? selectedItem.insideLookImages 
+    : defaultInsideLookImages;
 
   const evaluationMetrics = selectedItem.evaluationMetrics || [
     {

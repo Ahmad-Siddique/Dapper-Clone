@@ -5,6 +5,17 @@ import Image from "next/image";
 
 const DrawerVotes = forwardRef(function DrawerVotes({ juryMembers = [], theme = 'light' }, ref) {
   const isDark = theme === 'dark';
+  
+  // Debug: Log jury members data
+  console.log('=== DRAWER VOTES DEBUG ===');
+  console.log('Jury Members prop received:', juryMembers);
+  console.log('Type of juryMembers:', typeof juryMembers);
+  console.log('Is array?', Array.isArray(juryMembers));
+  console.log('Length:', juryMembers?.length);
+  console.log('First member:', juryMembers?.[0]);
+  console.log('All jury members:', JSON.stringify(juryMembers, null, 2));
+  console.log('=== END DRAWER VOTES DEBUG ===');
+  
   return (
     <div ref={ref} className={`px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12 border-t ${
       isDark ? 'bg-[#1a1a1a] border-gray-800' : 'bg-[#E8E8E8] border-gray-300'
@@ -87,16 +98,7 @@ const DrawerVotes = forwardRef(function DrawerVotes({ juryMembers = [], theme = 
                     <span className={`text-[14px] sm:text-[15px] md:text-[16px] font-semibold truncate ${
                       isDark ? 'text-white' : 'text-gray-900'
                     }`}>{member.name}</span>
-                    {member.country && (
-                      <>
-                        <span className={`text-[12px] sm:text-[13px] md:text-[14px] hidden sm:inline ${
-                          isDark ? 'text-gray-500' : 'text-gray-500'
-                        }`}>from</span>
-                        <span className={`text-[13px] sm:text-[14px] md:text-[15px] font-medium ${
-                          isDark ? 'text-white' : 'text-gray-900'
-                        }`}>{member.country}</span>
-                      </>
-                    )}
+                    
                   </div>
                   {member.role && (
                     <p className={`text-[12px] sm:text-[13px] md:text-[14px] truncate ${
