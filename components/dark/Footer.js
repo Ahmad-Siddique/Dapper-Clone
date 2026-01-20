@@ -2,15 +2,33 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer({ theme = 'light' }) {
+  // Color Palettes
+  const lightColors = {
+    primary: "#013825",      // Deep Forest Green
+    secondary: "#9E8F72",    // Golden Brown (updated)
+    tertiary: "#CEC8B0",     // Light Beige/Tan (updated)
+    background: "#F9F7F0",   // Very light neutral for main background
+    text: "#111111",
+  };
+
+  const darkColors = {
+    primary: "#74F5A1",
+    secondary: "#5FE08D",
+    tertiary: "#3BC972",
+    background: "#2A2A2A",
+    text: "#FFFFFF",
+  };
+
   // Theme-based styles
-  const footerBg = theme === 'dark' ? '#f5f5f5' : '#2A2A2A';
-  const cardBg = theme === 'dark' ? '#FFFFFF' : '#111111';
-  const textColor = theme === 'dark' ? '#111111' : 'text-white';
-  const secondaryTextColor = theme === 'dark' ? '#444444' : '#D6D6D6';
-  const borderColor = theme === 'dark' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)';
-  const socialBg = theme === 'dark' ? '#F5F5F5' : '#181818';
+  const footerBg = theme === 'dark' ? '#1A1A1A' : lightColors.background;
+  const cardBg = theme === 'dark' ? '#111111' : lightColors.tertiary; // Tertiary on cards / inner band
+  const textColor = theme === 'dark' ? darkColors.text : lightColors.text;
+  const secondaryTextColor = theme === 'dark' ? '#D6D6D6' : '#444444';
+  const borderColor = theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+  const socialBg = theme === 'dark' ? '#181818' : '#F5F5F5';
   
   // Background pattern for dark theme
   const bgPatternStyle = theme === 'dark' ? {
@@ -72,6 +90,10 @@ export default function Footer({ theme = 'light' }) {
           transform-origin: left;
           transition: transform 0.3s ease;
         }
+        
+        [data-theme="light"] .footer-link-underline::after {
+          background-color: #013825;
+        }
 
         .footer-link-underline:hover::after {
           transform: scaleX(1);
@@ -95,6 +117,10 @@ export default function Footer({ theme = 'light' }) {
           transform: translateY(-2px);
           box-shadow: 0 8px 25px rgba(116, 245, 161, 0.3);
         }
+        
+        [data-theme="light"] .social-icon-animate:hover {
+          box-shadow: 0 8px 25px rgba(1, 56, 37, 0.3);
+        }
       `}</style>
 
       <footer 
@@ -113,7 +139,7 @@ export default function Footer({ theme = 'light' }) {
           <div className="grid gap-6 sm:gap-7 md:gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 border-b pb-6 sm:pb-7 md:pb-8" style={{ borderColor }}>
             {/* Contact Tycho */}
             <div className="space-y-1.5 sm:space-y-2">
-              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#111111]' : 'text-white'}`}>
+              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-[#111111]'}`}>
                 Contact Tycho
               </h3>
               <div className="space-y-0.5 sm:space-y-1">
@@ -136,7 +162,7 @@ export default function Footer({ theme = 'light' }) {
 
             {/* Dapper Rotterdam */}
             <div className="space-y-1.5 sm:space-y-2">
-              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#111111]' : 'text-white'}`}>
+              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-[#111111]'}`}>
                 Dapper Rotterdam
               </h3>
               <p 
@@ -151,7 +177,7 @@ export default function Footer({ theme = 'light' }) {
 
             {/* Dapper Lisbon */}
             <div className="space-y-1.5 sm:space-y-2">
-              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#111111]' : 'text-white'}`}>
+              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-[#111111]'}`}>
                 Dapper Lisbon
               </h3>
               <p 
@@ -166,7 +192,7 @@ export default function Footer({ theme = 'light' }) {
 
             {/* Services */}
             <div className="space-y-1.5 sm:space-y-2">
-              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#111111]' : 'text-white'}`}>
+              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-[#111111]'}`}>
                 Services
               </h3>
               <nav className="space-y-0.5 sm:space-y-1">
@@ -193,7 +219,7 @@ export default function Footer({ theme = 'light' }) {
 
             {/* Expertise */}
             <div className="space-y-1.5 sm:space-y-2">
-              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#111111]' : 'text-white'}`}>
+              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-[#111111]'}`}>
                 Expertise
               </h3>
               <nav className="space-y-0.5 sm:space-y-1">
@@ -211,7 +237,7 @@ export default function Footer({ theme = 'light' }) {
 
             {/* Resources */}
             <div className="space-y-1.5 sm:space-y-2">
-              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#111111]' : 'text-white'}`}>
+              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-[#111111]'}`}>
                 Resources
               </h3>
               <nav className="space-y-0.5 sm:space-y-1">
@@ -223,7 +249,7 @@ export default function Footer({ theme = 'light' }) {
 
             {/* Company */}
             <div className="space-y-1.5 sm:space-y-2">
-              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-[#111111]' : 'text-white'}`}>
+              <h3 className={`font-[Helvetica Now Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-[#111111]'}`}>
                 Company
               </h3>
               <nav className="space-y-0.5 sm:space-y-1">
@@ -236,24 +262,18 @@ export default function Footer({ theme = 'light' }) {
 
           {/* LOGO BAND */}
           <div className="flex items-end border-b py-4 sm:py-5 md:py-6" style={{ borderColor }}>
-            <div className="flex items-end gap-2 sm:gap-3 md:gap-4">
-              {/* Leaf mark - smaller */}
-              <div className="h-[32px] w-[54px] sm:h-[38px] sm:w-[64px] md:h-[45px] md:w-[75px]">
-                <svg
-                  viewBox="0 0 120 80"
-                  className="h-full w-full"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M0 40C0 17.9 17.9 0 40 0h40v40c0 22.1-17.9 40-40 40H0V40z"
-                    fill="#74F5A1"
-                  />
-                </svg>
+            <div className="flex items-end gap-4 sm:gap-5 md:gap-6">
+              {/* Logo */}
+              <div className="relative h-[80px] w-auto sm:h-[104px] md:h-[128px]">
+                <Image
+                  src="/logo/techeyrie_logo.png"
+                  alt="TechEyrie Logo"
+                  width={360}
+                  height={144}
+                  className="h-full w-auto object-contain"
+                  priority
+                />
               </div>
-              {/* Wordmark - smaller */}
-              <span className={`font-[Helvetica Now Text,Arial,sans-serif] text-[24px] sm:text-[28px] md:text-[32px] lg:text-[36px] xl:text-[40px] 2xl:text-[46px] font-extrabold tracking-tight ${theme === 'dark' ? 'text-[#111111]' : 'text-white'}`}>
-                Dapper
-              </span>
             </div>
           </div>
 
@@ -315,7 +335,8 @@ export default function Footer({ theme = 'light' }) {
 }
 
 function FooterLink({ href, children, theme = 'light' }) {
-  const textColor = theme === 'dark' ? '#444444' : '#D6D6D6';
+  // Match the main footer body text colours for consistency
+  const textColor = theme === 'dark' ? '#D6D6D6' : '#444444';
   
   return (
     <Link

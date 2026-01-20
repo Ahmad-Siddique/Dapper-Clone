@@ -30,6 +30,14 @@ export default function CompareSection({ theme = 'light' }) {
   const [triangles, setTriangles] = useState([]);
   const triangleIdRef = useRef(0);
 
+  // Color Palettes
+  const lightColors = {
+    primary: "#013825",      // Deep Forest Green
+    secondary: "#9E8F72",    // Golden Brown (updated)
+    tertiary: "#CEC8B0",     // Light Beige/Tan (updated)
+    background: "#F9F7F0",   // Very light neutral for section background
+  };
+
   // Background styles based on theme
   const bgStyle = theme === 'dark' 
     ? {
@@ -41,7 +49,7 @@ export default function CompareSection({ theme = 'light' }) {
         `,
         backgroundBlendMode: 'overlay, normal, normal',
       }
-    : { backgroundColor: '#FFFFFF' };
+    : { backgroundColor: lightColors.background };
 
   const noiseOverlayStyle = {
     backgroundImage: `

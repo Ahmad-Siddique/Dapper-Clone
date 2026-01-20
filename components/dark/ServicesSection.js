@@ -331,6 +331,14 @@ export default function ServicesSection({ theme = "light" }) {
   const hasAnimatedRef = useRef(false);
   const [hasTriggeredAnimation, setHasTriggeredAnimation] = useState(false);
 
+  // Color Palettes
+  const lightColors = {
+    primary: "#013825",      // Deep Forest Green
+    secondary: "#9E8F72",    // Golden Brown (updated)
+    tertiary: "#CEC8B0",     // Light Beige/Tan (updated)
+    background: "#F9F7F0",   // Very light neutral for section background
+  };
+
   // Dark background exactly like HeroSection
   const bgStyle =
     theme === "dark"
@@ -343,7 +351,7 @@ export default function ServicesSection({ theme = "light" }) {
         `,
           backgroundBlendMode: "overlay, normal, normal",
         }
-      : { backgroundColor: "#EFEFEF" };
+      : { backgroundColor: lightColors.background };
 
   const noiseOverlayStyle = {
     backgroundImage: `

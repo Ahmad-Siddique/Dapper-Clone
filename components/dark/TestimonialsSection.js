@@ -48,10 +48,20 @@ export default function TestimonialsSection({ theme }) {
   // Theme Color Logic
   const isDark = theme === 'dark';
   
-  const bgColor = isDark ? 'bg-[#1c1c1c]' : 'bg-[#F2F2F2]';
+  // Color Palettes
+  const lightColors = {
+    primary: "#013825",      // Deep Forest Green
+    secondary: "#9E8F72",    // Golden Brown (updated)
+    tertiary: "#CEC8B0",     // Light Beige/Tan (updated)
+    background: "#F9F7F0",   // Very light neutral for section background
+  };
+
+  const bgColor = isDark ? 'bg-[#1c1c1c]' : '';
+  const bgColorStyle = isDark ? {} : { backgroundColor: lightColors.background };
   const textColor = isDark ? 'text-[#e5e5e5]' : 'text-slate-900';
   const headingColor = isDark ? 'text-[#f0f0f0]' : 'text-slate-900';
-  const cardBg = isDark ? 'bg-[#e6e6e2]' : 'bg-white';
+  const cardBg = isDark ? 'bg-[#e6e6e2]' : '';
+  const cardBgStyle = isDark ? {} : { backgroundColor: lightColors.tertiary };
   const cardText = 'text-[#1a1a1a]'; // Cards are always light based, text is dark
   const cardShadow = isDark ? 'shadow-xl' : 'shadow-[0_8px_30px_rgb(0,0,0,0.04)]'; // Softer shadow on light
 
@@ -68,7 +78,7 @@ export default function TestimonialsSection({ theme }) {
         `,
           backgroundBlendMode: "overlay, normal, normal",
         }
-      : { backgroundColor: "#EFEFEF" };
+      : { backgroundColor: lightColors.background };
 
   const noiseOverlayStyle = {
     backgroundImage: `
@@ -99,6 +109,7 @@ export default function TestimonialsSection({ theme }) {
                     <div 
                         key={t.id} 
                         className={`w-full max-w-full sm:max-w-lg md:max-w-xl ${cardBg} ${cardText} p-5 sm:p-6 md:p-8 lg:p-10 xl:p-12 rounded-xl sm:rounded-2xl ${cardShadow} transition-all duration-300 hover:scale-[1.01] font-suisse font-light`}
+                        style={cardBgStyle}
                     >
                         {/* Company Name */}
                         <div className="mb-4 sm:mb-6 md:mb-8">

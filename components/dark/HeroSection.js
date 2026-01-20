@@ -101,7 +101,7 @@ const HeroCard = memo(({
 HeroCard.displayName = 'HeroCard';
 
 // Card Stack Component with forwardRef to expose refs
-const CardStackSection = forwardRef(({ mediaAssets, isMobile }, ref) => {
+const CardStackSection = forwardRef(({ mediaAssets, isMobile, theme, lightColors, darkColors }, ref) => {
   const [videoStack, setVideoStack] = useState([0, 1, 2, 3]);
   const [playingVideo, setPlayingVideo] = useState(null);
   const heroCardsRef = useRef([]);
@@ -191,8 +191,15 @@ const CardStackSection = forwardRef(({ mediaAssets, isMobile }, ref) => {
               key={index}
               onClick={() => handleMediaClick(index)}
               className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-300 ${
-                index === videoStack[0] ? 'bg-[#74F5A1] scale-110' : 'bg-white/30 hover:bg-white/50'
+                index === videoStack[0]
+                  ? "scale-110"
+                  : theme === "dark" ? "bg-white/30 hover:bg-white/50" : "bg-black/30 hover:bg-black/50"
               }`}
+              style={{
+                backgroundColor: index === videoStack[0]
+                  ? (theme === "dark" ? darkColors.paginationActive : lightColors.paginationActive)
+                  : (theme === "dark" ? darkColors.paginationInactive : lightColors.paginationInactive)
+              }}
               aria-label={`View ${mediaAssets[index].title}`}
             />
           ))}
@@ -205,6 +212,41 @@ const CardStackSection = forwardRef(({ mediaAssets, isMobile }, ref) => {
 CardStackSection.displayName = 'CardStackSection';
 
 export default function HeroSection({ theme = "light" }) {
+  // --- Color Palettes ---
+  const lightColors = {
+    primary: "#013825",      // Deep Forest Green
+    secondary: "#9E8F72",    // Golden Brown (updated)
+    tertiary: "#CEC8B0",     // Light Beige/Tan (updated)
+    background: "#F9F7F0",   // Very light neutral for main background
+    noiseOverlay: "rgba(200, 200, 200, 0.3)",
+    cardBackground: "#CEC8B0", // Use tertiary on cards / certain sections
+    cardBorder: "black/10",
+    cardHoverBorder: "black/20",
+    cardHoverBackground: "black/5",
+    text: "#111111",
+    buttonBackground: "#013825",
+    buttonText: "white",
+    paginationActive: "#013825",
+    paginationInactive: "black/30",
+  };
+
+  const darkColors = {
+    primary: "#74F5A1",
+    secondary: "#5FE08D",
+    tertiary: "#3BC972",
+    background: "#2b2b2b",
+    noiseOverlay: "rgba(60, 60, 60, 0.3)",
+    cardBackground: "black/20",
+    cardBorder: "white/10",
+    cardHoverBorder: "white/30",
+    cardHoverBackground: "black/40",
+    text: "white",
+    buttonBackground: "#74F5A1",
+    buttonText: "#212121",
+    paginationActive: "#74F5A1",
+    paginationInactive: "white/30",
+  };
+
   // --- Refs & State for Hero ---
   const sectionRef = useRef(null);
   const heroSectionRef = useRef(null);
@@ -311,9 +353,17 @@ const originalHTMLRef = useRef({});
 // --- Logic: Electrical Effects ---
 const triggerElectricalAnimation = useCallback(() => {
   const titleLines = document.querySelectorAll(".hero-main-title"); // Changed from .hero-title-line
-  const originalColor = theme === "dark" ? "#f3f3f3" : "#111111";
-  const electricColor = theme === "dark" ? "#74F5A1" : "#3BC972";
-  const brightElectricColor = theme === "dark" ? "#FFFFFF" : "#FFFFFF";
+  // Return to brand colour after effect
+  const originalColor = theme === "dark" ? "#f3f3f3" : lightColors.primary;
+  const palette = theme === "dark" ? darkColors : lightColors;
+
+  // Use the brand palette for the electric passes
+  const electricShades =
+    theme === "dark"
+      ? [darkColors.primary, darkColors.secondary, darkColors.tertiary]
+      : [lightColors.primary, lightColors.secondary, lightColors.tertiary];
+
+  const brightElectricColor = theme === "dark" ? "#FFFFFF" : lightColors.secondary;
 
   // Define the EXACT original structure for hero section
   const originalStructures = [
@@ -334,6 +384,7 @@ const triggerElectricalAnimation = useCallback(() => {
     if (spans.length > 0) {
       spans.forEach((span, spanIndex) => {
         const baseDelay = lineIndex * 0.3 + spanIndex * 0.15;
+        const electricColor = electricShades[spanIndex % electricShades.length];
         
         gsap.to(span, {
           color: brightElectricColor,
@@ -532,12 +583,14 @@ const startElectricalAnimation = useCallback(() => {
     const id = triangleIdRef.current++;
     const size = Math.random() * 5 + 8;
     const rotation = Math.random() * 360;
-    const greenShades = ["#74F5A1", "#5FE08D", "#4DD97F", "#3BC972"];
+    const greenShades = theme === "dark"
+      ? ["#74F5A1", "#5FE08D", "#4DD97F", "#3BC972"]
+      : [lightColors.primary, lightColors.secondary, lightColors.tertiary];
     const color = greenShades[Math.floor(Math.random() * greenShades.length)];
     const newTriangle = { id, x, y, size, rotation, color };
     setTriangles((prev) => [...prev, newTriangle]);
     setTimeout(() => { setTriangles((prev) => prev.filter((t) => t.id !== id)); }, 1050);
-  }, []);
+  }, [theme, lightColors]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -593,15 +646,23 @@ useEffect(() => {
 
   const bgStyle = theme === "dark"
     ? {
-        backgroundColor: "#2b2b2b",
+        backgroundColor: darkColors.background,
         backgroundImage: `
           url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"),
-          radial-gradient(ellipse at top left, rgba(60, 60, 60, 0.3), transparent 50%),
+          radial-gradient(ellipse at top left, ${darkColors.noiseOverlay}, transparent 50%),
           radial-gradient(ellipse at bottom right, rgba(50, 50, 50, 0.2), transparent 50%)
         `,
         backgroundBlendMode: "overlay, normal, normal",
       }
-    : { backgroundColor: "#EFEFEF" };
+    : {
+        backgroundColor: lightColors.background,
+        backgroundImage: `
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"),
+          radial-gradient(ellipse at top left, ${lightColors.noiseOverlay}, transparent 50%),
+          radial-gradient(ellipse at bottom right, rgba(200, 200, 200, 0.2), transparent 50%)
+        `,
+        backgroundBlendMode: "overlay, normal, normal",
+      };
 
   const noiseOverlayStyle = {
     backgroundImage: `
@@ -650,18 +711,21 @@ useEffect(() => {
             <div className="flex flex-col">
               <div className="max-w-[1400px]" ref={titleContainerRef}>
                 <div className="hero-badge mb-6 sm:mb-7 md:mb-8 flex items-center gap-2 sm:gap-3">
-                  <span className="inline-flex h-4 w-4 sm:h-5 sm:w-5 rounded-sm bg-[#74F5A1]" />
+                  <span
+                    className="inline-flex h-4 w-4 sm:h-5 sm:w-5 rounded-sm"
+                    style={{ backgroundColor: theme === "dark" ? darkColors.primary : lightColors.primary }}
+                  />
                   <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] font-semibold tracking-[0.16em] uppercase ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"}`}>
                     B2B marketing agency
                   </span>
                 </div>
                 
-                <h1 className="mb-4 sm:mb-5 font-italiana leading-[0.92] tracking-[-0.03em] [font-variant-ligatures:no-common-ligatures]">
-                  <div className={`hero-main-title text-[32px] xs:text-[38px] sm:text-[46px] md:text-[56px] lg:text-[64px] xl:text-[72px] 2xl:text-[80px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
+                <h1 className="mb-4 sm:mb-5 font-cinzel leading-[0.96] tracking-[-0.02em] [font-variant-ligatures:no-common-ligatures]">
+                  <div className={`hero-main-title text-[22px] xs:text-[26px] sm:text-[30px] md:text-[36px] lg:text-[42px] xl:text-[48px] 2xl:text-[52px] md:whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : ""}`} style={{ color: theme === "dark" ? "#f3f3f3" : lightColors.primary }}>
                     <span className="font-bold">We build </span>
                     <span className="italic font-semibold tracking-[0.03em]">high‑performing</span>
                   </div>
-                  <div className={`hero-main-title mt-1 sm:mt-2 text-[32px] xs:text-[38px] sm:text-[46px] md:text-[56px] lg:text-[64px] xl:text-[72px] 2xl:text-[80px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
+                  <div className={`hero-main-title mt-1 sm:mt-2 text-[22px] xs:text-[26px] sm:text-[30px] md:text-[36px] lg:text-[42px] xl:text-[48px] 2xl:text-[52px] md:whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : ""}`} style={{ color: theme === "dark" ? "#f3f3f3" : lightColors.primary }}>
                     <span className="font-bold">marketing engines for </span>
                     <span className="font-bold">B2B brands</span>
                   </div>
@@ -678,15 +742,20 @@ useEffect(() => {
                   <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[17px] font-bold tracking-tight ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}>
                     Discover more
                   </span>
-                  <span className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-all duration-500 ease-out group-hover:bg-black group-hover:scale-110 group-hover:-translate-y-[1px]">
+                  <span
+                    className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center overflow-hidden rounded-[4px] transition-all duration-500 ease-out group-hover:scale-110 group-hover:-translate-y-[1px]"
+                    style={{
+                      backgroundColor: theme === "dark" ? darkColors.primary : lightColors.primary,
+                    }}
+                  >
                     <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-y-3 group-hover:opacity-0">
                       <svg width="12" height="12" className="sm:w-[14px] sm:h-[14px]" viewBox="0 0 14 14" aria-hidden="true">
-                        <path d="M7 1V13M7 13L3 9M7 13L11 9" fill="none" stroke="#212121" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M7 1V13M7 13L3 9M7 13L11 9" fill="none" stroke={theme === "dark" ? "#212121" : "#F9FAF5"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </span>
                     <span className="absolute inset-0 flex items-center justify-center translate-y-[-12px] opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100">
                       <svg width="12" height="12" className="sm:w-[14px] sm:h-[14px]" viewBox="0 0 14 14" aria-hidden="true">
-                        <path d="M7 1V13M7 13L3 9M7 13L11 9" fill="none" stroke="#74F5A1" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M7 1V13M7 13L3 9M7 13L11 9" fill="none" stroke={theme === "dark" ? darkColors.primary : lightColors.secondary} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </span>
                   </span>
@@ -695,7 +764,7 @@ useEffect(() => {
             </div>
 
             {/* RIGHT COLUMN - SMALLER CARDS */}
-            <CardStackSection ref={cardStackRef} mediaAssets={mediaAssets} isMobile={isMobile} />
+            <CardStackSection ref={cardStackRef} mediaAssets={mediaAssets} isMobile={isMobile} theme={theme} lightColors={lightColors} darkColors={darkColors} />
           </div>
 
           <div className={`mt-12 sm:mt-16 md:mt-20 h-px w-full ${theme === "dark" ? "border-b border-white/10" : "border-b border-black/10"}`} />
@@ -753,7 +822,13 @@ const PortfolioCard = memo(({ item, theme }) => {
         </div>
       </Link>
       <div className="p-4 sm:p-6 md:p-8 min-h-[100px] sm:min-h-[120px] flex flex-col justify-between">
-        <h3 className={`${isDark ? "text-white group-hover:text-[#74F5A1]" : "text-[#111111] group-hover:text-[#3BC972]"} font-bold font-['Figtree'] uppercase text-base sm:text-lg md:text-xl mb-2 line-clamp-2 transition-colors`}>
+        <h3
+          className={`${
+            isDark
+              ? "text-white group-hover:text-[#74F5A1]"
+              : "text-[#111111] group-hover:text-[#295E4C]"
+          } font-bold font-['Figtree'] uppercase text-base sm:text-lg md:text-xl mb-2 line-clamp-2 transition-colors`}
+        >
           {item.title}
         </h3>
         <div className="flex flex-wrap gap-1.5 sm:gap-2">

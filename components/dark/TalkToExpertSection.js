@@ -18,6 +18,14 @@ export default function TalkToExpertSection({ theme = 'light' }) {
   const [triangles, setTriangles] = useState([]);
   const triangleIdRef = useRef(0);
 
+  // Color Palettes
+  const lightColors = {
+    primary: "#013825",      // Deep Forest Green
+    secondary: "#9E8F72",    // Golden Brown (updated)
+    tertiary: "#CEC8B0",     // Light Beige/Tan (updated)
+    background: "#F9F7F0",   // Very light neutral for section background
+  };
+
   // Background styles based on theme - KEEPING ORIGINAL AS DEFAULT
   const bgStyle = theme === 'dark' 
     ? {
@@ -30,7 +38,7 @@ export default function TalkToExpertSection({ theme = 'light' }) {
         backgroundBlendMode: 'overlay, normal, normal',
       }
     : {
-        backgroundColor: '#2A2A2A', // ORIGINAL DARK BACKGROUND
+        backgroundColor: lightColors.background, // Light brown for light theme
       };
 
   const noiseOverlayStyle = {
@@ -53,7 +61,9 @@ export default function TalkToExpertSection({ theme = 'light' }) {
     const id = triangleIdRef.current++;
     const size = Math.random() * 5 + 8;
     const rotation = Math.random() * 360;
-    const greenShades = ['#74F5A1', '#5FE08D', '#4DD97F', '#3BC972'];
+    const greenShades = theme === 'dark' 
+      ? ['#74F5A1', '#5FE08D', '#4DD97F', '#3BC972']
+      : ['#013825', '#295E4C', '#9E8F72', '#CEC8B0'];
     const color = greenShades[Math.floor(Math.random() * greenShades.length)];
 
     const newTriangle = {

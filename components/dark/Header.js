@@ -1135,6 +1135,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { gsap } from "gsap";
 
 const navItems = [
@@ -1268,7 +1269,7 @@ export default function Header({ theme = "light" }) {
         const id = triangleIdRef.current++;
         const size = Math.random() * 5 + 8;
         const rotation = Math.random() * 360;
-        const greenShades = ["#74F5A1", "#5FE08D", "#4DD97F", "#3BC972"];
+        const greenShades = ["#013825", "#295E4C", "#9E8F72", "#CEC8B0"];
         const color =
           greenShades[Math.floor(Math.random() * greenShades.length)];
 
@@ -1496,18 +1497,37 @@ export default function Header({ theme = "light" }) {
     };
   }, []);
 
+  // Color Palettes
+  const lightColors = {
+    primary: "#013825",      // Deep Forest Green
+    secondary: "#9E8F72",    // Golden Brown (updated)
+    tertiary: "#CEC8B0",     // Light Beige/Tan (updated)
+    background: "#F9F7F0",   // Very light neutral for main background
+    text: "#111111",
+    hoverBg: "#F5F5F5",
+  };
+
+  const darkColors = {
+    primary: "#74F5A1",
+    secondary: "#5FE08D",
+    tertiary: "#3BC972",
+    background: "#1A1A1A",
+    text: "#FFFFFF",
+    hoverBg: "rgba(255, 255, 255, 0.1)",
+  };
+
   // Theme-based styles
-  const headerBg = theme === "dark" ? "#111111" : "#FFFFFF"; // Black for dark theme
-  const textColor = theme === "dark" ? "#FFFFFF" : "#111111"; // White text for dark theme
-  const hoverBg = theme === "dark" ? "rgba(255, 255, 255, 0.1)" : "#F5F5F5";
-  const dropdownBg = theme === "dark" ? "#1A1A1A" : "#FFFFFF"; // Dark dropdown for dark theme
+  const headerBg = theme === "dark" ? darkColors.background : lightColors.tertiary; // Light brown for light theme
+  const textColor = theme === "dark" ? darkColors.text : lightColors.text;
+  const hoverBg = theme === "dark" ? darkColors.hoverBg : lightColors.hoverBg;
+  const dropdownBg = theme === "dark" ? darkColors.background : lightColors.tertiary; // Light brown for light theme
   const dropdownBorder =
     theme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.06)";
-  const cardBg = theme === "dark" ? "#2A2A2A" : "#FAFAFA"; // Dark cards for dark theme
-  const cardText = theme === "dark" ? "#FFFFFF" : "#111111";
+  const cardBg = theme === "dark" ? "#2A2A2A" : lightColors.background; // Wheat for light theme
+  const cardText = theme === "dark" ? darkColors.text : lightColors.text;
   const cardDesc = theme === "dark" ? "#A0A0A0" : "#444444";
-  const mobilePanelBg = theme === "dark" ? "#1A1A1A" : "#FFFFFF";
-  const mobilePanelText = theme === "dark" ? "#FFFFFF" : "#111111";
+  const mobilePanelBg = theme === "dark" ? darkColors.background : lightColors.tertiary;
+  const mobilePanelText = theme === "dark" ? darkColors.text : lightColors.text;
   const mobileBorder =
     theme === "dark" ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)";
 
@@ -1545,6 +1565,10 @@ export default function Header({ theme = "light" }) {
           transform: scaleX(0);
           transform-origin: left;
           transition: transform 0.3s ease;
+        }
+        
+        [data-theme="light"] .header-link::after {
+          background-color: #013825;
         }
 
         .header-link:hover::after {
@@ -1605,25 +1629,18 @@ export default function Header({ theme = "light" }) {
             }}
           >
             {/* Logo */}
-            <Link href="/dark" className="flex flex-shrink-0 items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center">
-                <svg viewBox="0 0 32 32" className="h-6 w-6" aria-hidden="true">
-                  <path
-                    d="M7 18C7 11 13 7 19 7V18H7Z"
-                    fill={theme === "dark" ? "#74F5A1" : "#111111"}
-                  />
-                  <path
-                    d="M19 18C25 18 29 24 29 28H19V18Z"
-                    fill={theme === "dark" ? "#74F5A1" : "#111111"}
-                  />
-                </svg>
+            <Link href="/dark" className="flex flex-shrink-0 items-center gap-3 md:gap-4">
+              {/* Keep logo tall enough to be visible, but don't force extra header height */}
+              <div className="relative flex h-11 w-auto md:h-12 items-center justify-center">
+                <Image
+                  src="/logo/techeyrie_logo.png"
+                  alt="TechEyrie Logo"
+                  width={96}
+                  height={96}
+                  className="h-full w-auto object-contain"
+                  priority
+                />
               </div>
-              <span
-                className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[18px] md:text-[20px] font-bold leading-none tracking-tight`}
-                style={{ color: textColor }}
-              >
-                Dapper
-              </span>
             </Link>
 
             {/* Desktop NAV */}

@@ -86,6 +86,14 @@ export default function StatsSection({ theme = "light" }) {
   const [hasAnimated, setHasAnimated] = useState(false);
   const animationIntervalRef = useRef(null);
 
+  // Color Palettes
+  const lightColors = {
+    primary: "#013825",      // Deep Forest Green
+    secondary: "#9E8F72",    // Golden Brown (updated)
+    tertiary: "#CEC8B0",     // Light Beige/Tan (updated)
+    background: "#F9F7F0",   // Very light neutral for section background
+  };
+
   // Background styles based on theme
   const bgStyle =
     theme === "dark"
@@ -98,7 +106,7 @@ export default function StatsSection({ theme = "light" }) {
         `,
           backgroundBlendMode: "overlay, normal, normal",
         }
-      : { backgroundColor: "#EFEFEF" };
+      : { backgroundColor: lightColors.background };
 
   const noiseOverlayStyle = {
     backgroundImage: `
@@ -679,7 +687,7 @@ export default function StatsSection({ theme = "light" }) {
           <div className="grid items-start gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)] mb-20 sm:mb-28 md:mb-32 lg:mb-40">
             <div ref={titleContainerRef}>
               <div className="mb-4 flex items-center gap-3">
-                <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
+                <span className="inline-flex h-5 w-5 rounded-sm" style={{ backgroundColor: theme === "dark" ? "#74F5A1" : "#013825" }} />
                 <p
                   className={`font-[Helvetica Now Text,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase ${
                     theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"

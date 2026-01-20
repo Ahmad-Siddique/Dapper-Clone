@@ -25,16 +25,28 @@ export default function DeepJudgeAnimation({ theme }) {
 
   const isDark = theme === 'dark';
   
+  // Color Palettes
+  const lightColors = {
+    primary: "#013825",      // Deep Forest Green
+    secondary: "#9E8F72",    // Golden Brown (updated)
+    tertiary: "#CEC8B0",     // Light Beige/Tan (updated)
+    background: "#F9F7F0",   // Very light neutral for section background
+  };
+  
   // Theme Colors
-  const bgColor = isDark ? 'bg-[#1c1c1c]' : 'bg-[#E8E8E8]';
+  const bgColor = isDark ? 'bg-[#1c1c1c]' : '';
+  const bgColorStyle = isDark ? {} : { backgroundColor: lightColors.background };
   const textColor = isDark ? 'text-[#e5e5e5]' : 'text-slate-900';
-  const circleBlobColor = isDark ? 'bg-neutral-800/80 border-neutral-700/50' : 'bg-white/70 border-white/40';
+  const circleBlobColor = isDark ? 'bg-neutral-800/80 border-neutral-700/50' : '';
+  const circleBlobStyle = isDark ? {} : { backgroundColor: `${lightColors.tertiary}B3`, borderColor: `${lightColors.tertiary}66` };
   const iconColor = isDark ? 'text-white' : 'text-slate-900';
   const subTextColor = isDark ? 'text-neutral-400' : 'text-slate-600';
-  const cardBg = isDark ? 'bg-neutral-900/95 border-neutral-800' : 'bg-white/95 border-white/50';
+  const cardBg = isDark ? 'bg-neutral-900/95 border-neutral-800' : '';
+  const cardBgStyle = isDark ? {} : { backgroundColor: `${lightColors.background}F2`, borderColor: `${lightColors.tertiary}80` };
   const cardTitle = isDark ? 'text-white' : 'text-slate-900';
   const cardDesc = isDark ? 'text-neutral-400' : 'text-slate-500';
-  const badgeBg = isDark ? 'bg-neutral-800 text-white' : 'bg-neutral-100 text-slate-900';
+  const badgeBg = isDark ? 'bg-neutral-800 text-white' : '';
+  const badgeBgStyle = isDark ? {} : { backgroundColor: lightColors.tertiary, color: '#1a1a1a' };
 
   useLayoutEffect(() => {
     let ctx = gsap.context(() => {
@@ -303,7 +315,7 @@ export default function DeepJudgeAnimation({ theme }) {
         `,
           backgroundBlendMode: "overlay, normal, normal",
         }
-      : { backgroundColor: "#EFEFEF" };
+      : { backgroundColor: lightColors.background };
 
   const noiseOverlayStyle = {
     backgroundImage: `
@@ -342,11 +354,12 @@ export default function DeepJudgeAnimation({ theme }) {
                     {/* Background Blob (Independent) */}
                     <div 
                         ref={el => circleBgRefs.current[i] = el}
-                        className={`circle-bg absolute w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 ${circleBlobColor} backdrop-blur-xl shadow-xl rounded-xl sm:rounded-2xl z-[5] transition-colors duration-500`}
+                        className={`circle-bg absolute w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 ${circleBlobColor} backdrop-blur-xl shadow-xl rounded-xl sm:rounded-2xl z-[5] transition-colors duration-500 border`}
                         style={{
                             left: "50%",
                             top: "50%",
-                            transform: "translate(-50%, -50%)" // Initial Centered, GSAP will Set X/Y
+                            transform: "translate(-50%, -50%)", // Initial Centered, GSAP will Set X/Y
+                            ...circleBlobStyle
                         }}
                     />
                     
@@ -389,12 +402,12 @@ export default function DeepJudgeAnimation({ theme }) {
             ].map((card, i) => (
                 <div 
                     key={i}
-                    className={`feature-card absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${cardBg} shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden backdrop-blur-sm z-20 transition-colors duration-500`}
-                    style={{ width: '0px', height: '0px', opacity: 0, borderRadius: '50%' }}
+                    className={`feature-card absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ${cardBg} shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex flex-col overflow-hidden backdrop-blur-sm z-20 transition-colors duration-500 border`}
+                    style={{ width: '0px', height: '0px', opacity: 0, borderRadius: '50%', ...cardBgStyle }}
                 >
                     <div className="card-content opacity-0 p-3 sm:p-4 md:p-5 lg:p-6 flex flex-col h-full relative">
                         {/* Number Badge */}
-                        <div className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 ${badgeBg} rounded-lg sm:rounded-xl flex items-center justify-center font-bold mb-2 sm:mb-3 md:mb-4 shrink-0 text-sm sm:text-base md:text-lg`}>
+                        <div className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 ${badgeBg} rounded-lg sm:rounded-xl flex items-center justify-center font-bold mb-2 sm:mb-3 md:mb-4 shrink-0 text-sm sm:text-base md:text-lg`} style={badgeBgStyle}>
                             {i+1}
                         </div>
                         <h3 className={`text-base sm:text-lg md:text-xl font-bold ${cardTitle} mb-1 sm:mb-2`}>{card.title}</h3>
