@@ -51,7 +51,7 @@ const HeroCard = memo(({
   }`}
   style={{
     transform: `translateX(${offset}px) translateY(${offset}px) translateZ(-${stackPosition * 50}px) scale(${1 - stackPosition * 0.05})`,
-    zIndex: 40 - stackPosition,
+    zIndex: 50 - stackPosition, // Higher z-index to stay above portfolio section
     opacity: stackPosition === 0 ? 1 : 0.8  // Force inline style for immediate effect
   }}
   onClick={onClick}
@@ -530,13 +530,28 @@ const startElectricalAnimation = useCallback(() => {
                   const newX = startX + (cardPositions[index].xDistance * progress);
                   const newY = startY + (cardPositions[index].yDistance * progress);
                   const newScale = 1 - stackPosition * 0.05 - (0.25 * progress);
-                  const newOpacity = stackPosition === 0 ? 1 - progress : 0.8 - progress;
+                  // Fade out completely - ensure opacity reaches 0
+                  const newOpacity = Math.max(0, stackPosition === 0 ? 1 - (progress * 1.2) : 0.8 - (progress * 1.2));
                   
                   gsap.set(heroCard, {
                     x: newX,
                     y: newY,
                     scale: newScale,
                     opacity: newOpacity,
+                    visibility: newOpacity < 0.1 ? 'hidden' : 'visible',
+                    pointerEvents: newOpacity < 0.1 ? 'none' : 'auto',
+                  });
+                }
+              });
+            },
+            onComplete: () => {
+              // Hide all hero cards completely when animation completes
+              heroCardsRef.forEach((heroCard) => {
+                if (heroCard) {
+                  gsap.set(heroCard, {
+                    opacity: 0,
+                    visibility: 'hidden',
+                    pointerEvents: 'none',
                   });
                 }
               });
@@ -679,7 +694,7 @@ useEffect(() => {
           sectionRef.current = node;
           heroSectionRef.current = node;
         }}
-        className="relative overflow-hidden pt-24 sm:pt-28 md:pt-32 lg:pt-40 pb-16 sm:pb-20 md:pb-24 lg:pb-28 min-h-screen"
+        className="relative overflow-visible pt-24 sm:pt-28 md:pt-32 lg:pt-40 pb-16 sm:pb-20 md:pb-24 lg:pb-28 min-h-screen"
         style={bgStyle}
       >
         {theme === "dark" && (
@@ -774,7 +789,7 @@ useEffect(() => {
       {/* --- PORTFOLIO SECTION --- */}
       <section
         ref={portfolioSectionRef}
-        className="w-full min-h-screen py-16 sm:py-20 lg:py-24 relative z-10"
+        className="w-full min-h-screen py-16 sm:py-20 lg:py-24 relative"
         style={bgStyle}
       >
         <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 portfolio-content">
@@ -784,12 +799,12 @@ useEffect(() => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-10 relative z-20">
             {portfolioItems.map((item, index) => (
               <div
                 key={index}
                 ref={(el) => { if (el) portfolioCardsRef.current[index] = el; }}
-                className="portfolio-card"
+                className="portfolio-card relative z-20"
               >
                 <PortfolioCard item={item} theme={theme} />
               </div>
