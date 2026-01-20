@@ -239,7 +239,7 @@ export default function PrivacyPolicyPage() {
 
       <main
         ref={containerRef}
-        className={`relative min-h-screen py-20 md:py-24 overflow-hidden ${
+        className={`relative min-h-screen pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-20 md:pb-24 overflow-hidden ${
           isDark ? "text-white" : "text-black"
         }`}
       >

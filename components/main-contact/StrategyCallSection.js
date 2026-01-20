@@ -246,8 +246,8 @@ export default function StrategyCallSection({ theme = 'light' }) {
               disabled={currentIndex === 0}
               className={`w-14 h-14 flex items-center justify-center rounded-lg transition-all duration-300 ${
                 currentIndex === 0
-                  ? `${isDark ? 'bg-gray-700' : 'bg-gray-300'} cursor-not-allowed opacity-50`
-                  : `${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-300 hover:bg-gray-400 text-black'}`
+                  ? `${isDark ? 'bg-[#1a1a1a] border border-white/10' : 'bg-gray-200 border border-gray-300'} cursor-not-allowed opacity-40`
+                  : `${isDark ? 'bg-white/10 hover:bg-white/20 border border-white/20 text-white' : 'bg-white hover:bg-gray-50 border border-gray-200 text-black shadow-sm'}`
               }`}
               aria-label="Previous slide"
             >
@@ -260,6 +260,7 @@ export default function StrategyCallSection({ theme = 'light' }) {
                 strokeWidth="2"
                 strokeLinecap="round" 
                 strokeLinejoin="round"
+                className={currentIndex === 0 ? 'opacity-50' : ''}
               >
                 <path d="M15 18l-6-6 6-6" />
               </svg>
@@ -270,8 +271,8 @@ export default function StrategyCallSection({ theme = 'light' }) {
               disabled={currentIndex >= maxIndex}
               className={`w-14 h-14 flex items-center justify-center rounded-lg transition-all duration-300 ${
                 currentIndex >= maxIndex
-                  ? `${isDark ? 'bg-gray-700' : 'bg-gray-300'} cursor-not-allowed opacity-50`
-                  : `${isDark ? 'bg-white hover:bg-white/90' : 'bg-black hover:bg-gray-900'} text-white`
+                  ? `${isDark ? 'bg-[#1a1a1a] border border-white/10' : 'bg-gray-200 border border-gray-300'} cursor-not-allowed opacity-40`
+                  : `${isDark ? 'bg-white hover:bg-white/90 text-black' : 'bg-black hover:bg-gray-900 text-white'}`
               }`}
               aria-label="Next slide"
             >
@@ -284,6 +285,7 @@ export default function StrategyCallSection({ theme = 'light' }) {
                 strokeWidth="2"
                 strokeLinecap="round" 
                 strokeLinejoin="round"
+                className={currentIndex >= maxIndex ? 'opacity-50' : ''}
               >
                 <path d="M9 18l6-6-6-6" />
               </svg>
@@ -331,8 +333,8 @@ export default function StrategyCallSection({ theme = 'light' }) {
             disabled={currentIndex === 0}
             className={`w-14 h-14 flex items-center justify-center rounded-lg transition-all duration-300 ${
               currentIndex === 0
-                ? `${isDark ? 'bg-gray-700' : 'bg-gray-300'} cursor-not-allowed opacity-50`
-                : `${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-300 hover:bg-gray-400 text-black'}`
+                ? `${isDark ? 'bg-[#1a1a1a] border border-white/10' : 'bg-gray-200 border border-gray-300'} cursor-not-allowed opacity-40`
+                : `${isDark ? 'bg-white/10 hover:bg-white/20 border border-white/20 text-white' : 'bg-white hover:bg-gray-50 border border-gray-200 text-black shadow-sm'}`
             }`}
             aria-label="Previous slide"
           >
@@ -345,6 +347,7 @@ export default function StrategyCallSection({ theme = 'light' }) {
               strokeWidth="2"
               strokeLinecap="round" 
               strokeLinejoin="round"
+              className={currentIndex === 0 ? 'opacity-50' : ''}
             >
               <path d="M15 18l-6-6 6-6" />
             </svg>
@@ -355,8 +358,8 @@ export default function StrategyCallSection({ theme = 'light' }) {
             disabled={currentIndex >= maxIndex}
             className={`w-14 h-14 flex items-center justify-center rounded-lg transition-all duration-300 ${
               currentIndex >= maxIndex
-                ? `${isDark ? 'bg-gray-700' : 'bg-gray-300'} cursor-not-allowed opacity-50`
-                : `${isDark ? 'bg-white hover:bg-white/90' : 'bg-black hover:bg-gray-900'} text-white`
+                ? `${isDark ? 'bg-[#1a1a1a] border border-white/10' : 'bg-gray-200 border border-gray-300'} cursor-not-allowed opacity-40`
+                : `${isDark ? 'bg-white hover:bg-white/90 text-black' : 'bg-black hover:bg-gray-900 text-white'}`
             }`}
             aria-label="Next slide"
           >
@@ -369,6 +372,7 @@ export default function StrategyCallSection({ theme = 'light' }) {
               strokeWidth="2"
               strokeLinecap="round" 
               strokeLinejoin="round"
+              className={currentIndex >= maxIndex ? 'opacity-50' : ''}
             >
               <path d="M9 18l6-6-6-6" />
             </svg>

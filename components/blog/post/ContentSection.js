@@ -273,29 +273,29 @@ export default function BlogPostContent({ theme = 'light', post }) {
 
   return (
     <section 
-      className={`relative py-16 md:py-20 lg:py-24 ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#F5F5F5]'}`}
+      className={`relative py-12 sm:py-16 md:py-20 lg:py-24 overflow-x-hidden ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#F5F5F5]'}`}
     >
-      <div className="mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8 lg:px-12">
+      <div className="mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8 lg:px-12 w-full">
         
-        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] xl:grid-cols-[380px_1fr] gap-6 sm:gap-8 lg:gap-12 xl:gap-16 items-start">
           
           {/* LEFT SIDEBAR - Table of Contents (Sticky) */}
-          <div className="lg:sticky lg:top-24 lg:self-start">
-            <div className={`rounded-2xl p-6 md:p-8 ${
+          <div className="lg:sticky lg:top-24 lg:self-start order-2 lg:order-1">
+            <div className={`rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 ${
               isDark ? 'bg-[#1a1a1a]' : 'bg-white'
             }`}>
-              <h3 className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-xl md:text-2xl font-bold mb-6 ${
+              <h3 className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 ${
                 isDark ? 'text-white' : 'text-[#111111]'
               }`}>
                 In this article:
               </h3>
               
-              <nav className="space-y-2">
+              <nav className="space-y-1.5 sm:space-y-2">
                 {sections.map((section, index) => (
                   <button
                     key={index}
                     onClick={() => scrollToSection(index)}
-                    className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base transition-all duration-300 group ${
+                    className={`w-full text-left flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm sm:text-base transition-all duration-300 group ${
                       activeSection === index
                         ? isDark
                           ? 'bg-white/10 text-white'
@@ -306,7 +306,7 @@ export default function BlogPostContent({ theme = 'light', post }) {
                     }`}
                   >
                     <svg 
-                      className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${
+                      className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 transition-transform duration-300 ${
                         activeSection === index ? 'translate-x-1' : 'group-hover:translate-x-1'
                       }`}
                       fill="none" 
@@ -315,7 +315,7 @@ export default function BlogPostContent({ theme = 'light', post }) {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
-                    <span className="font-medium">{section.text}</span>
+                    <span className="font-medium line-clamp-2">{section.text}</span>
                   </button>
                 ))}
               </nav>
@@ -323,7 +323,7 @@ export default function BlogPostContent({ theme = 'light', post }) {
           </div>
 
           {/* RIGHT SIDE - Main Content */}
-          <article ref={contentRef}>
+          <article ref={contentRef} className="order-1 lg:order-2 w-full max-w-full">
             {content.map((section, index) => {
               // Calculate heading index for this item
               const headingIndex = content.slice(0, index).filter(s => s.type === 'heading').length;
@@ -333,7 +333,7 @@ export default function BlogPostContent({ theme = 'light', post }) {
                   <h2 
                     key={index}
                     data-index={headingIndex}
-                    className={`content-heading font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[40px] md:text-[48px] lg:text-[56px] font-bold mb-8 mt-16 first:mt-0 scroll-mt-24 leading-tight ${
+                    className={`content-heading font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[48px] xl:text-[56px] font-bold mb-6 sm:mb-8 mt-10 sm:mt-12 md:mt-16 first:mt-0 scroll-mt-20 sm:scroll-mt-24 leading-tight text-center lg:text-left ${
                       isDark ? 'text-white' : 'text-[#111111]'
                     }`}
                   >
@@ -346,9 +346,9 @@ export default function BlogPostContent({ theme = 'light', post }) {
                 return (
                   <p 
                     key={index}
-                    className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-xl md:text-2xl leading-relaxed mb-8 ${
+                    className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed mb-6 sm:mb-8 text-center lg:text-left ${
                       section.isQuote 
-                        ? `pl-6 border-l-4 ${isDark ? 'border-[#74F5A1] text-white/80' : 'border-[#74F5A1] text-[#666666]'} italic`
+                        ? `pl-4 sm:pl-6 border-l-4 ${isDark ? 'border-[#74F5A1] text-white/80' : 'border-[#74F5A1] text-[#666666]'} italic`
                         : isDark ? 'text-white/90' : 'text-[#1a1a1a]'
                     }`}
                   >
@@ -359,12 +359,21 @@ export default function BlogPostContent({ theme = 'light', post }) {
 
               if (section.type === 'image') {
                 return (
-                  <div key={index} className="my-10">
-                    <img 
-                      src={section.src} 
-                      alt={section.alt}
-                      className="w-full rounded-2xl"
-                    />
+                  <div key={index} className="my-6 sm:my-8 md:my-10">
+                    {section.src && section.src.trim() !== "" ? (
+                      <img 
+                        src={section.src} 
+                        alt={section.alt || 'Blog post image'}
+                        className="w-full rounded-xl sm:rounded-2xl"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className={`w-full h-[200px] sm:h-[300px] md:h-[400px] rounded-xl sm:rounded-2xl ${isDark ? 'bg-gray-800' : 'bg-gray-200'} flex items-center justify-center`}>
+                        <svg className={`w-12 h-12 ${isDark ? 'text-gray-600' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
                   </div>
                 );
               }
@@ -373,19 +382,19 @@ export default function BlogPostContent({ theme = 'light', post }) {
                 return (
                   <ul 
                     key={index}
-                    className="space-y-4 mb-10"
+                    className="space-y-3 sm:space-y-4 mb-6 sm:mb-8 md:mb-10"
                   >
                     {section.items?.map((item, i) => (
-                      <li key={i} className="flex items-start gap-3">
+                      <li key={i} className="flex items-start gap-2 sm:gap-3">
                         {/* Green Checkmark Icon */}
-                        <span className="flex-shrink-0 mt-1.5">
+                        <span className="flex-shrink-0 mt-1 sm:mt-1.5">
                           <svg 
-                            width="20" 
-                            height="20" 
+                            width="18" 
+                            height="18" 
+                            className="sm:w-5 sm:h-5 text-[#74F5A1]"
                             viewBox="0 0 20 20" 
                             fill="none" 
                             xmlns="http://www.w3.org/2000/svg"
-                            className="text-[#74F5A1]"
                           >
                             <path 
                               d="M16.6668 5L7.50016 14.1667L3.3335 10" 
@@ -396,7 +405,7 @@ export default function BlogPostContent({ theme = 'light', post }) {
                             />
                           </svg>
                         </span>
-                        <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-xl md:text-2xl leading-relaxed ${
+                        <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed ${
                           isDark ? 'text-white/90' : 'text-[#1a1a1a]'
                         }`}>
                           {item}

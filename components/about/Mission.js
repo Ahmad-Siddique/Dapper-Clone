@@ -145,7 +145,7 @@ const MissionSection = ({ theme = "light" }) => {
             </div>
 
             {/* IMAGE COLUMN - FULL BLEED */}
-            <div className="w-full lg:w-1/2 h-[60vh] lg:h-[80vh]">
+            <div className="w-full lg:w-1/2 h-[60vh] lg:h-[80vh] mt-8 md:mt-12 lg:mt-0">
               <div 
                 className="relative w-full h-full overflow-hidden"
                 style={{

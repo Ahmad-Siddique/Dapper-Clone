@@ -73,21 +73,33 @@ const DrawerCollections = forwardRef(function DrawerCollections({ collections = 
               {collection.followers && collection.followers.length > 0 && (
                 <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
                   <div className="flex -space-x-1.5 sm:-space-x-2">
-                    {collection.followers.slice(0, 3).map((follower, idx) => (
-                      <div key={idx} className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 overflow-hidden ${
-                        isDark 
-                          ? 'border-[#1a1a1a] bg-[#2a2a2a]' 
-                          : 'border-[#E8E8E8] bg-gray-300'
-                      }`}>
-                        <Image
-                          src={follower.avatar}
-                          alt="Follower"
-                          width={28}
-                          height={28}
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
-                    ))}
+                    {collection.followers.slice(0, 3).map((follower, idx) => {
+                      const hasAvatar = follower?.avatar && follower.avatar.trim() !== "";
+                      
+                      return (
+                        <div key={idx} className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 overflow-hidden flex items-center justify-center ${
+                          isDark 
+                            ? 'border-[#1a1a1a] bg-[#2a2a2a]' 
+                            : 'border-[#E8E8E8] bg-gray-300'
+                        }`}>
+                          {hasAvatar ? (
+                            <Image
+                              src={follower.avatar}
+                              alt="Follower"
+                              width={28}
+                              height={28}
+                              className="object-cover w-full h-full"
+                            />
+                          ) : (
+                            <span className={`text-[10px] sm:text-[12px] font-semibold ${
+                              isDark ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
+                              {follower.name?.[0]?.toUpperCase() || '?'}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                   {collection.followerCount && (
                     <span className={`text-[12px] sm:text-[13px] md:text-[14px] font-semibold ${

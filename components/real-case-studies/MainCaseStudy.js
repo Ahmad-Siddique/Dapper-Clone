@@ -683,7 +683,7 @@ export default function CaseStudiesPage({ projects = PROJECTS, theme = "light" }
             >
               {/* Left Side - Project Image with Scale and Rotate Animation */}
               <div 
-                className="order-2 lg:order-1 lg:sticky lg:top-8 lg:self-start"
+                className="order-1 lg:order-1 lg:sticky lg:top-8 lg:self-start"
                 ref={(el) => (imageRefs.current[index] = el)}
                 data-index={index}
               >
@@ -741,7 +741,7 @@ export default function CaseStudiesPage({ projects = PROJECTS, theme = "light" }
               </div>
 
               {/* Right Side - Project Details */}
-              <div className={`order-1 lg:order-2 ${isDark ? "text-white" : "text-black"}`}>
+              <div className={`order-2 lg:order-2 ${isDark ? "text-white" : "text-black"}`}>
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2 sm:gap-3 mb-6">
                   {project.tags?.map((tag, tagIndex) => (

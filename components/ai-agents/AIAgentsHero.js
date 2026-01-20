@@ -171,7 +171,7 @@ export default function AIAgentsHero({ theme = 'light' }) {
   return (
     <section 
       ref={containerRef}
-      className={`relative min-h-screen flex items-center justify-center overflow-hidden ${bgColor} border-b ${isDark ? 'border-white/10' : 'border-gray-200'}`}
+      className={`relative min-h-screen flex items-center justify-center overflow-hidden pt-20 sm:pt-24 md:pt-28 lg:pt-32 ${bgColor} border-b ${isDark ? 'border-white/10' : 'border-gray-200'}`}
     >
       {/* Grid Animation Background */}
       <GridAnimation theme={theme} />

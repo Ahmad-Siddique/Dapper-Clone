@@ -60,34 +60,34 @@ export default function BlogNewsletter({ theme = 'light' }) {
   return (
     <section
       ref={sectionRef}
-      className={`relative py-16 md:py-20 lg:py-24 overflow-hidden ${
+      className={`relative py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden ${
         isDark ? 'bg-[#0a0a0a]' : 'bg-[#F5F5F5]'
       }`}
     >
       <div className="mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8 lg:px-12">
-        <div className={`rounded-3xl p-8 md:p-12 lg:p-16 relative ${
+        <div className={`rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-12 lg:p-16 relative ${
           isDark ? 'bg-[#1a1a1a]' : 'bg-[#191919]'
         }`}>
           
           {/* Grid Layout - 2 Columns */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 xl:gap-16 items-center">
             
             {/* LEFT SIDE - Content & Decorative Shapes */}
             <div className="relative">
               {/* Heading */}
-              <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[48px] md:text-[56px] lg:text-[64px] xl:text-[72px] font-bold leading-[1.1] text-white mb-8">
+              <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[32px] sm:text-[40px] md:text-[48px] lg:text-[56px] xl:text-[64px] 2xl:text-[72px] font-bold leading-[1.1] text-white mb-6 sm:mb-8">
                 Receive weekly <span className="italic font-light">growth</span> tips
               </h2>
             </div>
 
             {/* RIGHT SIDE - Form */}
             <div>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 {/* Name Field */}
                 <div>
                   <label
                     htmlFor="newsletter-name"
-                    className="block mb-2 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base font-medium text-white"
+                    className="block mb-2 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm sm:text-base font-medium text-white"
                   >
                     Name <span className="text-[#74F5A1]">*</span>
                   </label>
@@ -97,7 +97,7 @@ export default function BlogNewsletter({ theme = 'light' }) {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className={`w-full px-5 py-4 rounded-xl font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base border text-white placeholder:text-white/40 focus:border-[#74F5A1] focus:outline-none transition-all ${
+                    className={`w-full px-4 sm:px-5 py-3 sm:py-4 rounded-lg sm:rounded-xl font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm sm:text-base border text-white placeholder:text-white/40 focus:border-[#74F5A1] focus:outline-none transition-all ${
                       isDark 
                         ? 'bg-[#0a0a0a] border-white/10' 
                         : 'bg-[#111111] border-white/10'
@@ -110,7 +110,7 @@ export default function BlogNewsletter({ theme = 'light' }) {
                 <div>
                   <label
                     htmlFor="newsletter-email"
-                    className="block mb-2 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base font-medium text-white"
+                    className="block mb-2 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm sm:text-base font-medium text-white"
                   >
                     Email Address <span className="text-[#74F5A1]">*</span>
                   </label>
@@ -120,7 +120,7 @@ export default function BlogNewsletter({ theme = 'light' }) {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={`w-full px-5 py-4 rounded-xl font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base border text-white placeholder:text-white/40 focus:border-[#74F5A1] focus:outline-none transition-all ${
+                    className={`w-full px-4 sm:px-5 py-3 sm:py-4 rounded-lg sm:rounded-xl font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm sm:text-base border text-white placeholder:text-white/40 focus:border-[#74F5A1] focus:outline-none transition-all ${
                       isDark 
                         ? 'bg-[#0a0a0a] border-white/10' 
                         : 'bg-[#111111] border-white/10'
@@ -130,7 +130,7 @@ export default function BlogNewsletter({ theme = 'light' }) {
                 </div>
 
                 {/* Terms Text */}
-                <p className="text-sm font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-white/60">
+                <p className="text-xs sm:text-sm font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-white/60 leading-relaxed">
                   By clicking 'Subscribe' you're confirming that you agree with our{' '}
                   <a href="#" className="underline hover:text-[#74F5A1] transition-colors">
                     Terms and Conditions
@@ -142,11 +142,11 @@ export default function BlogNewsletter({ theme = 'light' }) {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold bg-[#74F5A1] text-[#0a0a0a] hover:bg-[#5FE08D] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed group"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-lg sm:rounded-xl font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base sm:text-lg font-semibold bg-[#74F5A1] text-[#0a0a0a] hover:bg-[#5FE08D] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed group"
                 >
                   {isSubmitting ? 'Subscribing...' : 'Subscribe'}
                   <svg 
-                    className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" 
+                    className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" 
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke="currentColor"

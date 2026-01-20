@@ -37,14 +37,21 @@ const SERVICES = [
   },
 ];
 
-export default function BuildDemandSection() {
+export default function BuildDemandSection({ theme = 'light' }) {
   const [activeId, setActiveId] = useState(null);
+  const isDark = theme === 'dark';
 
   return (
     <>
       <style jsx global>{`
         .demand-grid {
           transition: grid-template-columns 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 639px) {
+          .demand-grid {
+            grid-template-columns: 1fr !important;
+          }
         }
 
         .demand-card {
@@ -59,7 +66,7 @@ export default function BuildDemandSection() {
         }
       `}</style>
 
-      <section className="relative overflow-hidden bg-[#EFEFEF] py-28 md:py-36 lg:py-44">
+      <section className={`relative overflow-hidden ${isDark ? 'bg-[#1a1a1a]' : 'bg-[#EFEFEF]'} py-20 sm:py-28 md:py-36 lg:py-44`}>
         {/* Decorative Squares */}
         <div className="pointer-events-none absolute left-0 top-40 h-16 w-12 bg-[#74F5A1] opacity-70" />
         <div className="pointer-events-none absolute left-16 top-48 h-12 w-12 bg-[#5FE08D] opacity-60" />
@@ -71,7 +78,7 @@ export default function BuildDemandSection() {
             <div>
               <div className="flex items-center gap-3">
                 <span className="inline-flex h-5 w-5 rounded-sm bg-[#74F5A1]" />
-                <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase text-[#212121]">
+                <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-semibold tracking-[0.16em] uppercase ${isDark ? 'text-white' : 'text-[#212121]'}`}>
                   Build demand
                 </span>
               </div>
@@ -80,10 +87,10 @@ export default function BuildDemandSection() {
             {/* Right: Title */}
             <div>
               <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[1.05] tracking-[-0.02em]">
-                <span className="block text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold text-[#111111]">
+                <span className={`block text-[36px] sm:text-[48px] md:text-[60px] lg:text-[72px] xl:text-[84px] 2xl:text-[96px] font-bold ${isDark ? 'text-white' : 'text-[#111111]'}`}>
                   We help you build
                 </span>
-                <span className="mt-1 block text-[48px] sm:text-[60px] md:text-[72px] lg:text-[84px] xl:text-[96px] font-bold text-[#111111]">
+                <span className={`mt-1 block text-[36px] sm:text-[48px] md:text-[60px] lg:text-[72px] xl:text-[84px] 2xl:text-[96px] font-bold ${isDark ? 'text-white' : 'text-[#111111]'}`}>
                   <span className="italic font-light">demand</span> for your SaaS
                 </span>
               </h2>
@@ -93,7 +100,7 @@ export default function BuildDemandSection() {
           {/* Bottom Row: Image (left) + Cards (right) */}
           <div className="grid grid-cols-1 lg:grid-cols-[0.7fr_1.3fr] gap-6 lg:gap-8 lg:items-start">
             {/* Left: Portrait Image - matches card height */}
-            <div className="relative w-full h-[500px] lg:h-[650px]">
+            <div className="relative w-full h-[400px] sm:h-[500px] lg:h-[650px]">
               <div className="relative h-full overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.15)]">
                 <Image
                   src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&h=900&fit=crop&q=80"
@@ -107,10 +114,10 @@ export default function BuildDemandSection() {
             </div>
 
             {/* Right: Service Cards - 5 cards totaling same height as image */}
-            <div className="flex flex-col gap-3 h-[500px] lg:h-[650px]">
+            <div className="flex flex-col gap-3 sm:gap-4 h-auto sm:h-[500px] lg:h-[650px]">
               {/* Top Row - 3 Cards */}
               <div
-                className="demand-grid grid gap-3 flex-1"
+                className="demand-grid grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3 flex-1"
                 style={{
                   gridTemplateColumns:
                     activeId === 'thought-leadership'
@@ -130,18 +137,18 @@ export default function BuildDemandSection() {
                       key={item.id}
                       onMouseEnter={() => setActiveId(item.id)}
                       onMouseLeave={() => setActiveId(null)}
-                      className="demand-card group relative flex h-full flex-col justify-between rounded-lg border border-black/6 bg-white p-8 hover:bg-[#FAFAFA] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]"
+                      className={`demand-card group relative flex h-full min-h-[180px] sm:min-h-0 flex-col justify-between rounded-lg border ${isDark ? 'border-white/10 bg-[#2a2a2a] hover:bg-[#333333]' : 'border-black/6 bg-white hover:bg-[#FAFAFA]'} p-6 sm:p-8 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]`}
                     >
                       {/* Title */}
-                      <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[24px] md:text-[28px] font-bold tracking-tight text-[#111111]">
+                      <h3 className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] sm:text-[22px] md:text-[24px] lg:text-[28px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-[#111111]'}`}>
                         {item.title}
                       </h3>
 
                       {/* Bottom: Description + Button */}
-                      <div className="mt-auto flex items-end justify-between gap-4">
+                      <div className="mt-auto flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3 sm:gap-4">
                         {/* Description - fades in on hover */}
                         <p
-                          className={`demand-description max-w-[280px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-medium leading-snug text-[#555555] ${
+                          className={`demand-description w-full sm:max-w-[280px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] sm:text-[14px] font-medium leading-snug ${isDark ? 'text-gray-300' : 'text-[#555555]'} ${
                             isActive
                               ? 'translate-y-0 opacity-100'
                               : 'translate-y-4 opacity-0'
@@ -166,7 +173,7 @@ export default function BuildDemandSection() {
                             >
                               <path
                                 d="M10 4V16M4 10H16"
-                                stroke="#111111"
+                                stroke={isDark ? "#1a1a1a" : "#111111"}
                                 strokeWidth="2.5"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -185,7 +192,7 @@ export default function BuildDemandSection() {
                             >
                               <path
                                 d="M10 4V16M4 10H16"
-                                stroke="#111111"
+                                stroke={isDark ? "#1a1a1a" : "#111111"}
                                 strokeWidth="2.5"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -201,7 +208,7 @@ export default function BuildDemandSection() {
 
               {/* Bottom Row - 2 Cards */}
               <div
-                className="demand-grid grid gap-3 flex-1"
+                className="demand-grid grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3 flex-1"
                 style={{
                   gridTemplateColumns:
                     activeId === 'social-media'
@@ -219,18 +226,18 @@ export default function BuildDemandSection() {
                       key={item.id}
                       onMouseEnter={() => setActiveId(item.id)}
                       onMouseLeave={() => setActiveId(null)}
-                      className="demand-card group relative flex h-full flex-col justify-between rounded-lg border border-black/6 bg-white p-8 hover:bg-[#FAFAFA] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]"
+                      className={`demand-card group relative flex h-full min-h-[180px] sm:min-h-0 flex-col justify-between rounded-lg border ${isDark ? 'border-white/10 bg-[#2a2a2a] hover:bg-[#333333]' : 'border-black/6 bg-white hover:bg-[#FAFAFA]'} p-6 sm:p-8 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)]`}
                     >
                       {/* Title */}
-                      <h3 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[24px] md:text-[28px] font-bold tracking-tight text-[#111111]">
+                      <h3 className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] sm:text-[22px] md:text-[24px] lg:text-[28px] font-bold tracking-tight ${isDark ? 'text-white' : 'text-[#111111]'}`}>
                         {item.title}
                       </h3>
 
                       {/* Bottom: Description + Button */}
-                      <div className="mt-auto flex items-end justify-between gap-4">
+                      <div className="mt-auto flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3 sm:gap-4">
                         {/* Description - fades in on hover */}
                         <p
-                          className={`demand-description max-w-[280px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[14px] font-medium leading-snug text-[#555555] ${
+                          className={`demand-description w-full sm:max-w-[280px] font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] sm:text-[14px] font-medium leading-snug ${isDark ? 'text-gray-300' : 'text-[#555555]'} ${
                             isActive
                               ? 'translate-y-0 opacity-100'
                               : 'translate-y-4 opacity-0'
@@ -255,7 +262,7 @@ export default function BuildDemandSection() {
                             >
                               <path
                                 d="M10 4V16M4 10H16"
-                                stroke="#111111"
+                                stroke={isDark ? "#1a1a1a" : "#111111"}
                                 strokeWidth="2.5"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -274,7 +281,7 @@ export default function BuildDemandSection() {
                             >
                               <path
                                 d="M10 4V16M4 10H16"
-                                stroke="#111111"
+                                stroke={isDark ? "#1a1a1a" : "#111111"}
                                 strokeWidth="2.5"
                                 strokeLinecap="round"
                                 strokeLinejoin="round"

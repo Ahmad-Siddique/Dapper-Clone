@@ -18,28 +18,28 @@ const SITEMAP_DATA = {
     { title: "Home", href: "/", description: "Main landing page" },
     { title: "About", href: "/about", description: "Learn about our company" },
     { title: "Contact", href: "/contact", description: "Get in touch with us" },
+    { title: "Contact 1", href: "/contact1", description: "Alternative contact page" },
+    { title: "Dark Theme", href: "/dark", description: "Dark theme showcase page" },
   ],
   services: [
     { title: "Services Overview", href: "/services1", description: "All our services" },
     { title: "Services 2", href: "/services2", description: "Alternative services page" },
+    { title: "Service Details", href: "/services2/[slug]", description: "Individual service detail pages", isDynamic: true },
     { title: "Content & Creative", href: "/services/content-creative", description: "Content creation services" },
-    { title: "Paid Media & Performance", href: "/services/paid-media", description: "Performance marketing" },
-    { title: "Data & Measurement", href: "/services/data-measurement", description: "Analytics and measurement" },
-    { title: "Demand Team", href: "/services/demand-team", description: "Dedicated demand generation team" },
-    { title: "Demand Gen Agency", href: "/services/demand-gen-agency", description: "Full-service partnership" },
   ],
   expertise: [
     { title: "Expertise Overview", href: "/expertise", description: "Our areas of expertise" },
     { title: "Expertise 1", href: "/expertise1", description: "Alternative expertise page" },
-    { title: "B2B SaaS", href: "/expertise/b2b-saas", description: "SaaS marketing expertise" },
-    { title: "B2B Service", href: "/expertise/b2b-service", description: "Service business marketing" },
-    { title: "B2B Hardware", href: "/expertise/b2b-hardware", description: "Hardware marketing solutions" },
+    { title: "Expertise Details", href: "/expertise/[slug]", description: "Individual expertise pages", isDynamic: true },
   ],
   portfolio: [
     { title: "Case Studies", href: "/case-studies", description: "View our case studies" },
     { title: "Case Study Details", href: "/case-studies/[slug]", description: "Individual case study pages", isDynamic: true },
+    { title: "Case Studies 1", href: "/case-studies1", description: "Alternative case studies page" },
+    { title: "Case Study 1 Details", href: "/case-studies1/[slug]", description: "Individual case study 1 pages", isDynamic: true },
+    { title: "Portfolio", href: "/portfolio", description: "View our portfolio" },
     { title: "Showcase", href: "/showcase", description: "Our work showcase" },
-    { title: "Work", href: "/work", description: "Our portfolio" },
+    { title: "Work", href: "/work", description: "Our portfolio and work" },
     { title: "Testimonials", href: "/testimonials", description: "Client testimonials" },
   ],
   resources: [
@@ -51,8 +51,19 @@ const SITEMAP_DATA = {
     { title: "AI Agents", href: "/ai-agents", description: "Browse AI agents" },
     { title: "AI Agent Details", href: "/ai-agents/[slug]", description: "Individual AI agent pages", isDynamic: true },
   ],
-  careers: [
-    { title: "Careers", href: "/work", description: "Join our team" },
+  wordpress: [
+    { title: "WordPress Pages", href: "/wordpress-pages", description: "WordPress content pages" },
+    { title: "WordPress Page Details", href: "/wordpress-pages/[slug]", description: "Individual WordPress pages", isDynamic: true },
+  ],
+  tools: [
+    { title: "Pricing Calculator", href: "/pricing-calculator", description: "Calculate pricing for services" },
+    { title: "GSAP Animation", href: "/gsap-animation", description: "GSAP animation showcase" },
+  ],
+  special: [
+    { title: "Ironhill", href: "/ironhill", description: "Ironhill project page" },
+  ],
+  legal: [
+    { title: "Privacy Policy", href: "/privacy-policy", description: "Privacy policy and data protection" },
   ],
   other: [
     { title: "Sitemap", href: "/sitemap", description: "This page" },
@@ -448,7 +459,10 @@ export default function SitemapPage() {
                 portfolio: "Portfolio & Work",
                 resources: "Resources",
                 aiAgents: "AI Agents",
-                careers: "Careers",
+                wordpress: "WordPress Pages",
+                tools: "Tools & Calculators",
+                special: "Special Pages",
+                legal: "Legal",
                 other: "Other",
               };
 

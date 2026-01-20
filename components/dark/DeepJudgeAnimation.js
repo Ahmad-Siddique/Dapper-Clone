@@ -41,10 +41,11 @@ export default function DeepJudgeAnimation({ theme }) {
       let mm = gsap.matchMedia();
 
       mm.add({
-        isDesktop: "(min-width: 800px)",
-        isMobile: "(max-width: 799px)",
+        isDesktop: "(min-width: 810px)",
+        isTablet: "(min-width: 630px) and (max-width: 809px)",
+        isMobile: "(max-width: 629px)",
       }, (context) => {
-        let { isDesktop, isMobile } = context.conditions;
+        let { isDesktop, isTablet, isMobile } = context.conditions;
 
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -80,14 +81,48 @@ export default function DeepJudgeAnimation({ theme }) {
                 }
                 x = xOffset;
                 y = yOffset;
-            } else {
-                // MOBILE: Vertical Ellipse
+            } else if (isTablet) {
+                // TABLET (630-810px): Push items further away since text wraps to 2 lines
                 const angleDeg = (i * (360 / 8)) - 90; 
                 const angleRad = (angleDeg * Math.PI) / 180;
-                const rx = 140; 
-                const ry = 280; 
+                const rx = 140; // Wider horizontal spread for tablet
+                const ry = 380; // Increased vertical spread to push items further from center
                 x = Math.cos(angleRad) * rx;
                 y = Math.sin(angleRad) * ry;
+                
+                // Push items at 0° and 180° (indices 2 and 6) much further away to avoid heading
+                // Index 2 = "Enterprise Grade" (right side), Index 6 = "AI Power" (left side)
+                // Both positioned at the top to avoid heading overlap
+                if (i === 2) {
+                    // Push "Enterprise Grade" much further right and up to clear heading
+                    x = 220; // Push far to the right
+                    y = -160; // Push up significantly (more for tablet)
+                } else if (i === 6) {
+                    // Push "AI Power" much further left and up to clear heading
+                    x = -220; // Push far to the left
+                    y = -160; // Push up significantly (more for tablet)
+                }
+            } else {
+                // MOBILE: Vertical Ellipse - Adjusted to avoid heading overlap
+                const angleDeg = (i * (360 / 8)) - 90; 
+                const angleRad = (angleDeg * Math.PI) / 180;
+                const rx = 110; // Reduced horizontal spread for better mobile fit
+                const ry = 340; // Increased vertical spread to push items further from center
+                x = Math.cos(angleRad) * rx;
+                y = Math.sin(angleRad) * ry;
+                
+                // Push items at 0° and 180° (indices 2 and 6) much further away to avoid heading
+                // Index 2 = "Enterprise Grade" (right side), Index 6 = "AI Power" (left side)
+                // Both positioned at the top to avoid heading overlap
+                if (i === 2) {
+                    // Push "Enterprise Grade" much further right and up to clear heading
+                    x = 180; // Push far to the right
+                    y = -120; // Push up significantly
+                } else if (i === 6) {
+                    // Push "AI Power" much further left and up to clear heading
+                    x = -180; // Push far to the left
+                    y = -120; // Push up significantly (same as index 2)
+                }
             }
             return { x, y };
         };
@@ -191,7 +226,7 @@ export default function DeepJudgeAnimation({ theme }) {
 
         tl.fromTo(heading3Ref.current,
             { opacity: 0, y: 50 },
-            // Mobile: -320 to clear grid, Desktop: -280
+            // Mobile: -320 to clear grid, Tablet/Desktop: -280
             { opacity: 1, y: isMobile ? -320 : -280, duration: 1 },
             "stage4"
         );
@@ -283,16 +318,16 @@ export default function DeepJudgeAnimation({ theme }) {
       <div ref={wrapperRef} className="h-screen w-full relative flex items-center justify-center overflow-hidden">
         
         {/* === HEADINGS (Z-20) === */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 px-4 sm:px-6">
-          <h1 ref={heading1Ref} className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute max-w-5xl transition-colors duration-500`}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[25] px-4 sm:px-6">
+          <h1 ref={heading1Ref} className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute max-w-5xl transition-colors duration-500 z-[26]`}>
             Your collective knowledge is
             <br className="hidden sm:block" /> your unique asset
           </h1>
-          <h1 ref={heading2Ref} className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute opacity-0 max-w-5xl transition-colors duration-500`}>
+          <h1 ref={heading2Ref} className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute opacity-0 max-w-5xl transition-colors duration-500 z-[26]`}>
             Search the way you think
             <br className="hidden sm:block" /> to unlock everything
           </h1>
-          <h1 ref={heading3Ref} className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute opacity-0 max-w-5xl top-[50%] transition-colors duration-500`}>
+          <h1 ref={heading3Ref} className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-center ${textColor} tracking-tight leading-[1.1] absolute opacity-0 max-w-5xl top-[50%] transition-colors duration-500 z-[26]`}>
             Build, deploy and orchestrate
             <br className="hidden sm:block" /> AI agents powered by your data
           </h1>
@@ -307,7 +342,7 @@ export default function DeepJudgeAnimation({ theme }) {
                     {/* Background Blob (Independent) */}
                     <div 
                         ref={el => circleBgRefs.current[i] = el}
-                        className={`circle-bg absolute w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 ${circleBlobColor} backdrop-blur-xl shadow-xl rounded-xl sm:rounded-2xl z-10 transition-colors duration-500`}
+                        className={`circle-bg absolute w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 ${circleBlobColor} backdrop-blur-xl shadow-xl rounded-xl sm:rounded-2xl z-[5] transition-colors duration-500`}
                         style={{
                             left: "50%",
                             top: "50%",
@@ -318,7 +353,7 @@ export default function DeepJudgeAnimation({ theme }) {
                     {/* Content (Independent) */}
                     <div 
                         ref={el => circleContentRefs.current[i] = el}
-                        className="circle-content absolute w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 flex flex-col items-center justify-center z-20 gap-1 sm:gap-1.5 md:gap-2 pointer-events-none"
+                        className="circle-content absolute w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 flex flex-col items-center justify-center z-[15] gap-1 sm:gap-1.5 md:gap-2 pointer-events-none"
                         style={{
                             left: "50%",
                             top: "50%",

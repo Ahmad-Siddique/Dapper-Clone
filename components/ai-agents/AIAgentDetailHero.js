@@ -103,7 +103,7 @@ export default function AIAgentDetailHero({ agent, theme = 'light' }) {
   return (
     <section 
       ref={containerRef}
-      className={`relative min-h-[90vh] flex items-center justify-center overflow-hidden border-b ${isDark ? 'border-white/10 bg-[#0a0a0a]' : 'border-black/10 bg-white'}`}
+      className={`relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-20 sm:pt-24 md:pt-28 lg:pt-32 border-b ${isDark ? 'border-white/10 bg-[#0a0a0a]' : 'border-black/10 bg-white'}`}
     >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -125,7 +125,7 @@ export default function AIAgentDetailHero({ agent, theme = 'light' }) {
       {/* Back Button */}
       <Link 
         href="/ai-agents"
-        className={`absolute top-8 left-6 md:left-8 z-[100] flex items-center gap-2 px-4 py-2 rounded-[4px] transition-all duration-300 cursor-pointer ${
+        className={`absolute top-20 sm:top-24 md:top-8 left-4 sm:left-6 md:left-8 z-[100] flex items-center gap-2 px-4 py-2 rounded-[4px] transition-all duration-300 cursor-pointer ${
           isDark 
             ? 'bg-black/40 hover:bg-black/60 text-white border border-white/20' 
             : 'bg-white/80 hover:bg-white text-black border border-black/20'
@@ -136,7 +136,7 @@ export default function AIAgentDetailHero({ agent, theme = 'light' }) {
         <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm font-semibold">Back</span>
       </Link>
 
-      <div className="relative z-10 max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="relative z-10 max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 w-full pt-20 sm:pt-24 md:pt-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Left: Content */}
           <div className="relative z-10">

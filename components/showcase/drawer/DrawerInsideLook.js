@@ -25,21 +25,42 @@ const DrawerInsideLook = forwardRef(function DrawerInsideLook({ insideLookImages
 
       {/* Grid - 2 columns */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        {insideLookImages.map((item) => (
-          <div key={item.id} className="group cursor-pointer">
-            {/* Card with image as background */}
-            <div
-              className="relative rounded-2xl sm:rounded-3xl overflow-hidden min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[650px]"
-            >
-              {/* Image */}
-              <Image
-                src={item.image}
-                alt={item.title}
-                fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
+        {insideLookImages.map((item) => {
+          const hasImage = item?.image && item.image.trim() !== "";
+          
+          return (
+            <div key={item.id} className="group cursor-pointer">
+              {/* Card with image as background */}
+              <div
+                className="relative rounded-2xl sm:rounded-3xl overflow-hidden min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[650px] bg-gray-800"
+              >
+                {/* Image */}
+                {hasImage ? (
+                  <Image
+                    src={item.image}
+                    alt={item.title || 'Inside look image'}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <svg
+                      className="w-16 h-16 text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                )}
+              </div>
 
             {/* Label Below */}
             <div className="mt-3 sm:mt-4">
@@ -48,11 +69,12 @@ const DrawerInsideLook = forwardRef(function DrawerInsideLook({ insideLookImages
               }`}>
                 <span className="font-semibold">Great element</span>
                 <span className={isDark ? 'text-gray-500' : 'text-gray-500'}> from </span>
-                <span className="font-semibold">{item.title}</span>
+                <span className="font-semibold">{item.title || 'Project'}</span>
               </p>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

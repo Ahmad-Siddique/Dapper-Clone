@@ -12,14 +12,17 @@ export default function BlogSection({ theme = 'light', blogPosts = [] }) {
   const [activeCategory, setActiveCategory] = useState('All');
   const titleRef = useRef(null);
   
+  // Ensure blogPosts is an array
+  const safeBlogPosts = Array.isArray(blogPosts) ? blogPosts : [];
+  
   // Extract unique categories from posts
-  const allCategories = ['All', ...new Set(blogPosts.map(post => post.category).filter(Boolean))];
+  const allCategories = ['All', ...new Set(safeBlogPosts.map(post => post?.category).filter(Boolean))];
   const categories = allCategories.length > 1 ? allCategories : ['All', 'Demand Generation', 'Other'];
   
   // Filter posts by category
   const filteredPosts = activeCategory === 'All' 
-    ? blogPosts 
-    : blogPosts.filter(post => post.category === activeCategory);
+    ? safeBlogPosts 
+    : safeBlogPosts.filter(post => post?.category === activeCategory);
 
   useEffect(() => {
     // Refresh ScrollTrigger on mount
@@ -48,38 +51,38 @@ export default function BlogSection({ theme = 'light', blogPosts = [] }) {
     <>
       {/* Blog Hero Section */}
       <section 
-        className={`relative py-20 md:py-24 lg:py-32 ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#F5F5F5]'}`}
+        className={`relative py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#F5F5F5]'}`}
       >
-        <div className="mx-auto max-w-[1800px] px-6 sm:px-8 md:px-12 lg:px-16">
-          <div className="mb-8 flex justify-center">
-            <span className={`inline-flex items-center gap-2 text-base font-medium ${isDark ? 'text-white/80' : 'text-[#111111]'}`}>
-              <span className="w-3 h-3 bg-[#74F5A1] rounded-sm"></span>
+        <div className="mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+          <div className="mb-6 sm:mb-8 flex justify-center">
+            <span className={`inline-flex items-center gap-2 text-sm sm:text-base font-medium ${isDark ? 'text-white/80' : 'text-[#111111]'}`}>
+              <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-[#74F5A1] rounded-sm"></span>
               Blog
             </span>
           </div>
           
           <h1 
             ref={titleRef}
-            className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[56px] md:text-[72px] lg:text-[96px] xl:text-[120px] font-bold leading-[0.95] tracking-tight text-center ${isDark ? 'text-white' : 'text-[#111111]'}`}
+            className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[36px] xs:text-[42px] sm:text-[48px] md:text-[64px] lg:text-[80px] xl:text-[96px] 2xl:text-[120px] font-bold leading-[0.95] tracking-tight text-center ${isDark ? 'text-white' : 'text-[#111111]'}`}
             style={{ opacity: 1 }}
           >
             On our <span className="italic font-light">minds</span>
           </h1>
           
-          <div className="mt-12 mb-6 text-center">
+          <div className="mt-8 sm:mt-10 md:mt-12 mb-4 sm:mb-6 text-center">
             <span 
-              className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm md:text-base font-medium ${isDark ? 'text-white/70' : 'text-[#666666]'}`}
+              className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-xs sm:text-sm md:text-base font-medium ${isDark ? 'text-white/70' : 'text-[#666666]'}`}
             >
               Choose a category:
             </span>
           </div>
           
-          <div className="flex flex-wrap items-center justify-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm md:text-base px-5 py-2.5 rounded-full transition-all duration-300 font-medium ${
+                className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-xs sm:text-sm md:text-base px-4 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-300 font-medium ${
                   activeCategory === category
                     ? 'bg-[#74F5A1] text-[#0a0a0a] shadow-lg shadow-[#74F5A1]/20'
                     : isDark
@@ -96,63 +99,81 @@ export default function BlogSection({ theme = 'light', blogPosts = [] }) {
 
       {/* Cards Section */}
       <section
-        className={`relative py-16 md:py-20 lg:py-24 ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#F5F5F5]'}`}
+        className={`relative py-12 sm:py-16 md:py-20 lg:py-24 ${isDark ? 'bg-[#0a0a0a]' : 'bg-[#F5F5F5]'}`}
       >
         <div className="mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8 lg:px-12">
           
+          {/* No Posts Message */}
+          {filteredPosts.length === 0 && (
+            <div className="text-center py-16 sm:py-20 md:py-24">
+              <p className={`text-lg sm:text-xl md:text-2xl font-medium ${isDark ? 'text-white/70' : 'text-gray-600'}`}>
+                No blog posts found in this category.
+              </p>
+            </div>
+          )}
+          
           {/* First Row - 2 Cards */}
           {filteredPosts.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-5 mb-8 md:mb-10">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-5 mb-6 sm:mb-8 md:mb-10">
               
               {/* LEFT CARD - Takes 3 columns (First post) */}
               {filteredPosts[0] && (
                 <Link href={`/blog/${filteredPosts[0].slug}`} className="group block lg:col-span-3">
-                  <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/20 h-full">
+                  <article className="relative rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/20 h-full">
                     
                     {/* Flex Container - 2 Columns */}
-                    <div className="flex flex-col md:flex-row h-full min-h-[600px]">
+                    <div className="flex flex-col md:flex-row h-full min-h-[400px] sm:min-h-[500px] md:min-h-[550px] lg:min-h-[600px]">
                       
                       {/* LEFT COLUMN - Image */}
-                      <div className="relative w-full md:w-1/2 overflow-hidden">
-                        <Image
-                          src={filteredPosts[0].image || "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=600&fit=crop"}
-                          alt={filteredPosts[0].title}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-110"
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                        />
+                      <div className="relative w-full md:w-1/2 h-[250px] sm:h-[300px] md:h-full overflow-hidden">
+                        {filteredPosts[0].image ? (
+                          <Image
+                            src={filteredPosts[0].image}
+                            alt={filteredPosts[0].title || 'Blog post'}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            onError={(e) => {
+                              e.target.src = "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=600&fit=crop";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                            <svg className="w-16 h-16 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
 
                       {/* RIGHT COLUMN - Content */}
-                      <div className="relative w-full md:w-1/2 bg-[#2a2a2a] p-6 md:p-8 lg:p-10 xl:p-12 flex flex-col justify-between">
+                      <div className="relative w-full md:w-1/2 bg-[#2a2a2a] p-5 sm:p-6 md:p-8 lg:p-10 xl:p-12 flex flex-col justify-between gap-4 sm:gap-6">
                         
                         {/* Top - Category Badge */}
                         <div>
-                          <span className="inline-block px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
+                          <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-[10px] sm:text-xs font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
                             {filteredPosts[0].category || 'Blog'}
                           </span>
                         </div>
 
                         {/* Middle - Title */}
-                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[36px] lg:text-[42px] xl:text-[48px] font-bold leading-[1.1] text-white transition-colors duration-300 group-hover:text-[#74F5A1]">
-                          {filteredPosts[0].title.length > 60 
-                            ? `${filteredPosts[0].title.substring(0, 60)}...` 
-                            : filteredPosts[0].title}
+                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[22px] sm:text-[26px] md:text-[32px] lg:text-[36px] xl:text-[42px] 2xl:text-[48px] font-bold leading-[1.1] text-white transition-colors duration-300 group-hover:text-[#74F5A1]">
+                          {filteredPosts[0].title}
                         </h2>
 
                         {/* Bottom - Author Info */}
-                        <div className="flex items-center gap-4">
-                          <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold text-[#74F5A1]">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base sm:text-lg font-semibold text-[#74F5A1]">
                               {filteredPosts[0].author?.charAt(0) || 'A'}
                             </span>
                           </div>
                           
-                          <div className="flex flex-col gap-1">
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base font-medium text-white">
+                          <div className="flex flex-col gap-0.5 sm:gap-1">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm sm:text-base font-medium text-white">
                               {filteredPosts[0].author || 'Author'}
                             </span>
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm text-white/60">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-xs sm:text-sm text-white/60">
                               {filteredPosts[0].readTime || '5 min read'}
                             </span>
                           </div>
@@ -166,45 +187,56 @@ export default function BlogSection({ theme = 'light', blogPosts = [] }) {
               {/* RIGHT CARD - Image background with white content overlay (Second post) */}
               {filteredPosts[1] && (
                 <Link href={`/blog/${filteredPosts[1].slug}`} className="group block lg:col-span-1">
-                  <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
+                  <article className="relative rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[450px] sm:min-h-[550px] md:min-h-[600px] lg:min-h-[700px]">
                     
                     {/* Background Image - Full Card */}
-                    <Image
-                      src={filteredPosts[1].image || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&h=800&fit=crop"}
-                      alt={filteredPosts[1].title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      sizes="(max-width: 1024px) 100vw, 25vw"
-                    />
+                    {filteredPosts[1].image ? (
+                      <Image
+                        src={filteredPosts[1].image}
+                        alt={filteredPosts[1].title || 'Blog post'}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        sizes="(max-width: 1024px) 100vw, 25vw"
+                        onError={(e) => {
+                          e.target.src = "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&h=800&fit=crop";
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                        <svg className="w-16 h-16 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
 
                     {/* White Content Box Overlay */}
-                    <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                      <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
+                    <div className="absolute inset-0 p-4 sm:p-5 md:p-6 flex flex-col justify-end">
+                      <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 min-h-[280px] sm:min-h-[300px] md:min-h-[320px] flex flex-col justify-between gap-4">
                         
                         {/* Category */}
-                        <div className="mb-4">
-                          <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
+                        <div>
+                          <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm md:text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
                             {filteredPosts[1].category || 'Blog'}
                           </span>
                         </div>
 
                         {/* Title */}
-                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
+                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] sm:text-[24px] md:text-[28px] lg:text-[30px] xl:text-[32px] font-semibold leading-[1.2] text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
                           {filteredPosts[1].title}
                         </h2>
 
                         {/* Meta Info */}
-                        <div className="flex items-center gap-3">
-                          <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold text-[#74F5A1]">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base sm:text-lg font-semibold text-[#74F5A1]">
                               {filteredPosts[1].author?.charAt(0) || 'A'}
                             </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm sm:text-base md:text-lg font-medium text-[#111111]">
                               {filteredPosts[1].author || 'Author'}
                             </span>
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-xs sm:text-sm md:text-base text-[#666666]">
                               {filteredPosts[1].readTime || '5 min read'}
                             </span>
                           </div>
@@ -220,38 +252,49 @@ export default function BlogSection({ theme = 'light', blogPosts = [] }) {
 
           {/* Second Row - 4 Cards */}
           {filteredPosts.length > 2 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 mb-8 md:mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-6 sm:mb-8 md:mb-10">
               {filteredPosts.slice(2, 6).map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
-                  <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                    <Image
-                      src={post.image || "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=800&fit=crop"}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    />
-                    <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                      <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                        <div className="mb-4">
-                          <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
+                  <article className="relative rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[450px] sm:min-h-[550px] md:min-h-[600px] lg:min-h-[650px] xl:min-h-[700px]">
+                    {post.image ? (
+                      <Image
+                        src={post.image}
+                        alt={post.title || 'Blog post'}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        onError={(e) => {
+                          e.target.src = "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&h=800&fit=crop";
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                        <svg className="w-16 h-16 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 p-4 sm:p-5 md:p-6 flex flex-col justify-end">
+                      <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 min-h-[280px] sm:min-h-[300px] md:min-h-[320px] flex flex-col justify-between gap-4">
+                        <div>
+                          <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm md:text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
                             {post.category || 'Blog'}
                           </span>
                         </div>
-                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
+                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] sm:text-[24px] md:text-[26px] lg:text-[30px] xl:text-[32px] font-semibold leading-[1.2] text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
                           {post.title}
                         </h2>
-                        <div className="flex items-center gap-3">
-                          <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold text-[#74F5A1]">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base sm:text-lg font-semibold text-[#74F5A1]">
                               {post.author?.charAt(0) || 'A'}
                             </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm sm:text-base md:text-lg font-medium text-[#111111]">
                               {post.author || 'Author'}
                             </span>
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-xs sm:text-sm md:text-base text-[#666666]">
                               {post.readTime || '5 min read'}
                             </span>
                           </div>
@@ -266,38 +309,49 @@ export default function BlogSection({ theme = 'light', blogPosts = [] }) {
 
           {/* Third Row - 4 Cards */}
           {filteredPosts.length > 6 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
               {filteredPosts.slice(6, 10).map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`} className="group block">
-                  <article className="relative rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[700px]">
-                    <Image
-                      src={post.image || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=800&fit=crop"}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    />
-                    <div className="absolute inset-0 p-5 md:p-6 flex flex-col justify-end">
-                      <div className="bg-white rounded-2xl p-6 md:p-8 min-h-[320px] flex flex-col justify-between">
-                        <div className="mb-4">
-                          <span className="inline-block px-4 py-2 rounded-lg text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
+                  <article className="relative rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/10 h-full min-h-[450px] sm:min-h-[550px] md:min-h-[600px] lg:min-h-[650px] xl:min-h-[700px]">
+                    {post.image ? (
+                      <Image
+                        src={post.image}
+                        alt={post.title || 'Blog post'}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        onError={(e) => {
+                          e.target.src = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=800&fit=crop";
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                        <svg className="w-16 h-16 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 p-4 sm:p-5 md:p-6 flex flex-col justify-end">
+                      <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 min-h-[280px] sm:min-h-[300px] md:min-h-[320px] flex flex-col justify-between gap-4">
+                        <div>
+                          <span className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm md:text-base font-semibold uppercase tracking-wider bg-[#74F5A1] text-[#0a0a0a]">
                             {post.category || 'Blog'}
                           </span>
                         </div>
-                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[28px] md:text-[30px] lg:text-[32px] font-semibold leading-[1.2] mb-6 text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
+                        <h2 className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[20px] sm:text-[24px] md:text-[26px] lg:text-[30px] xl:text-[32px] font-semibold leading-[1.2] text-[#111111] transition-colors duration-300 group-hover:text-[#111111]/80">
                           {post.title}
                         </h2>
-                        <div className="flex items-center gap-3">
-                          <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-semibold text-[#74F5A1]">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 bg-[#74F5A1]/20 flex items-center justify-center">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base sm:text-lg font-semibold text-[#74F5A1]">
                               {post.author?.charAt(0) || 'A'}
                             </span>
                           </div>
                           <div className="flex flex-col gap-0.5">
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-lg font-medium text-[#111111]">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-sm sm:text-base md:text-lg font-medium text-[#111111]">
                               {post.author || 'Author'}
                             </span>
-                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-base text-[#666666]">
+                            <span className="font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-xs sm:text-sm md:text-base text-[#666666]">
                               {post.readTime || '5 min read'}
                             </span>
                           </div>

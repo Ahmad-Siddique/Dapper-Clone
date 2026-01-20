@@ -347,7 +347,7 @@ export default function BlogPostPage({ params }) {
     <div
       style={{ position: 'relative', zIndex: 1 }}
       data-theme={theme}
-      className={theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white'}
+      className={`overflow-x-hidden w-full ${theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white'}`}
     >
       {/* Theme Toggle Button */}
       <button
@@ -396,10 +396,12 @@ export default function BlogPostPage({ params }) {
 
       <Header theme={theme} />
       {loading ? (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#74F5A1]"></div>
-            <p className="mt-4 text-lg">Loading blog post...</p>
+        <div className={`flex items-center justify-center min-h-[60vh] sm:min-h-screen ${theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white'}`}>
+          <div className="text-center px-4">
+            <div className="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-[#74F5A1]"></div>
+            <p className={`mt-4 text-base sm:text-lg ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+              Loading blog post...
+            </p>
           </div>
         </div>
       ) : post ? (
@@ -412,10 +414,14 @@ export default function BlogPostPage({ params }) {
           <Footer theme={theme} />
         </>
       ) : (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">Post not found</h1>
-            <a href="/blog" className="text-[#74F5A1] hover:underline">Back to blog</a>
+        <div className={`flex items-center justify-center min-h-[60vh] sm:min-h-screen ${theme === 'dark' ? 'bg-[#0a0a0a]' : 'bg-white'}`}>
+          <div className="text-center px-4">
+            <h1 className={`text-xl sm:text-2xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-[#111111]'}`}>
+              Post not found
+            </h1>
+            <a href="/blog" className="text-[#74F5A1] hover:underline text-sm sm:text-base">
+              Back to blog
+            </a>
           </div>
         </div>
       )}
