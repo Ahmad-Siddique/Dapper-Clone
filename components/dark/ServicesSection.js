@@ -778,47 +778,59 @@ export default function ServicesSection({ theme = "light" }) {
             </div>
 
             {/* RIGHT: Interactive service cards */}
-            <div className="flex-1">
-              <div
-                className="grid h-full gap-3 sm:gap-4 md:gap-6 transition-all duration-700 ease-out"
-                style={{
-                  gridTemplateColumns:
-                    activeId === "content"
-                      ? "1.2fr 0.8fr"
-                      : activeId === "paid"
-                      ? "0.8fr 1.2fr"
-                      : "1fr 1fr",
-                  gridTemplateRows:
-                    activeId === "data" ? "0.85fr 1.15fr" : "1fr 1fr",
-                }}
-              >
-                {SERVICES.map((service, index) => {
-                  const isActive = activeId === service.id;
+            {/* RIGHT: Interactive service cards */}
+<div className="flex-1">
+  <div
+  className="grid h-full gap-0.5 sm:gap-0.5 md:gap-1 transition-all duration-700 ease-out"
+  style={{
+    gridTemplateColumns:
+      activeId === "content"
+        ? "1.2fr 0.8fr"
+        : activeId === "paid"
+        ? "0.8fr 1.2fr"
+        : "1fr 1fr",
+    gridTemplateRows:
+      activeId === "data" ? "0.85fr 1.15fr" : "1fr 1fr",
+  }}
+>
 
-                  return (
-                    <article
-                      key={service.id}
-                      onMouseEnter={() => setActiveId(service.id)}
-                      onMouseLeave={() => setActiveId(null)}
-                      className={`
-                        service-card group relative flex flex-col justify-between 
-                        rounded-xl sm:rounded-2xl border px-4 py-4 sm:px-6 sm:py-6 md:px-8 md:py-7 lg:px-10 lg:py-9
-                        transition-all duration-700 ease-out
-                        ${
-                          theme === "dark"
-                            ? "bg-[#2a2a2a] border-white/10 shadow-[0_15px_50px_rgba(0,0,0,0.5)] hover:shadow-[0_25px_70px_rgba(0,0,0,0.7)]"
-                            : "bg-white border-black/6 shadow-[0_10px_35px_rgba(0,0,0,0.08)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
-                        }
-                        ${index === 2 ? "col-span-2" : ""}
-                      `}
-                    >
-                      <h3
-                        className={`font-[Helvetica_Now_Text,Arial,sans-serif] text-[18px] sm:text-[22px] md:text-[26px] lg:text-[30px] xl:text-[36px] 2xl:text-[40px] font-bold tracking-tight text-transition ${
-                          theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
-                        }`}
-                      >
-                        {service.title}
-                      </h3>
+
+                {SERVICES.map((service, index) => {
+  const isActive = activeId === service.id;
+
+  return (
+   <article
+  key={service.id}
+  onMouseEnter={() => setActiveId(service.id)}
+  onMouseLeave={() => setActiveId(null)}
+  className={`
+    service-card group relative flex flex-col justify-between 
+    rounded-xl sm:rounded-2xl border px-4 py-4 sm:px-6 sm:py-6 md:px-8 md:py-7 lg:px-10 lg:py-9
+    transition-all duration-700 ease-out
+    ${
+      theme === "dark"
+        ? "bg-[#2a2a2a] border-white/10"
+        : "bg-white border-black/6"
+    }
+    ${index === 2 ? "col-span-2" : ""}
+  `}
+>
+
+      <h3
+        className={`font-[Helvetica_Now_Text,Arial,sans-serif] text-[16px] sm:text-[18px] md:text-[22px] lg:text-[26px] xl:text-[28px] 2xl:text-[32px] font-bold tracking-tight leading-snug text-transition ${
+          theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
+        }`}
+      >
+        {service.id === "paid" ? (
+          <>
+            Paid Media &<br />
+            Performance
+          </>
+        ) : (
+          service.title
+        )}
+      </h3>
+
 
                       <div className="mt-4 sm:mt-6 flex items-end justify-between gap-3 sm:gap-4">
                         <p

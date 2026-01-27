@@ -928,35 +928,37 @@ export default function StatsSection({ theme = "light" }) {
                           }}
                         >
                           {/* Metric columns */}
-                          {card.metrics.map((metric) => (
-                            <div
-                              key={metric.value + metric.label}
-                              className={`rounded-md px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-4 ${
-                                theme === "dark"
-                                  ? "bg-[#3a3a3a]"
-                                  : "bg-[#F4F4F4]"
-                              }`}
-                            >
-                              <p
-                                className={`font-[Helvetica Now Text,Arial,sans-serif] text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[28px] font-bold tracking-tight ${
-                                  theme === "dark"
-                                    ? "text-[#f3f3f3]"
-                                    : "text-[#111111]"
-                                }`}
-                              >
-                                {metric.value}
-                              </p>
-                              <p
-                                className={`mt-0.5 sm:mt-1 max-w-full sm:max-w-[220px] font-[Helvetica Now Text,Arial,sans-serif] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] font-semibold leading-snug ${
-                                  theme === "dark"
-                                    ? "text-[#a0a0a0]"
-                                    : "text-[#444444]"
-                                }`}
-                              >
-                                {metric.label}
-                              </p>
-                            </div>
-                          ))}
+{card.metrics.map((metric) => (
+  <div
+    key={metric.value + metric.label}
+    className={`rounded-md px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-4 ${
+      theme === "dark"
+        ? "bg-[#3a3a3a]"
+        : "bg-[#F4F4F4]"
+    }`}
+  >
+    <p
+      className={`font-[Helvetica Now Text,Arial,sans-serif] text-[18px] sm:text-[22px] md:text-[24px] lg:text-[26px] xl:text-[28px] font-bold tracking-tight ${
+        theme === "dark"
+          ? "text-[#f3f3f3]"
+          : "text-[#111111]"
+      }`}
+    >
+      {metric.value}
+    </p>
+    <p
+      className={`mt-0.5 sm:mt-1 font-[Helvetica Now Text,Arial,sans-serif] text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[15px] font-semibold leading-snug overflow-hidden text-ellipsis whitespace-nowrap ${
+        theme === "dark"
+          ? "text-[#a0a0a0]"
+          : "text-[#444444]"
+      }`}
+      title={metric.label}
+    >
+      {metric.label}
+    </p>
+  </div>
+))}
+
 
                           {/* 3rd column: Full button (appears on hover) */}
                           <div

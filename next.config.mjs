@@ -69,6 +69,13 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        
+        protocol: "https",
+        hostname: "stream.mux.com",
+        port: "",
+        pathname: "/**",
+      }
      
      
     ],
