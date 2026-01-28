@@ -2708,6 +2708,8 @@ export default function Header({ theme = "light" }) {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
   const dropdownTimeoutRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   // Triangle animation effects - only for light theme (original)
   const [triangles, setTriangles] = useState([]);
@@ -2721,6 +2723,27 @@ export default function Header({ theme = "light" }) {
   const rightEyeRef = useRef(null);
   const smileRef = useRef(null);
   const faceContainerRef = useRef(null);
+
+  // Hide header on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY < lastScrollY || currentScrollY < 10) {
+        // Scrolling up or at top
+        setIsVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down
+        setIsVisible(false);
+        setActiveDropdown(null); // Close dropdowns when hiding
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   const handleMouseEnter = (label) => {
     if (dropdownTimeoutRef.current) {
@@ -3075,18 +3098,23 @@ export default function Header({ theme = "light" }) {
         }
       `}</style>
 
-      <header className="fixed left-0 right-0 top-6 z-50 antialiased md:top-8">
+      <header 
+        className="fixed left-0 right-0 top-6 z-50 antialiased md:top-8 transition-transform duration-300"
+        style={{
+          transform: isVisible ? 'translateY(0)' : 'translateY(-150%)'
+        }}
+      >
         <div className="flex items-center justify-between px-4 md:px-8 gap-3">
           
          
-          {/* Logo - Left Side (Full Left Aligned) */}
+          {/* Logo - Left Side */}
         <Link href="/dark" className="flex flex-shrink-0 items-center">
-          <div className="relative flex h-16 w-auto md:h-20 items-center justify-center">
+          <div className="relative flex h-[58px] w-auto md:h-[73px] items-center justify-center">
   <Image
     src="/logo/techeyrie_logo.png"
     alt="TechEyrie Logo"
-    width={136}
-    height={136}
+    width={124}
+    height={124}
             
               className="h-full w-auto object-contain"
               priority
@@ -3094,11 +3122,10 @@ export default function Header({ theme = "light" }) {
           </div>
         </Link>
 
-
-          {/* Header with Navigation - Right Side (Full Right Aligned) */}
+          {/* Header with Navigation - Right Side */}
           <div className="flex items-center gap-3">
             <div
-              className="flex items-center justify-between gap-2 rounded-[14px] px-3 py-[8px] shadow-[0_10px_30px_rgba(0,0,0,0.15)] md:gap-4 md:px-5 md:py-[10px] lg:px-6"
+              className="flex items-center justify-between gap-2 rounded-[14px] px-3 shadow-[0_10px_30px_rgba(0,0,0,0.15)] md:gap-4 md:px-5 lg:px-6 h-[58px] md:h-[73px]"
               style={{
                 backgroundColor: headerBg,
                 border:
@@ -3107,12 +3134,12 @@ export default function Header({ theme = "light" }) {
                     : "none",
               }}
             >
-              {/* Desktop NAV */}
-              <nav className="hidden items-center gap-1 lg:flex lg:gap-1">
+              {/* Desktop NAV - REMOVED HOVER BACKGROUND */}
+              <nav className="hidden items-center gap-1 lg:flex lg:gap-1 h-full">
                 {navItems.map((item) => (
                   <div
                     key={item.label}
-                    className="relative"
+                    className="relative h-full flex items-center"
                     onMouseEnter={() =>
                       item.hasDropdown && handleMouseEnter(item.label)
                     }
@@ -3121,11 +3148,10 @@ export default function Header({ theme = "light" }) {
                     {item.href ? (
                       <Link
                         href={item.href}
-                        className="header-link flex items-center gap-1 font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] tracking-tight transition-all duration-200 cursor-pointer px-3 py-1.5 rounded-[8px]"
+                        className="header-link flex items-center gap-1 font-[Helvetica_Now_Text,Arial,sans-serif] text-[19px] tracking-tight transition-all duration-200 cursor-pointer px-3 py-1.5 rounded-[8px]"
                         style={{
                           color: textColor,
-                          backgroundColor:
-                            activeDropdown === item.label ? hoverBg : "transparent",
+                          backgroundColor: "transparent",
                         }}
                       >
                         <span>{item.label}</span>
@@ -3153,11 +3179,10 @@ export default function Header({ theme = "light" }) {
                     ) : (
                       <button
                         type="button"
-                        className="header-link flex items-center gap-1 font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] tracking-tight transition-all duration-200 cursor-pointer px-3 py-1.5 rounded-[8px]"
+                        className="header-link flex items-center gap-1 font-[Helvetica_Now_Text,Arial,sans-serif] text-[19px] tracking-tight transition-all duration-200 cursor-pointer px-3 py-1.5 rounded-[8px]"
                         style={{
                           color: textColor,
-                          backgroundColor:
-                            activeDropdown === item.label ? hoverBg : "transparent",
+                          backgroundColor: "transparent",
                         }}
                       >
                         <span>{item.label}</span>
@@ -3188,11 +3213,11 @@ export default function Header({ theme = "light" }) {
               </nav>
 
               {/* Desktop CTA */}
-              <div className="hidden flex-shrink-0 items-center gap-3 lg:flex">
+              <div className="hidden flex-shrink-0 items-center gap-3 lg:flex h-full">
                 {/* Talk to us Button */}
                 <Link href="/contact" className="group flex items-center gap-2">
                   <span
-                    className="font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] tracking-tight"
+                    className="font-[Helvetica_Now_Text,Arial,sans-serif] text-[19px] tracking-tight"
                     style={{ color: textColor }}
                   >
                     Talk to us
@@ -3287,21 +3312,21 @@ export default function Header({ theme = "light" }) {
               </button>
             </div>
 
-            {/* Get a Quote Button - Next to Header */}
+            {/* Get a Quote Button */}
             <Link 
               ref={getQuoteBtnRef}
               href="/pricing-calculator" 
-              className="get-quote-btn group hidden lg:flex items-center gap-2 px-4 py-2 rounded-[10px] transition-all duration-300 hover:scale-105 shadow-[0_10px_30px_rgba(0,0,0,0.15)] flex-shrink-0"
+              className="get-quote-btn group hidden lg:flex items-center gap-2 px-6 rounded-[14px] transition-all duration-300 hover:scale-105 shadow-[0_10px_30px_rgba(0,0,0,0.15)] flex-shrink-0 h-[58px] md:h-[73px]"
               style={{
                 backgroundColor: theme === "dark" ? "#FFFFFF" : "#FFFFFF",
               }}
             >
               {/* Animated overlay */}
-              <div ref={getQuoteOverlayRef} className="get-quote-overlay" />
+              <div ref={getQuoteOverlayRef} className="get-quote-overlay" style={{ borderRadius: '14px' }} />
               
               <div className="get-quote-btn-content">
                 <span
-                  className="font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] font-semibold tracking-tight"
+                  className="font-[Helvetica_Now_Text,Arial,sans-serif] text-[19px] font-semibold tracking-tight"
                   style={{ color: theme === "dark" ? "#111111" : "#111111" }}
                 >
                   Get a quote
@@ -3840,176 +3865,108 @@ export default function Header({ theme = "light" }) {
           </div>
         </div>
 
-        {/* Mobile dropdown panel */}
-        <div
-          className={`
-            lg:hidden
-            ${mobileOpen ? "pointer-events-auto" : "pointer-events-none"}
-          `}
-        >
+        {/* MOBILE PANEL */}
+        {mobileOpen && (
           <div
-            className={`
-              mx-auto mt-2 w-full max-w-[1180px] px-2 md:px-4
-              transition-[max-height,opacity,transform] duration-300 ease-out
-              ${
-                mobileOpen
-                  ? "max-h-[320px] opacity-100 translate-y-0"
-                  : "max-h-0 opacity-0 -translate-y-2"
-              }
-            `}
+            className="fixed inset-x-4 top-[92px] z-40 max-h-[calc(100vh-120px)] overflow-y-auto rounded-[14px] border p-4 shadow-[0_20px_50px_rgba(0,0,0,0.3)] lg:hidden md:top-[104px]"
+            style={{
+              backgroundColor: mobilePanelBg,
+              borderColor: mobileBorder,
+            }}
           >
-            <div
-              className="overflow-hidden rounded-[14px] px-5 py-4 shadow-[0_10px_30px_rgba(0,0,0,0.25)]"
-              style={{
-                backgroundColor: mobilePanelBg,
-                border:
-                  theme === "dark"
-                    ? "1px solid rgba(255, 255, 255, 0.1)"
-                    : "none",
-              }}
-            >
-              <nav className="flex flex-col gap-2">
-                {navItems.map((item) => (
-                  item.href ? (
+            <nav className="space-y-1">
+              {navItems.map((item) => (
+                <div key={item.label}>
+                  {item.href ? (
                     <Link
-                      key={item.label}
                       href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center justify-between rounded-[8px] px-1 py-2 text-left font-[Helvetica_Now_Text,Arial,sans-serif] text-[16px] tracking-tight transition-colors hover:bg-[rgba(255,255,255,0.1)]"
+                      className="flex items-center justify-between rounded-[8px] px-1 py-2 text-left font-[Helvetica_Now_Text,Arial,sans-serif] text-[22px] tracking-tight transition-colors hover:bg-[rgba(255,255,255,0.1)]"
                       style={{ color: mobilePanelText }}
+                      onClick={() => setMobileOpen(false)}
                     >
                       <span>{item.label}</span>
                     </Link>
                   ) : (
                     <button
-                      key={item.label}
                       type="button"
-                      className="flex items-center justify-between rounded-[8px] px-1 py-2 text-left font-[Helvetica_Now_Text,Arial,sans-serif] text-[16px] tracking-tight transition-colors hover:bg-[rgba(255,255,255,0.1)]"
+                      className="flex items-center justify-between rounded-[8px] px-1 py-2 text-left font-[Helvetica_Now_Text,Arial,sans-serif] text-[22px] tracking-tight transition-colors hover:bg-[rgba(255,255,255,0.1)]"
                       style={{ color: mobilePanelText }}
                     >
                       <span>{item.label}</span>
-                      {item.hasDropdown && (
-                        <svg
-                          width="9"
-                          height="5"
-                          viewBox="0 0 10 6"
-                          aria-hidden="true"
-                          style={{ color: mobilePanelText, opacity: 0.7 }}
-                        >
-                          <path
-                            d="M1 1L5 5L9 1"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.4"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      )}
                     </button>
-                  )
-                ))}
-              </nav>
+                  )}
+                </div>
+              ))}
+            </nav>
 
-              <div
-                className="mt-4 border-t pt-4 space-y-3"
-                style={{ borderColor: mobileBorder }}
+            <div className="mt-6 space-y-3 border-t pt-4" style={{ borderColor: mobileBorder }}>
+              {/* Talk to us Button */}
+              <Link
+                href="/contact"
+                className={`group inline-flex w-full items-center justify-between rounded-[10px] px-4 py-3 font-[Helvetica_Now_Text,Arial,sans-serif] text-[21px] font-semibold tracking-tight ${
+                  theme === "dark" ? "bg-[#2A2A2A]" : "bg-[#F9F7F0]"
+                } transition-transform duration-300 ease-out hover:scale-[1.02]`}
+                style={{ 
+                  color: theme === "dark" ? darkColors.text : lightColors.text,
+                  border: theme === "dark" ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(0, 0, 0, 0.06)"
+                }}
+                onClick={() => setMobileOpen(false)}
               >
-                {/* Talk to us Button - Mobile */}
-                <Link
-                  href="/contact"
-                  onClick={() => setMobileOpen(false)}
-                  className={`group inline-flex w-full items-center justify-between rounded-[10px] px-4 py-3 font-[Helvetica_Now_Text,Arial,sans-serif] text-[15px] font-semibold tracking-tight ${
-                    theme === "dark" ? "text-[#111111]" : "text-white"
-                  } transition-transform duration-300 ease-out hover:scale-[1.02]`}
-                  style={{
-                    backgroundColor: theme === "dark" ? "#74F5A1" : "#111111",
-                  }}
+                <span>Talk to us</span>
+                <span
+                  className="flex h-7 w-7 items-center justify-center rounded-[4px] bg-[#74F5A1] transition-transform duration-300 group-hover:scale-110"
                 >
-                  <span>Talk to us</span>
-                  <span
-                    className={`relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-[4px] bg-[#74F5A1] transition-colors duration-500 ${
-                      theme === "dark"
-                        ? "group-hover:bg-white"
-                        : "group-hover:bg-black"
-                    }`}
-                  >
-                    <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:opacity-0">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 14 14"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M1 13L13 1M13 1H5M13 1V9"
-                          fill="none"
-                          stroke="#111111"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    <span className="absolute inset-0 flex items-center justify-center translate-x-[-10px] translate-y-[10px] opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100">
-                      <svg
-                        width="12"
-                        height="12"
-                        viewBox="0 0 14 14"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M1 13L13 1M13 1H5M13 1V9"
-                          fill="none"
-                          stroke="#111111"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                  </span>
-                </Link>
-
-                {/* Get a Quote Button - Mobile */}
-                <Link
-                  href="/pricing-calculator"
-                  onClick={() => setMobileOpen(false)}
-                  className="group inline-flex w-full items-center justify-between rounded-[10px] px-4 py-3 font-[Helvetica_Now_Text,Arial,sans-serif] text-[15px] font-semibold tracking-tight transition-transform duration-300 ease-out hover:scale-[1.02]"
-                  style={{
-                    backgroundColor: "#FFFFFF",
-                    color: "#111111",
-                  }}
-                >
-                  <span>Get a quote</span>
-                  <div 
-                    className="flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110"
-                    style={{ backgroundColor: "#4285F4" }}
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
+                  <svg width="11" height="11" viewBox="0 0 14 14" aria-hidden="true">
+                    <path
+                      d="M1 13L13 1M13 1H5M13 1V9"
                       fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle cx="12" cy="12" r="10" fill="#FFFFFF" />
-                      <circle cx="8" cy="9" r="1.5" fill="#4285F4" />
-                      <circle cx="16" cy="9" r="1.5" fill="#4285F4" />
-                      <path
-                        d="M8 14C8 14 9.5 16 12 16C14.5 16 16 14 16 14"
-                        stroke="#4285F4"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </div>
-                </Link>
-              </div>
+                      stroke="#111111"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </Link>
+
+              {/* Get a Quote Button */}
+              <Link
+                href="/pricing-calculator"
+                className="group inline-flex w-full items-center justify-between rounded-[10px] px-4 py-3 font-[Helvetica_Now_Text,Arial,sans-serif] text-[21px] font-semibold tracking-tight transition-transform duration-300 ease-out hover:scale-[1.02]"
+                style={{ 
+                  backgroundColor: "#FFFFFF",
+                  color: "#111111",
+                  border: "1px solid rgba(0, 0, 0, 0.1)"
+                }}
+                onClick={() => setMobileOpen(false)}
+              >
+                <span>Get a quote</span>
+                <span
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-[#4285F4] transition-transform duration-300 group-hover:scale-110"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="11" fill="#FFFFFF" />
+                    <circle cx="9" cy="10" r="1.8" fill="#4285F4" />
+                    <circle cx="15" cy="10" r="1.8" fill="#4285F4" />
+                    <circle cx="9.5" cy="9.5" r="0.6" fill="#FFFFFF" />
+                    <circle cx="15.5" cy="9.5" r="0.6" fill="#FFFFFF" />
+                    <path
+                      d="M8 15.5C8 15.5 9.5 18 12 18C14.5 18 16 15.5 16 15.5"
+                      stroke="#4285F4"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <ellipse cx="7" cy="13" rx="1.5" ry="1" fill="#FFB6C1" opacity="0.6" />
+                    <ellipse cx="17" cy="13" rx="1.5" ry="1" fill="#FFB6C1" opacity="0.6" />
+                  </svg>
+                </span>
+              </Link>
             </div>
           </div>
-        </div>
+        )}
       </header>
     </>
   );
 }
+

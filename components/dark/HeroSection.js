@@ -940,6 +940,7 @@ export default function HeroSection({ theme = "light" }) {
   const [hoveredCard, setHoveredCard] = useState(null);
   const [hoveredHeroCard, setHoveredHeroCard] = useState(null);
   const [hasTriggeredAnimation, setHasTriggeredAnimation] = useState(false);
+  const [activeArrows, setActiveArrows] = useState(0);
 
   // --- Data (Memoized to prevent re-renders) ---
   const mediaAssets = useMemo(() => [
@@ -984,6 +985,28 @@ export default function HeroSection({ theme = "light" }) {
       link: "/work/coca-cola",
     }
   ], []);
+
+  // --- Scroll to Portfolio Function ---
+  const scrollToPortfolio = useCallback(() => {
+    if (portfolioSectionRef.current) {
+      portfolioSectionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  }, []);
+
+  // --- Sequential Arrow Animation (Bottom to Top) ---
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveArrows((prev) => {
+        if (prev >= 4) return 0;
+        return prev + 1;
+      });
+    }, 400);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // --- Responsive Detection ---
   useEffect(() => {
@@ -1268,43 +1291,40 @@ export default function HeroSection({ theme = "light" }) {
           <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-8 lg:gap-12 xl:gap-16 items-start">
             
             <div className="flex flex-col">
-  <div className="max-w-full lg:max-w-[1600px] xl:max-w-[1800px]" ref={titleContainerRef}>
-    <div className="hero-badge mb-10 flex items-center gap-3">
-      <span
-        className="inline-flex h-5 w-5 rounded-sm"
-        style={{ backgroundColor: theme === "dark" ? darkColors.primary : lightColors.primary }}
-      />
-      <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[20px] font-semibold tracking-[0.16em] uppercase ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"}`}>
-        B2B marketing agency
-      </span>
-    </div>
-    
-   <h1 className="mb-4 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[0.92] tracking-[-0.03em]">
-  <span 
-    className={`hero-main-title-line block text-[32px] sm:text-[42px] md:text-[58px] lg:text-[72px] xl:text-[88px] 2xl:text-[100px] whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
-  >
-    <span className="font-bold">We build </span><span className="font-ivy-presto italic text-[0.94em] tracking-[0.03em]">high‑performing</span>
-  </span>
+              <div className="max-w-full lg:max-w-[1600px] xl:max-w-[1800px]" ref={titleContainerRef}>
+                <div className="hero-badge mb-10 flex items-center gap-3">
+                  <span
+                    className="inline-flex h-5 w-5 rounded-sm"
+                    style={{ backgroundColor: theme === "dark" ? darkColors.primary : lightColors.primary }}
+                  />
+                 <span className={`font-merriweather text-[13px] md:text-[20px] font-semibold tracking-[0.16em] uppercase ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"}`}>
+                    B2B marketing agency
+                  </span>
+                </div>
+                
+                <h1 className="mb-4 font-merriweather leading-[0.92] tracking-[-0.03em]">
+                  <span 
+                    className={`hero-main-title-line block text-[32px] sm:text-[42px] md:text-[58px] lg:text-[72px] xl:text-[88px] 2xl:text-[120px] whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
+                  >
+                  <span className="font-light">We build </span><span className="font-playfair italic text-[0.94em] tracking-[0.03em]">high‑performing</span>
+                  </span>
 
-  <span 
-    className={`hero-main-title-line mt-2 block text-[32px] sm:text-[42px] md:text-[58px] lg:text-[72px] xl:text-[88px] 2xl:text-[104px] font-bold whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
-  >
-    marketing engines for
-  </span>
-  
-  <span 
-    className={`hero-main-title-line mt-2 block text-[32px] sm:text-[42px] md:text-[58px] lg:text-[72px] xl:text-[88px] 2xl:text-[104px] font-bold whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
-  >
-    B2B brands
-  </span>
-</h1>
-
-
-  </div>
-
+                  <span 
+                    className={`hero-main-title-line mt-2 block text-[32px] sm:text-[42px] md:text-[58px] lg:text-[72px] xl:text-[88px] 2xl:text-[104px] font-light whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
+                  >
+                    marketing engines for
+                  </span>
+                  
+                  <span 
+                    className={`hero-main-title-line mt-2 block text-[32px] sm:text-[42px] md:text-[58px] lg:text-[72px] xl:text-[88px] 2xl:text-[104px] font-light whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
+                  >
+                    B2B brands
+                  </span>
+                </h1>
+              </div>
 
               <div className="hero-body max-w-full lg:max-w-[640px] pt-20">
-                <p className={`mb-9 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[17px] md:text-[25px] font-semibold leading-relaxed ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"}`}>
+                <p className={`mb-9 font-playfair text-[17px] md:text-[25px] font-normal leading-relaxed ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"}`}>
                   We build, optimize and scale marketing engines that generate pipeline and improve marketing ROI.
                 </p>
                 
@@ -1350,85 +1370,138 @@ export default function HeroSection({ theme = "light" }) {
           </div>
 
           {isDesktop && (
-  <div className="flex justify-end items-end mb-[10vh]" style={{ transform: 'translateY(-75%)' }}>
-    <div ref={heroCardsContainerRef} className="w-[180px] lg:w-[220px] xl:w-[260px]">
-      <div className="relative w-full aspect-[3/4]" style={{ perspective: '1000px' }}>
-        {mediaAssets.map((asset, index) => (
-          <div
-            key={index}
-            ref={(el) => { if (el) heroCardsRef.current[index] = el; }}
-            className="absolute w-full h-full cursor-pointer shadow-lg rounded-xl overflow-hidden"
-            style={{
-              zIndex: 50 - index,
-              transform: `translateX(${index * 30}px) translateY(${index * 30}px) scale(${1 - index * 0.05})`,
-            }}
-            onClick={() => setActiveCard(index)}
-            onMouseEnter={() => setHoveredHeroCard(index)}
-            onMouseLeave={() => setHoveredHeroCard(null)}
-          >
-            <div className="relative w-full h-full overflow-hidden rounded-xl">
-              <div className="absolute inset-0 z-10">
-                {asset.type === 'image' ? (
-                  <Image src={asset.src} alt={asset.alt} fill className="object-cover rounded-xl" />
-                ) : (
-                  <video src={asset.src} muted loop playsInline autoPlay className="w-full h-full object-cover rounded-xl" />
-                )}
-              </div>
-              
-              <div className="card-overlay absolute inset-0 z-15 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none">
-                <div className="absolute bottom-3 left-3 right-3">
-                  <h3 className="text-white text-sm font-bold mb-1">{asset.title}</h3>
-                  <p className="text-white/80 text-xs">{asset.subtitle}</p>
+            <div className="flex justify-end items-end mb-[10vh]" style={{ transform: 'translateY(-75%)' }}>
+              <div ref={heroCardsContainerRef} className="w-[180px] lg:w-[220px] xl:w-[260px]">
+                <div className="relative w-full aspect-[3/4]" style={{ perspective: '1000px' }}>
+                  {mediaAssets.map((asset, index) => (
+                    <div
+                      key={index}
+                      ref={(el) => { if (el) heroCardsRef.current[index] = el; }}
+                      className="absolute w-full h-full cursor-pointer shadow-lg rounded-xl overflow-hidden"
+                      style={{
+                        zIndex: 50 - index,
+                        transform: `translateX(${index * 30}px) translateY(${index * 30}px) scale(${1 - index * 0.05})`,
+                      }}
+                      onClick={() => setActiveCard(index)}
+                      onMouseEnter={() => setHoveredHeroCard(index)}
+                      onMouseLeave={() => setHoveredHeroCard(null)}
+                    >
+                      <div className="relative w-full h-full overflow-hidden rounded-xl">
+                        <div className="absolute inset-0 z-10">
+                          {asset.type === 'image' ? (
+                            <Image src={asset.src} alt={asset.alt} fill className="object-cover rounded-xl" />
+                          ) : (
+                            <video src={asset.src} muted loop playsInline autoPlay className="w-full h-full object-cover rounded-xl" />
+                          )}
+                        </div>
+                        
+                        <div className="card-overlay absolute inset-0 z-15 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none">
+                          <div className="absolute bottom-3 left-3 right-3">
+                            <h3 className="text-white text-sm font-bold mb-1">{asset.title}</h3>
+                            <p className="text-white/80 text-xs">{asset.subtitle}</p>
+                          </div>
+                        </div>
+                        
+                        <div 
+                          className={`absolute bottom-0 left-0 right-0 z-20 transition-all duration-300 pointer-events-none overflow-visible ${
+                            hoveredHeroCard === index ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+                          }`}
+                          style={{ height: '22%' }}
+                        >
+                  <svg
+  className="absolute bottom-0 left-0 w-full h-full"
+  viewBox="0 0 100 100"
+  preserveAspectRatio="none"
+>
+  <path
+    d="
+      M 0 100
+      L 46 15
+      A 5 5 0 0 1 54 15
+      L 100 100
+      Z
+    "
+    fill="#fff"
+  />
+</svg>
+
+
+
+
+
+
+
+
+
+
+                          
+                          <div className="absolute bottom-2 sm:bottom-3 left-0 right-0 flex flex-col items-center">
+                            <h3 className="text-[#013825] font-medium text-[9px] sm:text-[10px] mb-0.5">
+                              {asset.title}
+                            </h3>
+                            <p className="text-[#013825] text-[8px] sm:text-[9px] font-medium">
+                              {asset.metric}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-              
-              <div 
-                className={`absolute bottom-0 left-0 right-0 z-20 transition-all duration-300 pointer-events-none overflow-visible ${
-                  hoveredHeroCard === index ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
-                }`}
-                style={{ height: '35%' }}
-              >
-                <svg 
-                  className="absolute bottom-0 left-0 w-full h-full" 
-                  viewBox="0 0 100 100" 
-                  preserveAspectRatio="none"
-                >
-                  <path d="M 0 100 L 50 0 L 100 100 Z" fill="#FFFFFF" />
-                </svg>
                 
-                <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 flex flex-col items-center">
-                  <h3 className="text-[#013825] font-bold text-[10px] sm:text-xs mb-0.5">
-                    {asset.title}
-                  </h3>
-                  <p className="text-[#013825] text-[9px] sm:text-[10px] font-semibold">
-                    {asset.metric}
-                  </p>
+                <div className="flex justify-center mt-4 space-x-2">
+                  {mediaAssets.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveCard(index)}
+                      className="w-1.5 h-1.5 rounded-full transition-all"
+                      style={{
+                        backgroundColor: index === activeCard
+                          ? (theme === "dark" ? darkColors.paginationActive : lightColors.paginationActive)
+                          : (theme === "dark" ? darkColors.paginationInactive : lightColors.paginationInactive)
+                      }}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-      
-      <div className="flex justify-center mt-4 space-x-2">
-        {mediaAssets.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setActiveCard(index)}
-            className="w-1.5 h-1.5 rounded-full transition-all"
-            style={{
-              backgroundColor: index === activeCard
-                ? (theme === "dark" ? darkColors.paginationActive : lightColors.paginationActive)
-                : (theme === "dark" ? darkColors.paginationInactive : lightColors.paginationInactive)
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  </div>
-)}
+          )}
 
         </div>
+
+        {/* Scroll Arrows - Bottom to Top Animation */}
+        <div className="absolute bottom-24 md:bottom-32 lg:bottom-[30rem] left-1/2 -translate-x-1/2 z-20">
+          <button
+            onClick={scrollToPortfolio}
+            className="flex flex-col gap-0 cursor-pointer group hover:scale-110 transition-transform duration-300"
+            aria-label="Scroll to next section"
+          >
+            {[0, 1, 2, 3].map((index) => {
+              const isActive = (3 - index) < activeArrows;
+              
+              return (
+                <svg
+                  key={index}
+                  className="w-6 h-6 md:w-7 md:h-7 transition-colors duration-300"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  style={{
+                    color: isActive ? "#FCD34D" : "#92400E"
+                  }}
+                >
+                  <path
+                    d="M7 10L12 15L17 10"
+                    stroke="currentColor"
+                    strokeWidth="4.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              );
+            })}
+          </button>
+        </div>
+
       </section>
 
       <section ref={portfolioSectionRef} className="w-full min-h-screen py-16 sm:py-20 lg:py-24" style={bgStyle}>
@@ -1469,16 +1542,23 @@ export default function HeroSection({ theme = "light" }) {
                             className={`absolute bottom-0 left-0 right-0 z-20 transition-all duration-300 pointer-events-none overflow-hidden ${
                               hoveredCard === index ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
                             }`}
-                            style={{ height: '25%' }}
+                            style={{ height: '18%' }}
                           >
-                            <svg className="absolute bottom-0 left-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                              <path d="M 0 100 L 0 100 Q 50 5, 100 100 L 100 100 Z" fill="#FFFFFF" />
+                            <svg 
+                              className="absolute bottom-0 left-0 w-full h-full" 
+                              viewBox="0 0 100 100" 
+                              preserveAspectRatio="none"
+                            >
+                              <path 
+                                d="M 0 100 L 30 35 C 38 25, 44 20, 50 20 C 56 20, 62 25, 70 35 L 100 100 Z" 
+                                fill="#FFFFFF" 
+                              />
                             </svg>
-                            <div className="absolute bottom-5 sm:bottom-6 left-0 right-0 flex flex-col items-center">
-                              <h3 className="text-[#013825] font-bold text-xs sm:text-sm mb-0.5">
+                            <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 flex flex-col items-center">
+                              <h3 className="text-[#013825] font-medium text-[10px] sm:text-[11px] mb-0.5">
                                 {item.title}
                               </h3>
-                              <p className="text-[#013825] text-[10px] sm:text-xs font-semibold">
+                              <p className="text-[#013825] text-[9px] sm:text-[10px] font-medium">
                                 {item.metric}
                               </p>
                             </div>
@@ -1509,4 +1589,3 @@ export default function HeroSection({ theme = "light" }) {
     </div>
   );
 }
-
