@@ -1268,40 +1268,40 @@ export default function HeroSection({ theme = "light" }) {
           <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-8 lg:gap-12 xl:gap-16 items-start">
             
             <div className="flex flex-col">
-              <div className="max-w-[1400px]" ref={titleContainerRef}>
-                <div className="hero-badge mb-10 flex items-center gap-3">
-                  <span
-                    className="inline-flex h-5 w-5 rounded-sm"
-                    style={{ backgroundColor: theme === "dark" ? darkColors.primary : lightColors.primary }}
-                  />
-                  <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[20px] font-semibold tracking-[0.16em] uppercase ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"}`}>
-                    B2B marketing agency
-                  </span>
-                </div>
-                
-               <h1 className="mb-4 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[0.92] tracking-[-0.03em]">
-                <span 
-                  className={`hero-main-title-line block text-[46px] sm:text-[60px] md:text-[78px] lg:text-[92px] xl:text-[100px] ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
-                >
-                  <span className="font-bold">We build </span>
-                  <span className="font-ivy-presto italic text-[0.94em] tracking-[0.03em]">
-                    high‑performing
-                  </span>
-                </span>
+  <div className="max-w-full lg:max-w-[1600px] xl:max-w-[1800px]" ref={titleContainerRef}>
+    <div className="hero-badge mb-10 flex items-center gap-3">
+      <span
+        className="inline-flex h-5 w-5 rounded-sm"
+        style={{ backgroundColor: theme === "dark" ? darkColors.primary : lightColors.primary }}
+      />
+      <span className={`font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[13px] md:text-[20px] font-semibold tracking-[0.16em] uppercase ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"}`}>
+        B2B marketing agency
+      </span>
+    </div>
+    
+   <h1 className="mb-4 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] leading-[0.92] tracking-[-0.03em]">
+  <span 
+    className={`hero-main-title-line block text-[32px] sm:text-[42px] md:text-[58px] lg:text-[72px] xl:text-[88px] 2xl:text-[100px] whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
+  >
+    <span className="font-bold">We build </span><span className="font-ivy-presto italic text-[0.94em] tracking-[0.03em]">high‑performing</span>
+  </span>
 
-                <span 
-                  className={`hero-main-title-line mt-2 block text-[46px] sm:text-[60px] md:text-[78px] lg:text-[92px] xl:text-[104px] font-bold ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
-                >
-                  marketing engines for
-                </span>
-                
-                <span 
-                  className={`hero-main-title-line mt-2 block text-[46px] sm:text-[60px] md:text-[78px] lg:text-[92px] xl:text-[104px] font-bold ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
-                >
-                  B2B brands
-                </span>
-              </h1>
-              </div>
+  <span 
+    className={`hero-main-title-line mt-2 block text-[32px] sm:text-[42px] md:text-[58px] lg:text-[72px] xl:text-[88px] 2xl:text-[104px] font-bold whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
+  >
+    marketing engines for
+  </span>
+  
+  <span 
+    className={`hero-main-title-line mt-2 block text-[32px] sm:text-[42px] md:text-[58px] lg:text-[72px] xl:text-[88px] 2xl:text-[104px] font-bold whitespace-nowrap ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"}`}
+  >
+    B2B brands
+  </span>
+</h1>
+
+
+  </div>
+
 
               <div className="hero-body max-w-full lg:max-w-[640px] pt-20">
                 <p className={`mb-9 font-[Helvetica_Now_Text,Helvetica,Arial,sans-serif] text-[17px] md:text-[25px] font-semibold leading-relaxed ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"}`}>
