@@ -1128,9 +1128,9 @@ export default function HeroSection({ theme = "light" }) {
               const heroContainerRect = heroCardsContainerRef.current.getBoundingClientRect();
               const imageAreaRect = imageArea.getBoundingClientRect();
               
-              const stackOffset = index * 30;
+              const stackOffset = index * 80; // INCREASED to 80 for much more horizontal spacing
               const heroStartX = heroContainerRect.left + stackOffset;
-              const heroStartY = heroContainerRect.top + stackOffset;
+              const heroStartY = heroContainerRect.top;
               const width = window.innerWidth;
               let offsetX, offsetY;
               
@@ -1168,7 +1168,7 @@ export default function HeroSection({ theme = "light" }) {
               
               gsap.set(heroCard, {
                 x: stackOffset + (deltaX * progress),
-                y: stackOffset + (deltaY * progress),
+                y: (deltaY * progress),
                 scale: currentScale,
               });
               
@@ -1370,7 +1370,7 @@ export default function HeroSection({ theme = "light" }) {
           </div>
 
           {isDesktop && (
-            <div className="flex justify-end items-end mb-[10vh]" style={{ transform: 'translateY(-75%)' }}>
+            <div className="flex justify-end items-end mb-[10vh] pr-32" style={{ transform: 'translateY(-75%)' }}>
               <div ref={heroCardsContainerRef} className="w-[180px] lg:w-[220px] xl:w-[260px]">
                 <div className="relative w-full aspect-[3/4]" style={{ perspective: '1000px' }}>
                   {mediaAssets.map((asset, index) => (
@@ -1380,7 +1380,7 @@ export default function HeroSection({ theme = "light" }) {
                       className="absolute w-full h-full cursor-pointer shadow-lg rounded-xl overflow-hidden"
                       style={{
                         zIndex: 50 - index,
-                        transform: `translateX(${index * 30}px) translateY(${index * 30}px) scale(${1 - index * 0.05})`,
+                        transform: `translateX(${index * 80}px) scale(${1 - index * 0.05})`, // CHANGED to 80
                       }}
                       onClick={() => setActiveCard(index)}
                       onMouseEnter={() => setHoveredHeroCard(index)}
@@ -1409,30 +1409,21 @@ export default function HeroSection({ theme = "light" }) {
                           style={{ height: '22%' }}
                         >
                   <svg
-  className="absolute bottom-0 left-0 w-full h-full"
-  viewBox="0 0 100 100"
-  preserveAspectRatio="none"
->
-  <path
-    d="
-      M 0 100
-      L 46 15
-      A 5 5 0 0 1 54 15
-      L 100 100
-      Z
-    "
-    fill="#fff"
-  />
-</svg>
-
-
-
-
-
-
-
-
-
+    className="absolute bottom-0 left-0 w-full h-full"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+  >
+    <path
+      d="
+        M 0 100
+        L 46 15
+        A 5 5 0 0 1 54 15
+        L 100 100
+        Z
+      "
+      fill="#fff"
+    />
+  </svg>
 
                           
                           <div className="absolute bottom-2 sm:bottom-3 left-0 right-0 flex flex-col items-center">
@@ -1589,3 +1580,4 @@ export default function HeroSection({ theme = "light" }) {
     </div>
   );
 }
+
