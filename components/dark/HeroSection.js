@@ -941,6 +941,7 @@ export default function HeroSection({ theme = "light" }) {
   const [hoveredHeroCard, setHoveredHeroCard] = useState(null);
   const [hasTriggeredAnimation, setHasTriggeredAnimation] = useState(false);
   const [activeArrows, setActiveArrows] = useState(0);
+  const [hoveredBottomSection, setHoveredBottomSection] = useState(null);
 
   // --- Data (Memoized to prevent re-renders) ---
   const mediaAssets = useMemo(() => [
@@ -985,6 +986,49 @@ export default function HeroSection({ theme = "light" }) {
       link: "/work/coca-cola",
     }
   ], []);
+
+  // --- Handle Card Click - Animate to Front ---
+  const handleCardClick = useCallback((clickedIndex) => {
+    if (clickedIndex === activeCard) return; // Already at front
+    
+    const clickedCard = heroCardsRef.current[clickedIndex];
+    if (!clickedCard) return;
+
+    // Animate clicked card to front position (index 0)
+    gsap.to(clickedCard, {
+      x: 0,
+      scale: 1,
+      zIndex: 100,
+      duration: 0.5,
+      ease: "power2.out",
+    });
+
+    // Animate all other cards to their new positions
+    heroCardsRef.current.forEach((card, index) => {
+      if (index !== clickedIndex && card) {
+        let newIndex;
+        if (index < clickedIndex) {
+          // Cards before clicked card move back one position
+          newIndex = index + 1;
+        } else {
+          // Cards after clicked card stay in same relative position
+          newIndex = index;
+        }
+
+        const offset = isDesktop ? 100 : 30; // Different spacing for mobile
+
+        gsap.to(card, {
+          x: newIndex * offset,
+          scale: 1 - (newIndex * 0.05),
+          zIndex: 50 - newIndex,
+          duration: 0.5,
+          ease: "power2.out",
+        });
+      }
+    });
+
+    setActiveCard(clickedIndex);
+  }, [activeCard, isDesktop]);
 
   // --- Scroll to Portfolio Function ---
   const scrollToPortfolio = useCallback(() => {
@@ -1074,7 +1118,7 @@ export default function HeroSection({ theme = "light" }) {
     }, 10000);
   }, [triggerElectricalAnimation]);
 
-  // --- GSAP Scroll Animation ---
+  // --- GSAP Scroll Animation (DESKTOP ONLY) ---
   useLayoutEffect(() => {
     if (!isDesktop || !heroCardsContainerRef.current || !portfolioSectionRef.current) return;
 
@@ -1108,6 +1152,7 @@ export default function HeroSection({ theme = "light" }) {
       gsap.from(".hero-badge", { y: 24, opacity: 0, duration: 0.8, ease: "power3.out" });
       gsap.from(".hero-body", { y: 32, opacity: 0, duration: 0.8, ease: "power3.out", delay: 0.2, stagger: 0.08 });
 
+      // ONLY RUN SCROLL ANIMATION ON DESKTOP
       setTimeout(() => {
         mediaAssets.forEach((_, index) => {
           const heroCard = heroCardsRef.current[index];
@@ -1128,7 +1173,7 @@ export default function HeroSection({ theme = "light" }) {
               const heroContainerRect = heroCardsContainerRef.current.getBoundingClientRect();
               const imageAreaRect = imageArea.getBoundingClientRect();
               
-              const stackOffset = index * 80; // INCREASED to 80 for much more horizontal spacing
+              const stackOffset = index * 100;
               const heroStartX = heroContainerRect.left + stackOffset;
               const heroStartY = heroContainerRect.top;
               const width = window.innerWidth;
@@ -1369,7 +1414,8 @@ export default function HeroSection({ theme = "light" }) {
             </div>
           </div>
 
-          {isDesktop && (
+          {/* CARD SLIDER - DESKTOP: Right Side, MOBILE/TABLET: Center Below Content */}
+          {isDesktop ? (
             <div className="flex justify-end items-end mb-[10vh] pr-32" style={{ transform: 'translateY(-75%)' }}>
               <div ref={heroCardsContainerRef} className="w-[180px] lg:w-[220px] xl:w-[260px]">
                 <div className="relative w-full aspect-[3/4]" style={{ perspective: '1000px' }}>
@@ -1380,9 +1426,9 @@ export default function HeroSection({ theme = "light" }) {
                       className="absolute w-full h-full cursor-pointer shadow-lg rounded-xl overflow-hidden"
                       style={{
                         zIndex: 50 - index,
-                        transform: `translateX(${index * 80}px) scale(${1 - index * 0.05})`, // CHANGED to 80
+                        transform: `translateX(${index * 100}px) scale(${1 - index * 0.05})`,
                       }}
-                      onClick={() => setActiveCard(index)}
+                      onClick={() => handleCardClick(index)}
                       onMouseEnter={() => setHoveredHeroCard(index)}
                       onMouseLeave={() => setHoveredHeroCard(null)}
                     >
@@ -1408,24 +1454,23 @@ export default function HeroSection({ theme = "light" }) {
                           }`}
                           style={{ height: '22%' }}
                         >
-                  <svg
-    className="absolute bottom-0 left-0 w-full h-full"
-    viewBox="0 0 100 100"
-    preserveAspectRatio="none"
-  >
-    <path
-      d="
-        M 0 100
-        L 46 15
-        A 5 5 0 0 1 54 15
-        L 100 100
-        Z
-      "
-      fill="#fff"
-    />
-  </svg>
+                          <svg
+                            className="absolute bottom-0 left-0 w-full h-full"
+                            viewBox="0 0 100 100"
+                            preserveAspectRatio="none"
+                          >
+                            <path
+                              d="
+                                M 0 100
+                                L 46 15
+                                A 5 5 0 0 1 54 15
+                                L 100 100
+                                Z
+                              "
+                              fill="#74f5a1"
+                            />
+                          </svg>
 
-                          
                           <div className="absolute bottom-2 sm:bottom-3 left-0 right-0 flex flex-col items-center">
                             <h3 className="text-[#013825] font-medium text-[9px] sm:text-[10px] mb-0.5">
                               {asset.title}
@@ -1444,7 +1489,94 @@ export default function HeroSection({ theme = "light" }) {
                   {mediaAssets.map((_, index) => (
                     <button
                       key={index}
-                      onClick={() => setActiveCard(index)}
+                      onClick={() => handleCardClick(index)}
+                      className="w-1.5 h-1.5 rounded-full transition-all"
+                      style={{
+                        backgroundColor: index === activeCard
+                          ? (theme === "dark" ? darkColors.paginationActive : lightColors.paginationActive)
+                          : (theme === "dark" ? darkColors.paginationInactive : lightColors.paginationInactive)
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            // MOBILE/TABLET - CENTER ALIGNED IN HERO SECTION
+            <div className="flex justify-center items-center mt-16 mb-24">
+              <div ref={heroCardsContainerRef} className="w-[140px] sm:w-[180px]">
+                <div className="relative w-full aspect-[3/4]" style={{ perspective: '1000px' }}>
+                  {mediaAssets.map((asset, index) => (
+                    <div
+                      key={index}
+                      ref={(el) => { if (el) heroCardsRef.current[index] = el; }}
+                      className="absolute w-full h-full cursor-pointer shadow-lg rounded-xl overflow-hidden"
+                      style={{
+                        zIndex: 50 - index,
+                        transform: `translateX(${index * 30}px) scale(${1 - index * 0.05})`,
+                      }}
+                      onClick={() => handleCardClick(index)}
+                      onMouseEnter={() => setHoveredHeroCard(index)}
+                      onMouseLeave={() => setHoveredHeroCard(null)}
+                    >
+                      <div className="relative w-full h-full overflow-hidden rounded-xl">
+                        <div className="absolute inset-0 z-10">
+                          {asset.type === 'image' ? (
+                            <Image src={asset.src} alt={asset.alt} fill className="object-cover rounded-xl" />
+                          ) : (
+                            <video src={asset.src} muted loop playsInline autoPlay className="w-full h-full object-cover rounded-xl" />
+                          )}
+                        </div>
+                        
+                        <div className="card-overlay absolute inset-0 z-15 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none">
+                          <div className="absolute bottom-3 left-3 right-3">
+                            <h3 className="text-white text-[11px] font-bold mb-1">{asset.title}</h3>
+                            <p className="text-white/80 text-[9px]">{asset.subtitle}</p>
+                          </div>
+                        </div>
+                        
+                        <div 
+                          className={`absolute bottom-0 left-0 right-0 z-20 transition-all duration-300 pointer-events-none overflow-visible ${
+                            hoveredHeroCard === index ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+                          }`}
+                          style={{ height: '22%' }}
+                        >
+                          <svg
+                            className="absolute bottom-0 left-0 w-full h-full"
+                            viewBox="0 0 100 100"
+                            preserveAspectRatio="none"
+                          >
+                            <path
+                              d="
+                                M 0 100
+                                L 46 15
+                                A 5 5 0 0 1 54 15
+                                L 100 100
+                                Z
+                              "
+                              fill="#74f5a1"
+                            />
+                          </svg>
+
+                          <div className="absolute bottom-2 left-0 right-0 flex flex-col items-center">
+                            <h3 className="text-[#013825] font-medium text-[8px] mb-0.5">
+                              {asset.title}
+                            </h3>
+                            <p className="text-[#013825] text-[7px] font-medium">
+                              {asset.metric}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="flex justify-center mt-4 space-x-2">
+                  {mediaAssets.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleCardClick(index)}
                       className="w-1.5 h-1.5 rounded-full transition-all"
                       style={{
                         backgroundColor: index === activeCard
@@ -1460,8 +1592,8 @@ export default function HeroSection({ theme = "light" }) {
 
         </div>
 
-        {/* Scroll Arrows - Bottom to Top Animation */}
-        <div className="absolute bottom-24 md:bottom-32 lg:bottom-[30rem] left-1/2 -translate-x-1/2 z-20">
+        {/* Scroll Arrows - Pushed Down Below Slider on Mobile */}
+        <div className="absolute bottom-8 sm:bottom-12 md:bottom-16 lg:bottom-[30rem] left-1/2 -translate-x-1/2 z-20">
           <button
             onClick={scrollToPortfolio}
             className="flex flex-col gap-0 cursor-pointer group hover:scale-110 transition-transform duration-300"
@@ -1498,8 +1630,15 @@ export default function HeroSection({ theme = "light" }) {
       <section ref={portfolioSectionRef} className="w-full min-h-screen py-16 sm:py-20 lg:py-24" style={bgStyle}>
         <div className="w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 sm:mb-16">
-            <h2 className={`${theme === "dark" ? "text-white" : "text-[#111111]"} text-3xl sm:text-4xl md:text-5xl font-bold`}>
-              Services we offer
+            {/* Subheading */}
+            <p className={`font-merriweather text-sm sm:text-base md:text-lg mb-12 ${theme === "dark" ? "text-white/70" : "text-[#111111]/70"}`}>
+              Lorem Ipsum
+            </p>
+            
+            {/* Main Heading */}
+            <h2 className={`font-merriweather text-3xl sm:text-4xl md:text-5xl lg:text-7xl ${theme === "dark" ? "text-white" : "text-[#111111]"}`}>
+              <span className="font-light">Creating impact for </span>
+              <span className="italic bg-black text-white px-3 py-1.5 rounded-xl font-playfair font-semibold">businesses in Qatar</span>
             </h2>
           </div>
 
@@ -1507,68 +1646,95 @@ export default function HeroSection({ theme = "light" }) {
             {mediaAssets.map((item, index) => (
               <div
                 key={index}
-                className="rounded-xl overflow-hidden"
+                className="rounded-xl overflow-hidden group"
               >
                 <Link href={item.link}>
-                  <div 
-                    ref={(el) => { if (el) portfolioImageAreasRef.current[index] = el; }}
-                    className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-xl overflow-hidden"
-                  >
-                    {!isDesktop && (
-                      <>
-                        <div 
-                          className="relative w-full h-full"
-                          onMouseEnter={() => setHoveredCard(index)}
-                          onMouseLeave={() => setHoveredCard(null)}
-                        >
-                          <div className="absolute inset-0 z-10">
-                            {item.type === 'image' ? (
-                              <Image src={item.src} alt={item.alt} fill className="object-cover rounded-xl" />
-                            ) : (
-                              <video src={item.src} muted loop playsInline autoPlay className="w-full h-full object-cover rounded-xl" />
-                            )}
-                          </div>
-                          
+                  <div className="relative">
+                    <div 
+                      ref={(el) => { if (el) portfolioImageAreasRef.current[index] = el; }}
+                      className="relative w-full h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-t-xl overflow-hidden"
+                    >
+                      {!isDesktop && (
+                        <>
                           <div 
-                            className={`absolute bottom-0 left-0 right-0 z-20 transition-all duration-300 pointer-events-none overflow-hidden ${
-                              hoveredCard === index ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
-                            }`}
-                            style={{ height: '18%' }}
+                            className="relative w-full h-full"
+                            onMouseEnter={() => setHoveredCard(index)}
+                            onMouseLeave={() => setHoveredCard(null)}
                           >
-                            <svg 
-                              className="absolute bottom-0 left-0 w-full h-full" 
-                              viewBox="0 0 100 100" 
-                              preserveAspectRatio="none"
+                            <div className="absolute inset-0 z-10">
+                              {item.type === 'image' ? (
+                                <Image src={item.src} alt={item.alt} fill className="object-cover rounded-xl" />
+                              ) : (
+                                <video src={item.src} muted loop playsInline autoPlay className="w-full h-full object-cover rounded-xl" />
+                              )}
+                            </div>
+                            
+                            <div 
+                              className={`absolute bottom-0 left-0 right-0 z-20 transition-all duration-300 pointer-events-none overflow-hidden ${
+                                hoveredCard === index ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+                              }`}
+                              style={{ height: '18%' }}
                             >
-                              <path 
-                                d="M 0 100 L 30 35 C 38 25, 44 20, 50 20 C 56 20, 62 25, 70 35 L 100 100 Z" 
-                                fill="#FFFFFF" 
-                              />
-                            </svg>
-                            <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 flex flex-col items-center">
-                              <h3 className="text-[#013825] font-medium text-[10px] sm:text-[11px] mb-0.5">
-                                {item.title}
-                              </h3>
-                              <p className="text-[#013825] text-[9px] sm:text-[10px] font-medium">
-                                {item.metric}
-                              </p>
+                              <svg 
+                                className="absolute bottom-0 left-0 w-full h-full" 
+                                viewBox="0 0 100 100" 
+                                preserveAspectRatio="none"
+                              >
+                                <path 
+                                  d="M 0 100 L 30 35 C 38 25, 44 20, 50 20 C 56 20, 62 25, 70 35 L 100 100 Z" 
+                                  fill="#74f5a1"
+                                />
+                              </svg>
+                              <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 flex flex-col items-center">
+                                <h3 className="text-[#013825] font-medium text-[10px] sm:text-[11px] mb-0.5">
+                                  {item.title}
+                                </h3>
+                                <p className="text-[#013825] text-[9px] sm:text-[10px] font-medium">
+                                  {item.metric}
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                  
-                  <div className="p-4 sm:p-6">
-                    <h3 className={`${theme === "dark" ? "text-white" : "text-[#111111]"} font-bold text-base sm:text-lg mb-2`}>
-                      {item.title}
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {item.buttons.map((button, btnIndex) => (
-                        <span key={btnIndex} className={`border rounded-full px-3 py-1 text-xs ${theme === "dark" ? "border-white/30 text-white/80" : "border-black/20 text-black/80"}`}>
-                          {button}
-                        </span>
-                      ))}
+                        </>
+                      )}
+                    </div>
+                    
+                    <div 
+                      className="p-4 sm:p-6 pt-6 sm:pt-8 -mt-4 sm:-mt-6 relative z-10 transition-all duration-300 rounded-b-xl"
+                      // style={{
+                      //   backgroundColor: hoveredBottomSection === index ? '#015b4f' : 'transparent'
+                      // }}
+                      onMouseEnter={() => setHoveredBottomSection(index)}
+                      onMouseLeave={() => setHoveredBottomSection(null)}
+                    >
+                      <h3 
+                        className="font-bold text-base sm:text-lg mb-2 transition-colors duration-300"
+                        style={{
+                          color: hoveredBottomSection === index 
+                            ? '#ffffff' 
+                            : (theme === "dark" ? "#ffffff" : "#111111")
+                        }}
+                      >
+                        {item.title}
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {item.buttons.map((button, btnIndex) => (
+                          <span 
+                            key={btnIndex} 
+                            className="border rounded-full px-3 py-1 text-xs transition-colors duration-300"
+                            style={{
+                              borderColor: hoveredBottomSection === index 
+                                ? 'rgba(255, 255, 255, 0.3)' 
+                                : (theme === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(0, 0, 0, 0.2)"),
+                              color: hoveredBottomSection === index 
+                                ? 'rgba(255, 255, 255, 0.8)' 
+                                : (theme === "dark" ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.8)")
+                            }}
+                          >
+                            {button}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -1580,4 +1746,3 @@ export default function HeroSection({ theme = "light" }) {
     </div>
   );
 }
-

@@ -15,6 +15,10 @@ import DeepJudgeAnimation from './DeepJudgeAnimation';
 import TestimonialsSection from './TestimonialsSection';
 import CursorTrail from './CursorTrail';
 import './MainPage.css';
+import RealProblemSection from './RealProblemSection';
+import NewServicesSection from './NewServicesSection';
+import ThatsTheTechEyrie from './ThatsTheTechEyrie';
+import BuildOthersSection from './BuildOtherSection';
 
 const MainPage = () => {
   const [theme, setTheme] = useState('light');
@@ -58,6 +62,10 @@ const MainPage = () => {
 
         <Header theme={theme} />
         <HeroSection theme={theme} />
+        <RealProblemSection theme={theme} />
+        <NewServicesSection theme={theme} />
+        <ThatsTheTechEyrie theme={theme} />
+        <BuildOthersSection theme={theme} />
         <DeepJudgeAnimation theme={theme} />
         <StatsSection theme={theme} />
         <ServicesSection theme={theme} />
