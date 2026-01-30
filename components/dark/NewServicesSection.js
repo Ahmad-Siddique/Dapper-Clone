@@ -259,9 +259,6 @@ export default function NewServicesSection({ theme = "light" }) {
   const [activeId, setActiveId] = useState(null);
   const sectionRef = useRef(null);
   const titleContainerRef = useRef(null);
-  const animationIntervalRef = useRef(null);
-  const hasAnimatedRef = useRef(false);
-  const [hasTriggeredAnimation, setHasTriggeredAnimation] = useState(false);
   
   const canvasContainerRef = useRef(null);
   const threeRootRef = useRef(null);
@@ -303,7 +300,7 @@ export default function NewServicesSection({ theme = "light" }) {
     `,
   };
 
-  // --- SIMPLE ELECTRIC ANIMATION (NO CHARACTER SPLITTING) ---
+  // --- ELECTRIC ANIMATION (ONCE PER VIEWPORT ENTRY) ---
 
   const triggerElectricalAnimation = useCallback(() => {
     const titleLines = document.querySelectorAll(".new-services-title-line");
@@ -333,23 +330,38 @@ export default function NewServicesSection({ theme = "light" }) {
     });
   }, [theme]);
 
-  const startElectricalAnimation = useCallback(() => {
-    if (animationIntervalRef.current) {
-      clearInterval(animationIntervalRef.current);
-    }
+  // --- INTERSECTION OBSERVER FOR VIEWPORT DETECTION ---
+  useEffect(() => {
+    const titleContainer = titleContainerRef.current;
+    if (!titleContainer) return;
 
-    setTimeout(() => {
-      triggerElectricalAnimation();
-    }, 800);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              triggerElectricalAnimation();
+            }, 300);
+          }
+        });
+      },
+      {
+        threshold: 0.3,
+        rootMargin: "0px",
+      }
+    );
 
-    animationIntervalRef.current = setInterval(() => {
-      triggerElectricalAnimation();
-    }, 10000);
+    observer.observe(titleContainer);
+
+    return () => {
+      if (titleContainer) {
+        observer.unobserve(titleContainer);
+      }
+    };
   }, [triggerElectricalAnimation]);
 
   // --- END ELECTRIC ANIMATION LOGIC ---
 
-  // Transition to specific image with proper particle animation
   const transitionToImage = useCallback((targetIndex) => {
     if (isTransitioningRef.current || !sceneRef.current || !rendererRef.current) return;
     if (currentImageIndexRef.current === targetIndex) return;
@@ -551,74 +563,6 @@ export default function NewServicesSection({ theme = "light" }) {
     };
   }, [startAutoRotate]);
 
-  useLayoutEffect(() => {
-    const section = sectionRef.current;
-    const titleContainer = titleContainerRef.current;
-
-    if (!section || !titleContainer) return;
-
-    const ctx = gsap.context(() => {
-      gsap.killTweensOf(".new-services-title-line");
-      gsap.set(".new-services-title-line", { opacity: 1, y: 0 });
-
-      const revealTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: titleContainer,
-          start: "top 60%",
-          end: "top 30%",
-          once: true,
-          onEnter: () => {
-            if (!hasTriggeredAnimation) {
-              setHasTriggeredAnimation(true);
-              hasAnimatedRef.current = true;
-              setTimeout(() => {
-                startElectricalAnimation();
-              }, 1000);
-            }
-          },
-          markers: false,
-        },
-      });
-
-      revealTl.fromTo(
-        ".new-services-title-line",
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", stagger: 0.15 }
-      );
-
-      const cardTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top 70%",
-          once: true,
-        },
-      });
-
-      cardTl.fromTo(
-        ".service-card",
-        { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", stagger: 0.2 }
-      );
-    }, section);
-
-    return () => ctx.revert();
-  }, [theme, startElectricalAnimation, hasTriggeredAnimation]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!hasAnimatedRef.current) {
-        triggerElectricalAnimation();
-      }
-    }, 1500);
-
-    return () => {
-      clearTimeout(timer);
-      if (animationIntervalRef.current) {
-        clearInterval(animationIntervalRef.current);
-      }
-    };
-  }, [triggerElectricalAnimation]);
-
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = `
@@ -679,10 +623,10 @@ export default function NewServicesSection({ theme = "light" }) {
             </span>
           </div>
 
-          {/* Title - Right side only on desktop */}
-          <div className="grid lg:grid-cols-[40%_1fr] gap-8 lg:gap-12 mb-12 sm:mb-16 md:mb-20">
+          {/* Title - Right side only on desktop - MOVED UP */}
+          <div className="grid lg:grid-cols-[25%_1fr] gap-8 lg:gap-40 mb-10 sm:mb-12 md:mb-14">
             <div className="hidden lg:block" />
-            <div ref={titleContainerRef}>
+            <div ref={titleContainerRef} className="mt-16 sm:-mt-0 md:mt-4 lg:-mt-16 xl:-mt-16 2xl:-mt-16">
               <h2 className="leading-[1.02] tracking-tight">
                 <div
                   className={`new-services-title-line text-[28px] sm:text-[36px] md:text-[48px] lg:text-[60px] xl:text-[70px] 2xl:text-[82px] 3xl:text-[90px] text-transition ${
@@ -705,15 +649,18 @@ export default function NewServicesSection({ theme = "light" }) {
             </div>
           </div>
 
-          {/* Grid with Image left | Description + Cards right */}
-          <div className="grid lg:grid-cols-[40%_1fr] gap-8 lg:gap-12">
-            {/* Image Container - Full height of description + cards */}
+          {/* Grid with Image left | Description + Cards right - 30% MORE GAP */}
+          <div className="grid lg:grid-cols-[25%_1fr] gap-8 lg:gap-40">
+            {/* Image Container */}
             <div className="relative w-full h-full">
               <div className="sticky top-8 h-full">
                 <div className="relative w-full service-card h-full">
                   <div 
                     ref={canvasContainerRef}
-                    className="three-canvas-container relative h-[450px] sm:h-[550px] md:h-[600px] lg:h-full lg:min-h-[650px] xl:min-h-[700px] rounded-xl sm:rounded-2xl border border-transition shadow-2xl overflow-hidden"
+                    className="three-canvas-container relative h-[450px] sm:h-[550px] md:h-[600px] lg:h-[700px] xl:h-[750px] rounded-xl sm:rounded-2xl border border-transition shadow-2xl overflow-hidden"
+
+
+
                   />
 
                   <span className="pointer-events-none absolute left-3 top-3 sm:left-4 sm:top-4 md:left-6 md:top-6 h-8 w-6 sm:h-10 sm:w-7 md:h-12 md:w-8 bg-[#74F5A1] z-10" />
@@ -722,19 +669,19 @@ export default function NewServicesSection({ theme = "light" }) {
               </div>
             </div>
 
-            {/* Right Content: Description + Cards */}
-            <div className="flex flex-col">
+            {/* Right Content: Description + Cards - FULL WIDTH */}
+            <div className="flex flex-col w-full">
               {/* Description */}
               <div className="mb-6 sm:mb-8 space-y-4">
                 <p
-                  className={`font-merriweather text-[14px] sm:text-[16px] md:text-[17px] lg:text-[19px] xl:text-[21px] font-normal leading-relaxed text-transition ${
+                  className={`font-merriweather text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[15px] font-normal leading-relaxed text-transition ${
                     theme === "dark" ? "text-[#d0d0d0]" : "text-[#212121]"
                   }`}
                 >
                   As businesses grow, tools multiply, processes become manual, and visibility is lost. What once felt manageable slowly turns into complexity.
                 </p>
                 <p
-                  className={`font-merriweather text-[14px] sm:text-[16px] md:text-[17px] lg:text-[19px] xl:text-[21px] font-normal leading-relaxed text-transition ${
+                  className={`font-merriweather text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] xl:text-[15px] font-normal leading-relaxed text-transition ${
                     theme === "dark" ? "text-[#d0d0d0]" : "text-[#212121]"
                   }`}
                 >
@@ -742,7 +689,7 @@ export default function NewServicesSection({ theme = "light" }) {
                 </p>
               </div>
 
-              {/* Cards Grid - Height reduced by 20% */}
+              {/* Cards Grid - 30% LESS HEIGHT */}
               <div
                 className="grid h-full gap-0.5 sm:gap-0.5 md:gap-1 transition-all duration-700 ease-out"
                 style={{
@@ -753,7 +700,9 @@ export default function NewServicesSection({ theme = "light" }) {
                       ? "0.8fr 1.2fr"
                       : "1fr 1fr",
                   gridTemplateRows:
-                    activeId === "platforms" ? "0.85fr 1.15fr" : "1fr 1fr",
+                 
+  activeId === "platforms" ? "0.45fr 0.55fr" : "0.5fr 0.5fr",
+
                 }}
               >
                 {SERVICES.map((service, index) => {
@@ -777,7 +726,7 @@ export default function NewServicesSection({ theme = "light" }) {
                       `}
                     >
                       <h3
-                        className={`font-[Helvetica_Now_Text,Arial,sans-serif] text-[15px] sm:text-[17px] md:text-[19px] lg:text-[21px] xl:text-[23px] 2xl:text-[25px] font-bold tracking-tight leading-snug text-transition ${
+                        className={`font-merriweather text-[13px] sm:text-[14px] md:text-[15px] lg:text-[16px] xl:text-[17px] 2xl:text-[18px] font-normal tracking-tight leading-snug text-transition ${
                           theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                         }`}
                       >
@@ -794,7 +743,7 @@ export default function NewServicesSection({ theme = "light" }) {
 
                       <div className="mt-2 sm:mt-3 flex items-end justify-between gap-3 sm:gap-4">
                         <p
-                          className={`max-w-full sm:max-w-[350px] md:max-w-[450px] text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] font-normal leading-snug transition-all duration-500 ease-out text-transition ${
+                          className={`max-w-full sm:max-w-[350px] md:max-w-[450px] font-merriweather text-[10px] sm:text-[11px] md:text-[12px] lg:text-[13px] font-normal leading-snug transition-all duration-500 ease-out text-transition ${
                             theme === "dark"
                               ? "text-[#aaaaaa]"
                               : "text-[#444444]"

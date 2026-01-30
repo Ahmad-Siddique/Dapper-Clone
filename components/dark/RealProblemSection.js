@@ -7,10 +7,8 @@ import gsap from "gsap";
 
 export default function RealProblemSection({ theme = "light" }) {
   const containerRef = useRef(null);
-  
-  // Animation refs for electric text
-  const animationIntervalRef = useRef(null);
-  const hasAnimatedRef = useRef(false);
+  const titleContainerRef = useRef(null);
+  const hasAnimatedInViewport = useRef(false);
 
   // Triangle animation effects
   const [triangles, setTriangles] = useState([]);
@@ -46,10 +44,10 @@ export default function RealProblemSection({ theme = "light" }) {
     `,
   };
 
-  // --- ELECTRIC ANIMATION LOGIC ---
+  // --- ELECTRIC ANIMATION LOGIC (ONCE PER VIEWPORT ENTRY) ---
 
   const triggerElectricalAnimation = useCallback(() => {
-    const titleLines = document.querySelectorAll(".hero-title-line");
+    const titleLines = document.querySelectorAll(".real-problem-title-line");
 
     const originalColor = theme === "dark" ? "#f3f3f3" : "#111111";
     const electricColor = theme === "dark" ? "#74F5A1" : "#3BC972";
@@ -120,35 +118,40 @@ export default function RealProblemSection({ theme = "light" }) {
     });
   }, [theme]);
 
-  const startElectricalAnimation = useCallback(() => {
-    if (animationIntervalRef.current) {
-      clearInterval(animationIntervalRef.current);
-    }
-
-    setTimeout(() => {
-      triggerElectricalAnimation();
-    }, 800);
-
-    animationIntervalRef.current = setInterval(() => {
-      triggerElectricalAnimation();
-    }, 10000);
-  }, [triggerElectricalAnimation]);
-
+  // --- INTERSECTION OBSERVER FOR VIEWPORT DETECTION ---
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!hasAnimatedRef.current) {
-        hasAnimatedRef.current = true;
-        startElectricalAnimation();
+    const titleContainer = titleContainerRef.current;
+    if (!titleContainer) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Trigger animation when entering viewport
+            setTimeout(() => {
+              triggerElectricalAnimation();
+            }, 300);
+            hasAnimatedInViewport.current = true;
+          } else {
+            // Reset flag when leaving viewport so it can animate again on re-entry
+            hasAnimatedInViewport.current = false;
+          }
+        });
+      },
+      {
+        threshold: 0.3, // Trigger when 30% of the element is visible
+        rootMargin: "0px",
       }
-    }, 1500);
+    );
+
+    observer.observe(titleContainer);
 
     return () => {
-      clearTimeout(timer);
-      if (animationIntervalRef.current) {
-        clearInterval(animationIntervalRef.current);
+      if (titleContainer) {
+        observer.unobserve(titleContainer);
       }
     };
-  }, [startElectricalAnimation]);
+  }, [triggerElectricalAnimation]);
 
   useEffect(() => {
     const style = document.createElement("style");
@@ -252,7 +255,7 @@ export default function RealProblemSection({ theme = "light" }) {
 
       <section
         ref={containerRef}
-        className="relative overflow-hidden py-12 sm:py-16 md:py-20 lg:py-24 bg-transition"
+        className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-40 xl:py-48 2xl:py-56 bg-transition"
         style={bgStyle}
       >
         {/* Noise texture overlay */}
@@ -282,12 +285,12 @@ export default function RealProblemSection({ theme = "light" }) {
           />
         ))}
 
-        <div className="relative z-10 mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8">
+        <div className="relative z-10 mx-auto max-w-[1800px] px-4 sm:px-6 md:px-8 lg:px-10">
           {/* Label above everything */}
-          <div className="mb-4 sm:mb-5 md:mb-6 flex items-center gap-2 sm:gap-3">
+          <div className="mb-6 sm:mb-7 md:mb-8 lg:mb-10 flex items-center gap-2 sm:gap-3">
             <span className="inline-flex h-4 w-4 sm:h-5 sm:w-5 rounded-sm bg-[#74F5A1]" />
             <span
-              className={`font-italiana text-[11px] sm:text-[12px] md:text-[13px] lg:text-[16px] font-semibold tracking-[0.16em]  ${
+              className={`font-italiana text-[11px] sm:text-[12px] md:text-[13px] lg:text-[16px] font-semibold tracking-[0.16em] uppercase ${
                 theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
               }`}
             >
@@ -296,31 +299,31 @@ export default function RealProblemSection({ theme = "light" }) {
           </div>
 
           {/* Heading left, copy/CTA right */}
-          <div className="mb-8 sm:mb-10 grid gap-6 sm:gap-8 md:gap-10 lg:grid-cols-[1.2fr_1fr]">
-            <div>
+          <div className="mb-8 sm:mb-10 md:mb-12 lg:mb-16 grid gap-8 sm:gap-10 md:gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
+            <div ref={titleContainerRef}>
               <h2
                 className={`leading-[1.02] tracking-tight ${
                   theme === "dark" ? "text-[#f3f3f3]" : "text-[#111111]"
                 }`}
               >
-                <span className="hero-title-line block font-italiana font-light text-[24px] sm:text-[32px] md:text-[40px] lg:text-[56px] xl:text-[70px] 2xl:text-[82px]">
+                <span className="real-problem-title-line block font-italiana font-light text-[24px] sm:text-[32px] md:text-[40px] lg:text-[56px] xl:text-[70px] 2xl:text-[82px]">
                   Most businesses don&apos;t
                 </span>
-                <span className="hero-title-line block font-italiana font-light text-[24px] sm:text-[32px] md:text-[40px] lg:text-[56px] xl:text-[70px] 2xl:text-[82px]">
+                <span className="real-problem-title-line block font-italiana font-light text-[24px] sm:text-[32px] md:text-[40px] lg:text-[56px] xl:text-[70px] 2xl:text-[82px]">
                   have a tool problem,
                 </span>
-                <span className="hero-title-line block font-playfair font-semibold italic text-[24px] sm:text-[32px] md:text-[40px] lg:text-[56px] xl:text-[70px] 2xl:text-[82px]">
+                <span className="real-problem-title-line block font-playfair font-semibold italic text-[24px] sm:text-[32px] md:text-[40px] lg:text-[56px] xl:text-[70px] 2xl:text-[82px]">
                   they have a systems
                 </span>
-                <span className="hero-title-line block font-playfair font-semibold italic text-[24px] sm:text-[32px] md:text-[40px] lg:text-[56px] xl:text-[70px] 2xl:text-[82px]">
+                <span className="real-problem-title-line block font-playfair font-semibold italic text-[24px] sm:text-[32px] md:text-[40px] lg:text-[56px] xl:text-[70px] 2xl:text-[82px]">
                   problem
                 </span>
               </h2>
             </div>
 
-            <div className="flex flex-col gap-4 sm:gap-5 md:gap-6 lg:max-w-[600px]">
+            <div className="flex flex-col gap-5 sm:gap-6 md:gap-7 lg:max-w-[600px] mt-4 sm:mt-6 md:mt-8 lg:mt-16">
               <p
-                className={`font-[Helvetica_Now_Text,Arial,sans-serif] text-[13px] sm:text-[15px] md:text-[17px] lg:text-[19px] xl:text-[21px] font-normal leading-relaxed ${
+                className={`font-merriweather text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px] font-normal leading-relaxed ${
                   theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"
                 }`}
               >
@@ -328,7 +331,7 @@ export default function RealProblemSection({ theme = "light" }) {
               </p>
 
               <p
-                className={`font-[Helvetica_Now_Text,Arial,sans-serif] text-[13px] sm:text-[15px] md:text-[17px] lg:text-[19px] xl:text-[21px] font-normal leading-relaxed ${
+                className={`font-merriweather text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px] font-normal leading-relaxed ${
                   theme === "dark" ? "text-[#f3f3f3]" : "text-[#212121]"
                 }`}
               >
@@ -336,55 +339,14 @@ export default function RealProblemSection({ theme = "light" }) {
               </p>
 
               <Link
-  href="/services"
-  className="group inline-flex items-center gap-3 self-start rounded-[8px] sm:rounded-[10px] px-5 py-3 sm:px-6 sm:py-3.5 md:px-7 md:py-4 shadow-sm transition-transform duration-300 ease-out hover:scale-[1.05] hover:-translate-y-[1px]"
-  style={{ backgroundColor: '#12685b' }}
->
-  <span className="font-[Helvetica_Now_Text,Arial,sans-serif] text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] font-semibold tracking-tight text-white">
-    Our services
-  </span>
-
-  <span className="relative inline-flex h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 items-center justify-center overflow-hidden rounded-[4px] bg-white/20 group-hover:bg-white/30 transition-colors duration-500">
-    <span className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out group-hover:translate-x-3 group-hover:-translate-y-3 group-hover:opacity-0">
-      <svg
-        width="12"
-        height="12"
-        className="sm:w-[14px] sm:h-[14px] md:w-4 md:h-4"
-        viewBox="0 0 14 14"
-        aria-hidden="true"
-      >
-        <path
-          d="M1 13L13 1M13 1H5M13 1V9"
-          fill="none"
-          stroke="#ffffff"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </span>
-
-    <span className="absolute inset-0 flex items-center justify-center translate-x-[-10px] translate-y-[10px] opacity-0 transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100">
-      <svg
-        width="12"
-        height="12"
-        className="sm:w-[14px] sm:h-[14px] md:w-4 md:h-4"
-        viewBox="0 0 14 14"
-        aria-hidden="true"
-      >
-        <path
-          d="M1 13L13 1M13 1H5M13 1V9"
-          fill="none"
-          stroke="#ffffff"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </span>
-  </span>
-</Link>
-
+                href="/services"
+                className="group inline-flex items-center justify-center self-start rounded-full px-5 py-2.5 sm:px-6 sm:py-3 shadow-sm transition-transform duration-300 ease-out hover:scale-[1.05] hover:-translate-y-[1px] mt-2 sm:mt-3"
+                style={{ backgroundColor: '#12685b' }}
+              >
+                <span className="font-merriweather text-[13px] sm:text-[14px] md:text-[15px] font-semibold tracking-wide text-white">
+                  Our services
+                </span>
+              </Link>
             </div>
           </div>
         </div>

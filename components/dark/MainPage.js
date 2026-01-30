@@ -66,7 +66,7 @@ const MainPage = () => {
         <NewServicesSection theme={theme} />
         <ThatsTheTechEyrie theme={theme} />
         <BuildOthersSection theme={theme} />
-        <DeepJudgeAnimation theme={theme} />
+        {/* <DeepJudgeAnimation theme={theme} /> */}
         <StatsSection theme={theme} />
         <ServicesSection theme={theme} />
         <DemandSection theme={theme} />
